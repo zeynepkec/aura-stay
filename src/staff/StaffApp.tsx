@@ -1,0 +1,43 @@
+import type { ReactNode } from 'react'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { getStaff, tabsFor } from '../lib/staff'
+import KitchenOrders from './KitchenOrders'
+import StaffLayout from './StaffLayout'
+import StaffLogin from './StaffLogin'
+import StaffPlaceholder from './StaffPlaceholder'
+
+// Hazır olan ekranlar; olmayanlar "yakında" sayfasını gösterir
+const SCREENS: Record<string, ReactNode> = {
+  kitchen: <KitchenOrders />,
+}
+
+export default function StaffApp() {
+  const staff = getStaff()
+
+  if (!staff) {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<StaffLogin />} />
+        </Routes>
+      </BrowserRouter>
+    )
+  }
+
+  const tabs = tabsFor(staff.role)
+  const firstTab = `/staff/${tabs[0].key}`
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/staff" element={<StaffLayout staff={staff} />}>
+          <Route index element={<Navigate to={firstTab} replace />} />
+          {tabs.map((tab) => (
+            <Route key={tab.key} path={tab.key} element={SCREENS[tab.key] ?? <StaffPlaceholder tab={tab.key} />} />
+          ))}
+        </Route>
+        <Route path="*" element={<Navigate to={firstTab} replace />} />
+      </Routes>
+    </BrowserRouter>
+  )
+}
