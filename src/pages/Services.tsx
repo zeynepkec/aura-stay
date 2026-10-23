@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useServices, type ServiceType } from '../store/ServiceContext'
 import '../translations/services'
+import '../translations/tables'
 
 export const serviceIcons: Record<ServiceType, typeof Car> = {
   cleaning: Sparkles,
@@ -63,7 +64,11 @@ export default function Services() {
                   </div>
                   <span
                     className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-                      r.status === 'done' ? 'bg-service' : r.status === 'in_progress' ? 'bg-accent/15 text-accent' : 'bg-background text-muted'
+                      r.status === 'done' || r.status === 'confirmed'
+                        ? 'bg-service'
+                        : r.status === 'in_progress'
+                          ? 'bg-accent/15 text-accent'
+                          : 'bg-background text-muted'
                     }`}
                   >
                     {t(`services.status.${r.status}`)}

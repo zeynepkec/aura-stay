@@ -5,10 +5,13 @@ import KitchenOrders from './KitchenOrders'
 import StaffLayout from './StaffLayout'
 import StaffLogin from './StaffLogin'
 import StaffPlaceholder from './StaffPlaceholder'
-
+import StaffTasks from './StaffTasks'
+import StaffTables from './StaffTables'
 // Hazır olan ekranlar; olmayanlar "yakında" sayfasını gösterir
 const SCREENS: Record<string, ReactNode> = {
   kitchen: <KitchenOrders />,
+  tasks: <StaffTasks />,
+  tables: <StaffTables />,
 }
 
 export default function StaffApp() {

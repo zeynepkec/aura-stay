@@ -1,10 +1,13 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, type ReactNode } from 'react'
+import { stay } from '../data/stay'
+import { useShared } from '../lib/shared'
 
 export type ServiceType = 'cleaning' | 'transfer' | 'table' | 'towels'
 export type RequestStatus = 'pending' | 'in_progress' | 'done'
 
 export type ServiceRequest = {
   id: string
+  room: string
   type: ServiceType
   details: Record<string, string>
   status: RequestStatus
@@ -18,40 +21,17 @@ type ServiceContextType = {
 
 const ServiceContext = createContext<ServiceContextType | null>(null)
 
-// DEMO: personel paneli gelene kadar durum kendiliğinden ilerler (saniye)
-const DEMO_SECONDS = { in_progress: 20, done: 60 }
-
-function loadRequests(): ServiceRequest[] {
-  try {
-    return JSON.parse(localStorage.getItem('aura-requests') ?? '[]')
-  } catch {
-    return []
-  }
-}
-
 export function ServiceProvider({ children }: { children: ReactNode }) {
-  const [requests, setRequests] = useState<ServiceRequest[]>(loadRequests)
+  // Talepler ortak hafızada: personel durumu değiştirince burası da güncellenir
+  const [allRequests, setRequests] = useShared<ServiceRequest[]>('aura-requests', [])
 
-  useEffect(() => localStorage.setItem('aura-requests', JSON.stringify(requests)), [requests])
-
-  // DEMO: her 2 saniyede durumları güncelle
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setRequests((prev) =>
-        prev.map((r) => {
-          const seconds = (Date.now() - r.createdAt) / 1000
-          const status: RequestStatus =
-            seconds >= DEMO_SECONDS.done ? 'done' : seconds >= DEMO_SECONDS.in_progress ? 'in_progress' : 'pending'
-          return status === r.status ? r : { ...r, status }
-        }),
-      )
-    }, 2000)
-    return () => clearInterval(timer)
-  }, [])
+  // Misafir sadece kendi odasının taleplerini görür
+  const requests = allRequests.filter((r) => r.room === stay.roomNumber)
 
   const sendRequest = (type: ServiceType, details: Record<string, string>) => {
     const request: ServiceRequest = {
       id: 'S' + Math.floor(1000 + Math.random() * 9000),
+      room: stay.roomNumber,
       type,
       details,
       status: 'pending',
