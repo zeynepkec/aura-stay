@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import BottomNav from './components/BottomNav'
+import StatusToasts from './components/StatusToasts'
 import StaffApp from './staff/StaffApp'
 import { getSession } from './lib/session'
 import Assistant from './pages/Assistant'
@@ -25,7 +26,7 @@ import { StayProvider } from './store/StayContext'
 export default function App() {
     // Personel paneli: /staff ile başlayan adresler
   if (window.location.pathname.startsWith('/staff')) return <StaffApp />
-  
+
   const session = getSession()
 
   // Giriş yapılmamışsa: sadece karşılama ekranı ve QR linki açılabilir
@@ -66,6 +67,7 @@ export default function App() {
                 <Route path="/stay/memory" element={<MemoryCard />} />
               </Routes>
             </div>
+            <StatusToasts />
             <BottomNav />
           </BrowserRouter>
         </FeedbackProvider>
