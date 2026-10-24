@@ -14,7 +14,7 @@ export default function BottomNav() {
   const { t } = useTranslation()
 
   return (
-    <nav className="fixed bottom-0 left-1/2 z-20 w-full max-w-[430px] -translate-x-1/2 border-t border-line bg-card">
+    <nav className="fixed bottom-0 left-1/2 z-20 w-full max-w-[430px] -translate-x-1/2 border-t border-line bg-card pb-[env(safe-area-inset-bottom)]">
       <ul className="grid grid-cols-5">
         {tabs.map(({ to, key, icon: Icon, center }) => (
           <li key={to}>

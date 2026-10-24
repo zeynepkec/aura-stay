@@ -1,0 +1,16 @@
+{
+  "name": "AURA Stay",
+  "short_name": "AURA Stay",
+  "description": "Otel misafirleri için dijital konsiyerj",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#F7F6F4",
+  "background_color": "#F7F6F4",
+  "icons": [
+    { "src": "/pwa-64x64.png", "sizes": "64x64", "type": "image/png" },
+    { "src": "/pwa-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/pwa-512x512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/maskable-icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
