@@ -32,8 +32,7 @@ export function startSession(hotelId: string, room: string, token: string): Sess
 
 // Çıkış yap: oturumu ve bu misafire ait tüm verileri temizle
 export function endSession() {
-  ;['aura-session', 'aura-cart', 'aura-orders', 'aura-requests', 'aura-review', 'aura-feedback'].forEach((k) =>
-    localStorage.removeItem(k),
+  ;['aura-session', 'aura-cart'].forEach((k) =>    localStorage.removeItem(k),
   )
 }
 

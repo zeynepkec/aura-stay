@@ -10,6 +10,7 @@ const PINS: Record<string, StaffRole> = {
 // Panel sekmeleri ve her sekmeyi hangi rollerin görebileceği
 export const STAFF_TABS: { key: string; roles: StaffRole[] }[] = [
   { key: 'kitchen', roles: ['kitchen', 'reception'] },
+    { key: 'menu', roles: ['kitchen', 'reception'] },
   { key: 'tasks', roles: ['housekeeping', 'reception'] },
   { key: 'tables', roles: ['reception'] },
   { key: 'bills', roles: ['reception'] },

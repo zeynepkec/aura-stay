@@ -1,43 +1,39 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, type ReactNode } from 'react'
+import { stay } from '../data/stay'
+import { useShared } from '../lib/shared'
 
-export type Review = { cleanliness: number; comfort: number; service: number; comment: string; createdAt: number }
+export type Review = { room: string; cleanliness: number; comfort: number; service: number; comment: string; createdAt: number }
 
 export type FeedbackCategory = 'room' | 'food' | 'staff' | 'other'
 export type FeedbackStatus = 'new' | 'seen' | 'resolved'
-export type Feedback = { id: string; category: FeedbackCategory; message: string; status: FeedbackStatus; createdAt: number }
+export type Feedback = { id: string; room: string; category: FeedbackCategory; message: string; status: FeedbackStatus; createdAt: number }
 
 type FeedbackContextType = {
   review: Review | null
-  saveReview: (review: Omit<Review, 'createdAt'>) => void
+  saveReview: (review: Omit<Review, 'createdAt' | 'room'>) => void
   feedbacks: Feedback[]
   sendFeedback: (category: FeedbackCategory, message: string) => void
 }
 
 const FeedbackContext = createContext<FeedbackContextType | null>(null)
 
-function load<T>(key: string, fallback: T): T {
-  try {
-    const saved = localStorage.getItem(key)
-    return saved ? JSON.parse(saved) : fallback
-  } catch {
-    return fallback
-  }
-}
-
 export function FeedbackProvider({ children }: { children: ReactNode }) {
-  const [review, setReview] = useState<Review | null>(() => load('aura-review', null))
-  const [feedbacks, setFeedbacks] = useState<Feedback[]>(() => load('aura-feedback', []))
+  // Ortak hafıza: resepsiyon bunları görür ve durumunu değiştirir
+  const [allReviews, setReviews] = useShared<Review[]>('aura-reviews', [])
+  const [allFeedback, setFeedback] = useShared<Feedback[]>('aura-feedback', [])
 
-  useEffect(() => localStorage.setItem('aura-review', JSON.stringify(review)), [review])
-  useEffect(() => localStorage.setItem('aura-feedback', JSON.stringify(feedbacks)), [feedbacks])
+  const room = stay.roomNumber
 
   const value: FeedbackContextType = {
-    review,
-    saveReview: (r) => setReview({ ...r, createdAt: Date.now() }),
-    feedbacks,
+    // Her odanın tek bir değerlendirmesi olur (yeniden gönderilirse güncellenir)
+    review: allReviews.find((r) => r.room === room) ?? null,
+    saveReview: (r) =>
+      setReviews((prev) => [{ ...r, room, createdAt: Date.now() }, ...prev.filter((x) => x.room !== room)]),
+    // Misafir sadece kendi odasının mesajlarını görür
+    feedbacks: allFeedback.filter((f) => f.room === room),
     sendFeedback: (category, message) =>
-      setFeedbacks((prev) => [
-        { id: 'F' + Math.floor(1000 + Math.random() * 9000), category, message, status: 'new', createdAt: Date.now() },
+      setFeedback((prev) => [
+        { id: 'F' + Math.floor(1000 + Math.random() * 9000), room, category, message, status: 'new', createdAt: Date.now() },
         ...prev,
       ]),
   }

@@ -1,22 +1,30 @@
-import { ArrowLeft, Info, Minus, Plus, ShoppingBag } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, Info, Minus, Plus, ShoppingBag } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { menuItems, pick, price } from '../data/menu'
+import { useShared } from '../lib/shared'
 import { useStay } from '../store/StayContext'
 import { categoryIcons } from './Dining'
 import '../translations/dining'
 import '../translations/orders'
+import '../translations/soldOut'
 
 export default function Cart() {
   const { t, i18n } = useTranslation()
   const lang = i18n.resolvedLanguage
-  const { cart, cartCount, cartTotal, note, setNote, setQuantity, placeOrder } = useStay()
   const navigate = useNavigate()
+  const { cart, cartCount, cartTotal, note, setNote, setQuantity, placeOrder } = useStay()
+  const [soldOut] = useShared<string[]>('aura-soldout', [])
+
+  // Sepette tükenen ürün varsa sipariş verilemez
+  const hasSoldOut = cart.some((line) => soldOut.includes(line.id))
 
   const confirmOrder = () => {
+    if (hasSoldOut) return
     const order = placeOrder()
     if (order) navigate(`/orders/${order.id}`, { state: { justPlaced: true } })
   }
+
   return (
     <div>
       <Link to="/dining" className="ml-3 mt-4 flex h-11 w-fit items-center gap-1 px-2 text-sm text-muted">
@@ -29,7 +37,6 @@ export default function Cart() {
         {cartCount > 0 && <p className="mt-1 text-sm text-muted">{t('dining.items', { count: cartCount })}</p>}
       </header>
 
-      {/* Sepet boşsa */}
       {cart.length === 0 ? (
         <div className="mx-5 flex flex-col items-center rounded-card border border-line bg-card px-6 py-14 text-center">
           <ShoppingBag size={28} className="text-muted" />
@@ -46,29 +53,58 @@ export default function Cart() {
               const item = menuItems.find((m) => m.id === line.id)
               if (!item) return null
               const Icon = categoryIcons[item.category]
+              const isSoldOut = soldOut.includes(line.id)
               return (
-                <li key={line.id} className="flex items-center gap-3 rounded-card border border-line bg-card p-3">
+                <li
+                  key={line.id}
+                  className={`flex items-center gap-3 rounded-card border bg-card p-3 ${isSoldOut ? 'border-ink' : 'border-line'}`}
+                >
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-background text-ink/60">
                     <Icon size={20} strokeWidth={1.6} />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold">{pick(item.name, lang)}</p>
-                    <p className="text-sm text-muted">{price(line.lineTotal, lang)}</p>
+                    <p className={`truncate text-sm font-semibold ${isSoldOut ? 'line-through opacity-60' : ''}`}>
+                      {pick(item.name, lang)}
+                    </p>
+                    {isSoldOut ? (
+                      <span className="mt-0.5 inline-block rounded-full bg-ink px-2 py-0.5 text-[11px] font-semibold text-card">
+                        {t('dining.sold_out')}
+                      </span>
+                    ) : (
+                      <p className="text-sm text-muted">{price(line.lineTotal, lang)}</p>
+                    )}
                   </div>
-                  {/* Adet: − 2 + */}
-                  <div className="flex items-center gap-1 rounded-full border border-line p-0.5">
-                    <button type="button" onClick={() => setQuantity(line.id, line.quantity - 1)} className="flex h-9 w-9 items-center justify-center">
-                      <Minus size={16} />
+                  {isSoldOut ? (
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(line.id, 0)}
+                      className="h-9 rounded-full border border-line px-4 text-sm font-semibold"
+                    >
+                      {t('dining.remove')}
                     </button>
-                    <span className="min-w-[20px] text-center text-sm font-semibold">{line.quantity}</span>
-                    <button type="button" onClick={() => setQuantity(line.id, line.quantity + 1)} className="flex h-9 w-9 items-center justify-center">
-                      <Plus size={16} />
-                    </button>
-                  </div>
+                  ) : (
+                    <div className="flex items-center gap-1 rounded-full border border-line p-0.5">
+                      <button type="button" onClick={() => setQuantity(line.id, line.quantity - 1)} className="flex h-9 w-9 items-center justify-center">
+                        <Minus size={16} />
+                      </button>
+                      <span className="min-w-[20px] text-center text-sm font-semibold">{line.quantity}</span>
+                      <button type="button" onClick={() => setQuantity(line.id, line.quantity + 1)} className="flex h-9 w-9 items-center justify-center">
+                        <Plus size={16} />
+                      </button>
+                    </div>
+                  )}
                 </li>
               )
             })}
           </ul>
+
+          {/* Tükenen ürün uyarısı — Peach Salmon */}
+          {hasSoldOut && (
+            <p className="mx-5 mt-4 flex gap-2 rounded-card bg-activity/60 p-4 text-sm font-medium">
+              <AlertTriangle size={18} className="mt-px shrink-0" />
+              {t('dining.sold_out_warning')}
+            </p>
+          )}
 
           {/* Mutfağa not */}
           <section className="mt-6 px-5">
@@ -93,15 +129,16 @@ export default function Cart() {
               <Info size={14} className="mt-px shrink-0 text-accent" />
               {t('dining.room_charge_info')}
             </p>
-                    </section>
+          </section>
 
-          {/* Siparişi onayla butonu */}
+          {/* Siparişi onayla */}
           <div className="h-20" />
           <div className="fixed bottom-[76px] left-1/2 z-10 w-full max-w-[430px] -translate-x-1/2 px-5">
             <button
               type="button"
               onClick={confirmOrder}
-              className="flex h-14 w-full items-center justify-between rounded-full bg-ink px-6 text-card shadow-lg"
+              disabled={hasSoldOut}
+              className="flex h-14 w-full items-center justify-between rounded-full bg-ink px-6 text-card shadow-lg disabled:opacity-30"
             >
               <span className="text-sm font-semibold">{t('orders.place_order')}</span>
               <span className="font-semibold">{price(cartTotal, lang)}</span>

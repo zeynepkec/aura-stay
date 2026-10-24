@@ -3,8 +3,10 @@ import { CakeSlice, ChefHat, Coffee, Croissant, Plus, Salad } from 'lucide-react
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { categories, menuItems, pick, price } from '../data/menu'
+import { useShared } from '../lib/shared'
 import { useStay } from '../store/StayContext'
 import '../translations/dining'
+import '../translations/soldOut'
 
 export const categoryIcons: Record<string, typeof ChefHat> = {
   breakfast: Croissant,
@@ -18,6 +20,7 @@ export default function Dining() {
   const { t, i18n } = useTranslation()
   const lang = i18n.resolvedLanguage
   const { cartCount, cartTotal, quantityOf, addToCart } = useStay()
+  const [soldOut] = useShared<string[]>('aura-soldout', [])
   const [active, setActive] = useState(categories[0].id)
 
   const goTo = (id: string) => {
@@ -58,8 +61,12 @@ export default function Dining() {
                   .filter((item) => item.category === c.id)
                   .map((item) => {
                     const qty = quantityOf(item.id)
+                    const isSoldOut = soldOut.includes(item.id)
                     return (
-                      <article key={item.id} className="flex gap-3 rounded-card border border-line bg-card p-3">
+                      <article
+                        key={item.id}
+                        className={`flex gap-3 rounded-card border border-line bg-card p-3 ${isSoldOut ? 'opacity-60' : ''}`}
+                      >
                         <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-background text-ink/60">
                           <Icon size={24} strokeWidth={1.6} />
                         </span>
@@ -68,6 +75,11 @@ export default function Dining() {
                           <p className="mt-0.5 text-xs text-muted">{pick(item.description, lang)}</p>
                           <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                             <span className="mr-1 text-sm font-semibold">{price(item.price, lang)}</span>
+                            {isSoldOut && (
+                              <span className="rounded-full bg-ink px-2 py-0.5 text-[11px] font-semibold text-card">
+                                {t('dining.sold_out')}
+                              </span>
+                            )}
                             {item.tags.map((tag) => (
                               <span key={tag} className="rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
                                 {t(`dining.tags.${tag}`)}
@@ -75,12 +87,13 @@ export default function Dining() {
                             ))}
                           </div>
                         </div>
-                        {/* + butonu: sepette varsa adedi gösterir */}
+                        {/* + butonu: tükendiyse çalışmaz */}
                         <button
                           type="button"
                           onClick={() => addToCart(item.id)}
+                          disabled={isSoldOut}
                           aria-label={t('dining.add')}
-                          className={`flex h-10 w-10 shrink-0 items-center justify-center self-end rounded-full ${
+                          className={`flex h-10 w-10 shrink-0 items-center justify-center self-end rounded-full disabled:opacity-30 ${
                             qty > 0 ? 'bg-ink text-card' : 'border border-line bg-card'
                           }`}
                         >
@@ -95,7 +108,6 @@ export default function Dining() {
         })}
       </div>
 
-      {/* Sepet çubuğu — sepette ürün varsa görünür */}
       {cartCount > 0 && (
         <div className="fixed bottom-[76px] left-1/2 z-10 w-full max-w-[430px] -translate-x-1/2 px-5">
           <Link to="/cart" className="flex h-14 items-center justify-between rounded-full bg-ink px-5 text-card shadow-lg">
