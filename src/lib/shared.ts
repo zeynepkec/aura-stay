@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+// Aynı sekmedeki diğer ekranlara "bu değer değişti" haberi
+const SAME_TAB_EVENT = 'aura-shared-change'
+
 // Tarayıcı hafızasından oku
 export function readShared<T>(key: string, fallback: T): T {
   try {
@@ -12,28 +15,36 @@ export function readShared<T>(key: string, fallback: T): T {
 
 // useState gibi çalışır, ama:
 // 1) değeri tarayıcı hafızasına kaydeder
-// 2) başka sekme aynı değeri değiştirirse kendini günceller
+// 2) başka sekme YA DA aynı sekmedeki başka ekran değiştirirse kendini günceller
 export function useShared<T>(key: string, fallback: T) {
   const fallbackRef = useRef(fallback)
   const [value, setValue] = useState<T>(() => readShared(key, fallback))
 
-  // Başka sekmede değişiklik olunca haber al
   useEffect(() => {
+    // Başka sekmede değişiklik
     const onStorage = (e: StorageEvent) => {
-      if (e.key === key) setValue(e.newValue ? (JSON.parse(e.newValue) as T) : fallbackRef.current)
+      if (e.key === key) setValue(readShared(key, fallbackRef.current))
+    }
+    // Aynı sekmede değişiklik
+    const onLocal = (e: Event) => {
+      if ((e as CustomEvent<string>).detail === key) setValue(readShared(key, fallbackRef.current))
     }
     window.addEventListener('storage', onStorage)
-    return () => window.removeEventListener('storage', onStorage)
+    window.addEventListener(SAME_TAB_EVENT, onLocal)
+    return () => {
+      window.removeEventListener('storage', onStorage)
+      window.removeEventListener(SAME_TAB_EVENT, onLocal)
+    }
   }, [key])
 
-  // Değeri değiştir ve kaydet
+  // Değeri değiştir, kaydet ve herkese haber ver
   const update = useCallback(
     (next: T | ((prev: T) => T)) => {
-      setValue((prev) => {
-        const resolved = typeof next === 'function' ? (next as (p: T) => T)(prev) : next
-        localStorage.setItem(key, JSON.stringify(resolved))
-        return resolved
-      })
+      const prev = readShared(key, fallbackRef.current)
+      const resolved = typeof next === 'function' ? (next as (p: T) => T)(prev) : next
+      localStorage.setItem(key, JSON.stringify(resolved))
+      setValue(resolved)
+      window.dispatchEvent(new CustomEvent(SAME_TAB_EVENT, { detail: key }))
     },
     [key],
   )

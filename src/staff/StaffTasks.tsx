@@ -9,8 +9,7 @@ import '../translations/services'
 import '../translations/tasks'
 
 // Her rol hangi talep türlerini görür (masa talepleri ayrı sekmede)
-const TYPES_BY_ROLE: Record<StaffRole, ServiceType[]> = {
-  kitchen: [],
+export const TYPES_BY_ROLE: Record<StaffRole, ServiceType[]> = {  kitchen: [],
   housekeeping: ['cleaning', 'towels'],
   reception: ['cleaning', 'towels', 'transfer'],
 }
