@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { pick } from '../data/menu'
 import { mapsRouteUrl, mapsSearchUrl, routes, routeTags } from '../data/routes'
-import { routeIcon } from './Explore'
+import { routeIcon, routeIcons } from './Explore'
 import '../translations/explore'
 import '../translations/routeDetail'
 
@@ -49,21 +49,25 @@ export default function RouteDetail() {
             <Icon size={22} />
           </span>
           <span className="flex items-center gap-1 rounded-full bg-card/60 px-3 py-1 text-xs font-semibold">
-            <Star size={13} className="fill-accent text-accent" />
+            <Star size={13} className="fill-primary text-primary" />
             {route.rating}
           </span>
         </div>
         <h1 className="mt-6 text-2xl font-bold leading-tight">{pick(route.title, lang)}</h1>
         <p className="mt-1 text-sm text-ink/70">{t('explore.shared_by', { name: route.sharedBy })}</p>
-        <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium">
+        <div className="mt-4 flex flex-wrap gap-2 text-sm font-medium">
           <span className="flex items-center gap-1 rounded-full bg-card/60 px-3 py-1.5"><Clock size={13} />{t('explore.min', { count: route.minutes })}</span>
           <span className="flex items-center gap-1 rounded-full bg-card/60 px-3 py-1.5"><MapPin size={13} />{t('explore.km', { count: route.km })}</span>
           <span className="rounded-full bg-card/60 px-3 py-1.5">{t('explore.stops', { count: route.stops.length })}</span>
-          {route.tags.map((tag) => (
-            <span key={tag} className="rounded-full bg-card/60 px-3 py-1.5">
-              {routeTags[tag].emoji} {pick(routeTags[tag].name, lang)}
-            </span>
-          ))}
+          {route.tags.map((tag) => {
+            const TagIcon = routeIcons[tag]
+            return (
+              <span key={tag} className="flex items-center gap-1 rounded-full bg-card/60 px-3 py-1.5">
+                <TagIcon size={13} />
+                {pick(routeTags[tag].name, lang)}
+              </span>
+            )
+          })}
         </div>
       </header>
 
@@ -73,8 +77,8 @@ export default function RouteDetail() {
           <h2 className="mb-2 text-base font-bold">{t('routeDetail.about')}</h2>
           <p className="text-sm leading-relaxed text-ink/80">{pick(route.description, lang)}</p>
           {/* Yerel ipucu */}
-          <p className="mt-3 flex gap-2 rounded-2xl bg-accent/10 p-3 text-sm">
-            <Lightbulb size={16} className="mt-0.5 shrink-0 text-accent" />
+          <p className="mt-3 flex gap-2 rounded-xl bg-primary-soft p-3 text-sm">
+            <Lightbulb size={16} className="mt-0.5 shrink-0 text-primary" />
             <span>
               <b>{t('routeDetail.tip')}: </b>
               {pick(route.tip, lang)}
@@ -106,7 +110,7 @@ export default function RouteDetail() {
             {route.stops.map((stop, i) => (
               <li key={stop.place} className="flex gap-3">
                 <div className="flex flex-col items-center">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink text-xs font-bold text-card">{i + 1}</span>
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-card">{i + 1}</span>
                   {i < route.stops.length - 1 && <span className="my-1 h-6 w-0.5 bg-line" />}
                 </div>
                 <div className="flex flex-1 items-start justify-between gap-2 pt-1">
@@ -134,7 +138,7 @@ export default function RouteDetail() {
           href={directionsUrl}
           target="_blank"
           rel="noreferrer"
-          className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-ink text-sm font-semibold text-card"
+          className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-card"
         >
           <Navigation size={18} />
           {t('routeDetail.directions')}

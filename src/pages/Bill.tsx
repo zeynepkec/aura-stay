@@ -33,7 +33,7 @@ export default function Bill() {
       <header className="px-5 pb-4 pt-2">
         <h1 className="text-3xl font-bold">{t('stay.bill.title')}</h1>
         <p className="mt-1 text-sm text-muted">
-          {t('stay.room', { number: stay.roomNumber })} · {stay.hotelName}
+          {t('stay.room', { number: stay.roomNumber })}, {stay.hotelName}
         </p>
       </header>
 
@@ -43,7 +43,7 @@ export default function Bill() {
           <p className="text-sm text-muted">{t('stay.bill.total')}</p>
           <p className="mt-1 text-4xl font-bold">{price(total, lang)}</p>
           <p className="mt-3 flex gap-2 text-xs text-muted">
-            <Info size={14} className="mt-px shrink-0 text-accent" />
+            <Info size={14} className="mt-px shrink-0 text-primary" />
             {t('stay.bill.pay_info')}
           </p>
         </section>
@@ -64,7 +64,7 @@ export default function Bill() {
                     <div>
                       <p className="text-sm font-semibold">#{o.id}</p>
                       <p className="text-xs text-muted">
-                        {time(o.createdAt)} · {t(`orders.status.${o.status}`)}
+                        {time(o.createdAt)}, {t(`orders.status.${o.status}`)}
                       </p>
                     </div>
                     <span className="text-sm font-semibold">{price(o.total, lang)}</span>

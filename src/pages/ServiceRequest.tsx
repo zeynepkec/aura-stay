@@ -53,14 +53,14 @@ export default function ServiceRequest() {
       key={value}
       type="button"
       onClick={onClick}
-      className={`h-10 rounded-full px-4 text-sm font-medium ${active ? 'bg-ink text-card' : 'border border-line bg-card'}`}
+      className={`h-10 rounded-full px-4 text-sm font-medium ${active ? 'bg-primary text-card' : 'border border-line bg-card'}`}
     >
       {text}
     </button>
   )
 
   const label = (text: string) => <p className="mb-2 text-sm font-bold">{text}</p>
-  const inputClass = 'h-12 w-full rounded-2xl border border-line bg-card px-4 text-sm outline-none focus:border-accent'
+  const inputClass = 'h-12 w-full rounded-xl border border-line bg-card px-4 text-base outline-none focus:border-primary'
 
   return (
     <div>
@@ -158,8 +158,8 @@ export default function ServiceRequest() {
 
         {/* Ücret bilgisi: transfer ücretini resepsiyon onaylar */}
         {PRICE_ON_REQUEST.includes(type) && (
-          <p className="flex gap-2 rounded-2xl bg-accent/10 p-3 text-xs text-ink/80">
-            <Info size={14} className="mt-px shrink-0 text-accent" />
+          <p className="flex gap-2 rounded-xl bg-primary-soft p-3 text-sm text-ink/80">
+            <Info size={14} className="mt-px shrink-0 text-primary" />
             {t('services.form.price_note')}
           </p>
         )}
@@ -171,7 +171,7 @@ export default function ServiceRequest() {
             value={note}
             onChange={(e) => setNote(e.target.value)}
             rows={3}
-            className="w-full resize-none rounded-card border border-line bg-card p-4 text-sm outline-none focus:border-accent"
+            className="w-full resize-none rounded-card border border-line bg-card p-4 text-sm outline-none focus:border-primary"
           />
         </section>
 
@@ -180,7 +180,7 @@ export default function ServiceRequest() {
           type="button"
           onClick={submit}
           disabled={sent || !canSend}
-          className={`h-14 w-full rounded-full text-sm font-semibold disabled:opacity-40 ${sent ? 'bg-service text-ink' : 'bg-ink text-card'}`}
+          className={`h-14 w-full rounded-full text-sm font-semibold disabled:opacity-40 ${sent ? 'bg-service text-ink' : 'bg-primary text-card'}`}
         >
           {sent ? t('services.form.sent') : t('services.form.send')}
         </button>

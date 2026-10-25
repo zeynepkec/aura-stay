@@ -34,7 +34,7 @@ export default function OrderDetail() {
         </div>
         <span
           className={`rounded-full px-3 py-1 text-xs font-semibold ${
-            order.status === 'delivered' ? 'bg-service' : 'bg-accent/15 text-accent'
+            order.status === 'delivered' ? 'bg-service' : 'bg-primary-soft text-primary'
           }`}
         >
           {t(`orders.status.${order.status}`)}
@@ -61,7 +61,7 @@ export default function OrderDetail() {
                   <div className="flex flex-col items-center">
                     <span
                       className={`flex h-7 w-7 items-center justify-center rounded-full border-2 ${
-                        done ? 'border-ink bg-ink text-card' : active ? 'border-accent bg-accent text-card' : 'border-line bg-card'
+                        done ? 'border-primary bg-primary text-card' : active ? 'border-accent bg-accent text-card' : 'border-line bg-card'
                       }`}
                     >
                       {done && <Check size={14} strokeWidth={3} />}
@@ -83,7 +83,7 @@ export default function OrderDetail() {
           </ol>
           {order.status !== 'delivered' && (
             <p className="mt-4 flex items-center gap-2 border-t border-line pt-4 text-sm text-muted">
-              <Clock size={15} className="text-accent" />
+              <Clock size={15} className="text-primary" />
               {t('orders.eta')}
             </p>
           )}

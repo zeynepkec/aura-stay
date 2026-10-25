@@ -58,7 +58,7 @@ export default function StaffFeedback() {
                 key={v}
                 type="button"
                 onClick={() => setView(v)}
-                className={`flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium ${view === v ? 'bg-ink text-card' : 'border border-line bg-card'}`}
+                className={`flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium ${view === v ? 'bg-primary text-card' : 'border border-line bg-card'}`}
               >
                 {t(`feedback.views.${v}`)}
                 <span className={`rounded-full px-1.5 text-xs ${view === v ? 'bg-card/20' : 'bg-background'}`}>
@@ -109,7 +109,7 @@ export default function StaffFeedback() {
                       <button
                         type="button"
                         onClick={() => setStatus(f.id, 'resolved')}
-                        className="h-10 flex-1 rounded-full bg-ink text-sm font-semibold text-card"
+                        className="h-10 flex-1 rounded-full bg-primary text-sm font-semibold text-card"
                       >
                         {t('feedback.mark_resolved')}
                       </button>
@@ -131,7 +131,7 @@ export default function StaffFeedback() {
           </div>
 
           {/* Ortalama puan kartı — lila-pembe geçiş */}
-          <div className="mb-4 rounded-card bg-gradient-to-br from-discover to-discover-pink p-5">
+          <div className="mb-4 rounded-card bg-discover/40 p-5">
             <p className="text-sm text-ink/70">{t('feedback.average')}</p>
             <p className="mt-1 text-4xl font-bold">{reviews.length ? overall.toFixed(1) : '—'}</p>
             <p className="text-xs text-ink/60">{t('feedback.count', { count: reviews.length })}</p>

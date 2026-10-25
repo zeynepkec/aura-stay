@@ -72,7 +72,7 @@ export default function Review() {
                     }}
                     className="p-0.5"
                   >
-                    <Star size={26} className={n <= scores[c] ? 'fill-accent text-accent' : 'text-line'} />
+                    <Star size={26} className={n <= scores[c] ? 'fill-primary text-primary' : 'text-line'} />
                   </button>
                 ))}
               </div>
@@ -91,7 +91,7 @@ export default function Review() {
             }}
             rows={3}
             placeholder={t('review.comment_placeholder')}
-            className="w-full resize-none rounded-card border border-line bg-card p-4 text-sm outline-none focus:border-accent"
+            className="w-full resize-none rounded-card border border-line bg-card p-4 text-sm outline-none focus:border-primary"
           />
         </section>
 
@@ -105,7 +105,7 @@ export default function Review() {
             type="button"
             onClick={submitReview}
             disabled={!canSave}
-            className="h-14 w-full rounded-full bg-ink text-sm font-semibold text-card disabled:opacity-30"
+            className="h-14 w-full rounded-xl bg-primary text-sm font-semibold text-card disabled:opacity-30"
           >
             {review ? t('review.update') : t('review.send')}
           </button>
@@ -128,7 +128,7 @@ export default function Review() {
               key={c}
               type="button"
               onClick={() => setCategory(c)}
-              className={`h-9 rounded-full px-4 text-sm font-medium ${category === c ? 'bg-ink text-card' : 'border border-line bg-card'}`}
+              className={`h-9 rounded-full px-4 text-sm font-medium ${category === c ? 'bg-primary text-card' : 'border border-line bg-card'}`}
             >
               {t(`review.feedback.categories.${c}`)}
             </button>
@@ -140,13 +140,13 @@ export default function Review() {
           onChange={(e) => setMessage(e.target.value)}
           rows={3}
           placeholder={t('review.feedback.placeholder')}
-          className="mt-3 w-full resize-none rounded-card border border-line bg-card p-4 text-sm outline-none focus:border-accent"
+          className="mt-3 w-full resize-none rounded-card border border-line bg-card p-4 text-sm outline-none focus:border-primary"
         />
         <button
           type="button"
           onClick={submitFeedback}
           disabled={!message.trim()}
-          className="mt-3 h-12 w-full rounded-full border border-ink text-sm font-semibold disabled:opacity-30"
+          className="mt-3 h-12 w-full rounded-xl border border-ink text-sm font-semibold disabled:opacity-30"
         >
           {t('review.feedback.send')}
         </button>
@@ -160,11 +160,11 @@ export default function Review() {
                 <li key={f.id} className="rounded-card border border-line bg-card p-4">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-semibold text-muted">
-                      {t(`review.feedback.categories.${f.category}`)} · {time(f.createdAt)}
+                      {t(`review.feedback.categories.${f.category}`)}, {time(f.createdAt)}
                     </span>
                     <span
                       className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-                        f.status === 'resolved' ? 'bg-service' : f.status === 'seen' ? 'bg-accent/15 text-accent' : 'bg-background text-muted'
+                        f.status === 'resolved' ? 'bg-service' : f.status === 'seen' ? 'bg-primary-soft text-primary' : 'bg-background text-muted'
                       }`}
                     >
                       {t(`review.feedback.status.${f.status}`)}

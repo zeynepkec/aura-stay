@@ -5,7 +5,7 @@ import { initReactI18next } from 'react-i18next'
 const resources = {
   tr: {
     translation: {
-      nav: { home: 'Ana Sayfa', dining: 'Yemek', assistant: 'Asistan', explore: 'Keşfet', services: 'Hizmetler' },
+      nav: { home: 'Odam', dining: 'Yemek', assistant: 'Konsiyerj', explore: 'Keşfet', services: 'Hizmetler' },
       home: {
         welcome: 'Hoş geldin,',
         room: 'Oda {{number}}',
@@ -28,7 +28,7 @@ const resources = {
   },
   en: {
     translation: {
-      nav: { home: 'Home', dining: 'Dining', assistant: 'Assistant', explore: 'Explore', services: 'Services' },
+      nav: { home: 'My room', dining: 'Dining', assistant: 'Concierge', explore: 'Explore', services: 'Services' },
       home: {
         welcome: 'Welcome,',
         room: 'Room {{number}}',
@@ -51,7 +51,7 @@ const resources = {
   },
   el: {
     translation: {
-      nav: { home: 'Αρχική', dining: 'Φαγητό', assistant: 'Βοηθός', explore: 'Εξερεύνηση', services: 'Υπηρεσίες' },
+      nav: { home: 'Δωμάτιο', dining: 'Φαγητό', assistant: 'Κονσιέρζ', explore: 'Βόλτες', services: 'Υπηρεσίες' },
       home: {
         welcome: 'Καλώς ήρθες,',
         room: 'Δωμάτιο {{number}}',

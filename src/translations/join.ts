@@ -2,14 +2,15 @@ import i18n from '../i18n'
 
 i18n.addResourceBundle('tr', 'translation', {
   join: {
-    welcome_title: "AURA Stay'e hoş geldin",
+    welcome_title: 'Hoş geldin',
     welcome_text: 'Otelin dijital konsiyerji. Nasıl giriş yapmak istersin?',
     steps: ['Odandaki QR kodu bul', 'Telefonunun kamerasıyla okut', 'Uygulama odana özel açılır'],
     demo: 'Demo: Oda 302 ile giriş yap',
-    guest_title: 'Misafir girişi',
+    guest_title: 'Odana giriş yap',
     guest_text: 'Odana özel menü, hizmetler ve asistan.',
-    staff_title: 'Personel girişi',
-    staff_text: 'Mutfak, kat hizmetleri ve resepsiyon paneli. PIN ile girilir.',
+    staff_title: 'Otel çalışanıyım',
+    key_caption: 'Oda anahtarın QR kod',
+    staff_text: 'Mutfak, kat hizmetleri, resepsiyon',
     staff_button: 'Personel paneline git',
     success_title: 'Hoş geldin!',
     success_text: 'Oda {{room}} · {{hotel}}',
@@ -22,14 +23,15 @@ i18n.addResourceBundle('tr', 'translation', {
 
 i18n.addResourceBundle('en', 'translation', {
   join: {
-    welcome_title: 'Welcome to AURA Stay',
+    welcome_title: 'Welcome',
     welcome_text: 'The hotel\'s digital concierge. How would you like to sign in?',
     steps: ['Find the QR code in your room', 'Scan it with your phone camera', 'The app opens for your room'],
     demo: 'Demo: sign in as Room 302',
-    guest_title: 'Guest sign-in',
+    guest_title: 'Sign in to your room',
     guest_text: 'Menu, services and assistant for your room.',
-    staff_title: 'Staff sign-in',
-    staff_text: 'Kitchen, housekeeping and reception panel. Sign in with your PIN.',
+    staff_title: 'I work at the hotel',
+    key_caption: 'Your room key is a QR code',
+    staff_text: 'Kitchen, housekeeping, reception',
     staff_button: 'Go to staff panel',
     success_title: 'Welcome!',
     success_text: 'Room {{room}} · {{hotel}}',
@@ -42,14 +44,15 @@ i18n.addResourceBundle('en', 'translation', {
 
 i18n.addResourceBundle('el', 'translation', {
   join: {
-    welcome_title: 'Καλώς ήρθες στο AURA Stay',
+    welcome_title: 'Καλώς ήρθες',
     welcome_text: 'Ο ψηφιακός concierge του ξενοδοχείου. Πώς θέλεις να συνδεθείς;',
     steps: ['Βρες τον κωδικό QR στο δωμάτιό σου', 'Σκάναρέ τον με την κάμερα του κινητού', 'Η εφαρμογή ανοίγει για το δωμάτιό σου'],
     demo: 'Demo: σύνδεση ως Δωμάτιο 302',
-    guest_title: 'Σύνδεση επισκέπτη',
+    guest_title: 'Σύνδεση στο δωμάτιο',
     guest_text: 'Μενού, υπηρεσίες και βοηθός για το δωμάτιό σου.',
-    staff_title: 'Σύνδεση προσωπικού',
-    staff_text: 'Πάνελ κουζίνας, καθαριότητας και ρεσεψιόν. Σύνδεση με PIN.',
+    staff_title: 'Εργάζομαι στο ξενοδοχείο',
+    key_caption: 'Το κλειδί σου είναι ένας κωδικός QR',
+    staff_text: 'Κουζίνα, καθαριότητα, ρεσεψιόν',
     staff_button: 'Μετάβαση στο πάνελ προσωπικού',
     success_title: 'Καλώς ήρθες!',
     success_text: 'Δωμάτιο {{room}} · {{hotel}}',

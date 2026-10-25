@@ -151,7 +151,7 @@ export default function StaffBills() {
                       type="button"
                       onClick={() => toggleClosed(bill.room)}
                       className={`mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-full text-sm font-semibold ${
-                        bill.isClosed ? 'border border-line' : 'bg-ink text-card'
+                        bill.isClosed ? 'border border-line' : 'bg-primary text-card'
                       }`}
                     >
                       {bill.isClosed ? <Unlock size={16} /> : <Lock size={16} />}

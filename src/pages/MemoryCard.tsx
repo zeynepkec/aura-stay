@@ -4,6 +4,7 @@ import { ArrowLeft, Download, Share2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { menuItems, pick } from '../data/menu'
+import KeyTag from '../components/KeyTag'
 import { stay } from '../data/stay'
 import { useFeedback } from '../store/FeedbackContext'
 import { useStay } from '../store/StayContext'
@@ -72,7 +73,7 @@ export default function MemoryCard() {
   const stat = (value: string, label: string) => (
     <div className="rounded-2xl bg-card/60 p-3">
       <p className="truncate text-lg font-bold">{value}</p>
-      <p className="text-[11px] text-ink/60">{label}</p>
+      <p className="text-xs text-ink/60">{label}</p>
     </div>
   )
 
@@ -85,20 +86,18 @@ export default function MemoryCard() {
 
       <header className="px-5 pb-4 pt-2">
         <h1 className="text-3xl font-bold">{t('memory.title')}</h1>
-        <p className="mt-1 text-sm text-muted">{t('memory.subtitle')}</p>
+        <p className="mt-1 text-muted">{t('memory.subtitle')}</p>
       </header>
 
       <div className="px-5">
         {/* Anı kartı — resme çevrilen kısım */}
-        <div ref={cardRef} className="relative overflow-hidden rounded-card bg-gradient-to-br from-discover to-discover-pink p-6">
-          <span className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-card/25" />
-          <span className="pointer-events-none absolute -bottom-20 -left-10 h-40 w-40 rounded-full bg-accent/25" />
+        <div ref={cardRef} className="relative overflow-hidden rounded-card bg-discover-pink p-6">
 
           <div className="relative">
-            <p className="text-xs font-bold uppercase tracking-[0.2em]">AURA Stay</p>
+            <p className="font-semibold">AURA Stay</p>
             <h2 className="mt-8 text-3xl font-bold leading-tight">{t('memory.memories_from')}</h2>
             <p className="mt-1 text-sm text-ink/70">
-              {stay.hotelName} · {date(stay.checkIn)} – {date(stay.checkOut)}
+              {stay.hotelName}, {date(stay.checkIn)} – {date(stay.checkOut)}
             </p>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
@@ -109,7 +108,9 @@ export default function MemoryCard() {
             </div>
 
             <p className="mt-6 text-base font-medium italic leading-relaxed">“{quote}”</p>
-            <p className="mt-6 text-xs text-ink/60">{t('stay.room', { number: stay.roomNumber })}</p>
+            <div className="mt-6 w-[150px]">
+              <KeyTag size="md" hole="bg-discover-pink">{stay.roomNumber}</KeyTag>
+            </div>
           </div>
         </div>
 
@@ -119,7 +120,7 @@ export default function MemoryCard() {
             type="button"
             onClick={onShare}
             disabled={busy}
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-ink text-sm font-semibold text-card disabled:opacity-50"
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-card disabled:opacity-50"
           >
             <Share2 size={18} />
             {busy ? t('memory.preparing') : t('memory.share')}
@@ -128,7 +129,7 @@ export default function MemoryCard() {
             type="button"
             onClick={onDownload}
             disabled={busy}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-line bg-card text-sm font-semibold disabled:opacity-50"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-line bg-card text-sm font-semibold disabled:opacity-50"
           >
             <Download size={18} />
             {t('memory.download')}

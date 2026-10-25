@@ -1,8 +1,10 @@
 import { ArrowLeft, ChevronRight, Image, LogOut, Receipt, Star } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import KeyTag from '../components/KeyTag'
 import { stay } from '../data/stay'
 import '../translations/stay'
+import '../translations/home'
 import { endSession } from '../lib/session'
 import '../translations/qr'
 
@@ -25,45 +27,43 @@ export default function Stay() {
         {t('stay.back')}
       </Link>
 
-      {/* Konaklama kartı — lila-pembe geçiş */}
-      <header className="mx-5 rounded-card bg-gradient-to-br from-discover to-discover-pink p-5">
-        <p className="text-xs font-medium uppercase tracking-wider text-ink/60">{stay.hotelName}</p>
-        <h1 className="mt-1 text-3xl font-bold">{t('stay.room', { number: stay.roomNumber })}</h1>
-        <div className="mt-5 grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-card/60 p-2">
-            <p className="text-[11px] text-ink/60">{t('stay.check_in')}</p>
-            <p className="text-sm font-bold">{date(stay.checkIn)}</p>
+      {/* Anahtar etiketi ve tarihler */}
+      <header className="px-5 pt-2">
+        <h1 className="mb-4 text-3xl font-bold">{t('home.my_stay')}</h1>
+        <KeyTag caption={stay.hotelName}>{stay.roomNumber}</KeyTag>
+        <dl className="mt-4 grid grid-cols-3 divide-x divide-line rounded-card border border-line bg-card text-center">
+          <div className="p-3">
+            <dt className="text-sm text-muted">{t('stay.check_in')}</dt>
+            <dd className="font-semibold">{date(stay.checkIn)}</dd>
           </div>
-          <div className="rounded-2xl bg-card/60 p-2">
-            <p className="text-[11px] text-ink/60">{t('stay.check_out')}</p>
-            <p className="text-sm font-bold">{date(stay.checkOut)}</p>
+          <div className="p-3">
+            <dt className="text-sm text-muted">{t('stay.check_out')}</dt>
+            <dd className="font-semibold">{date(stay.checkOut)}</dd>
           </div>
-          <div className="flex items-center justify-center rounded-2xl bg-card/60 p-2 text-sm font-bold">
-            {t('stay.nights', { count: nights })}
-          </div>
-        </div>
+          <div className="flex items-center justify-center p-3 font-semibold">{t('stay.nights', { count: nights })}</div>
+        </dl>
       </header>
 
       {/* Satırlar */}
-      <div className="space-y-3 px-5 pt-6">
+      <div className="mx-5 mt-6 divide-y divide-line overflow-hidden rounded-card border border-line bg-card">
         {rows.map(({ key, to, icon: Icon, ready }) => {
           const content = (
             <>
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-background">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-background">
                 <Icon size={20} />
               </span>
               <span className="flex-1">
-                <span className="block text-sm font-semibold">{t(`stay.rows.${key}.title`)}</span>
-                <span className="block text-xs text-muted">{t(`stay.rows.${key}.desc`)}</span>
+                <span className="block font-semibold">{t(`stay.rows.${key}.title`)}</span>
+                <span className="block text-sm text-muted">{t(`stay.rows.${key}.desc`)}</span>
               </span>
               {ready ? (
                 <ChevronRight size={18} className="text-muted" />
               ) : (
-                <span className="rounded-full bg-background px-2.5 py-1 text-[11px] font-semibold text-muted">{t('stay.soon')}</span>
+                <span className="rounded-full bg-background px-2.5 py-1 text-xs font-semibold text-muted">{t('stay.soon')}</span>
               )}
             </>
           )
-          const className = 'flex items-center gap-4 rounded-card border border-line bg-card p-4'
+          const className = 'flex min-h-[72px] items-center gap-4 px-4 py-3'
           return ready ? (
             <Link key={key} to={to} className={className}>{content}</Link>
           ) : (
@@ -82,7 +82,7 @@ export default function Stay() {
               window.location.replace('/')
             }
           }}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-line bg-card text-sm font-semibold text-muted"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-line bg-card text-sm font-semibold text-muted"
         >
           <LogOut size={18} />
           {t('qr.logout')}

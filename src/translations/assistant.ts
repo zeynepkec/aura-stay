@@ -3,10 +3,10 @@ import i18n from '../i18n'
 // Asistan metinleri — askHermis asistanının cümleleriyle birleştirildi
 i18n.addResourceBundle('tr', 'translation', {
   assistant: {
-    title: 'Asistan',
-    subtitle: 'Hermis dijital konsiyerjin, 7/24',
+    title: 'Konsiyerj',
+    subtitle: 'Ne istediğini yaz. Göndermeden önce onayını alır.',
     welcome: 'Merhaba! Ben Hermis dijital konsiyerjin. Yemek siparişi, oda temizliği, transfer, masa rezervasyonu ya da Atina rotaları için yardımcı olabilirim.',
-    placeholder: 'Asistana bir şey sor…',
+    placeholder: 'Ne istediğini yaz…',
     via: 'Asistan üzerinden',
     suggestions: ['2 musakka sipariş et', 'Oda temizliği istiyorum', 'Havalimanı transferi', 'Gün batımı rotası öner', 'Wi-Fi şifresi'],
     ai: {
@@ -33,6 +33,7 @@ i18n.addResourceBundle('tr', 'translation', {
     },
     buttons: {
       yes: 'Evet, onayla',
+      send: 'Gönder',
       no: 'Vazgeç',
       total: 'Toplam',
       track_order: 'Siparişi takip et',
@@ -49,10 +50,10 @@ i18n.addResourceBundle('tr', 'translation', {
 
 i18n.addResourceBundle('en', 'translation', {
   assistant: {
-    title: 'Assistant',
-    subtitle: 'Your Hermis digital concierge, 24/7',
+    title: 'Concierge',
+    subtitle: 'Write what you need. It asks before sending anything.',
     welcome: "Hello! I'm your Hermis digital concierge. I can help with food orders, room cleaning, transfers, table bookings or Athens routes.",
-    placeholder: 'Ask the concierge anything…',
+    placeholder: 'Write what you need…',
     via: 'Via assistant',
     suggestions: ['Order 2 moussaka', 'I need room cleaning', 'Airport transfer', 'Suggest a sunset route', 'Wi-Fi password'],
     ai: {
@@ -79,6 +80,7 @@ i18n.addResourceBundle('en', 'translation', {
     },
     buttons: {
       yes: 'Yes, confirm',
+      send: 'Send',
       no: 'Cancel',
       total: 'Total',
       track_order: 'Track order',
@@ -95,10 +97,10 @@ i18n.addResourceBundle('en', 'translation', {
 
 i18n.addResourceBundle('el', 'translation', {
   assistant: {
-    title: 'Βοηθός',
-    subtitle: 'Ο ψηφιακός σου concierge στο Hermis, 24/7',
+    title: 'Κονσιέρζ',
+    subtitle: 'Γράψε τι χρειάζεσαι. Ρωτάει πριν στείλει οτιδήποτε.',
     welcome: 'Γεια σας! Είμαι ο ψηφιακός concierge του Hermis. Μπορώ να βοηθήσω με παραγγελίες, καθαρισμό, μεταφορές, κρατήσεις ή διαδρομές στην Αθήνα.',
-    placeholder: 'Ρωτήστε τον βοηθό…',
+    placeholder: 'Γράψε τι χρειάζεσαι…',
     via: 'Μέσω βοηθού',
     suggestions: ['2 μουσακάδες', 'Καθαρισμός δωματίου', 'Μεταφορά στο αεροδρόμιο', 'Διαδρομή για ηλιοβασίλεμα', 'Κωδικός Wi-Fi'],
     ai: {
@@ -125,6 +127,7 @@ i18n.addResourceBundle('el', 'translation', {
     },
     buttons: {
       yes: 'Ναι, επιβεβαίωση',
+      send: 'Αποστολή',
       no: 'Ακύρωση',
       total: 'Σύνολο',
       track_order: 'Παρακολούθηση',
