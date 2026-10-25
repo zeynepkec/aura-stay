@@ -3,8 +3,7 @@ import { stay } from '../data/stay'
 import { useShared } from '../lib/shared'
 
 export type ServiceType = 'cleaning' | 'transfer' | 'table' | 'towels'
-export type RequestStatus = 'pending' | 'in_progress' | 'done'
-
+export type RequestStatus = 'pending' | 'in_progress' | 'done' | 'confirmed' | 'declined'
 export type ServiceRequest = {
   id: string
   room: string
