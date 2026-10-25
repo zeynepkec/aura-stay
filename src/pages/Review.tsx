@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ArrowLeft, CheckCircle2, Star } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import ReviewSummary from '../components/ReviewSummary'
 import { useFeedback, type FeedbackCategory } from '../store/FeedbackContext'
 import '../translations/review'
 import '../translations/stay'
@@ -109,6 +110,11 @@ export default function Review() {
             {review ? t('review.update') : t('review.send')}
           </button>
         )}
+      </div>
+
+      {/* Yorum özeti ve örnek yorumlar (askHermis) */}
+      <div className="mt-10 px-5">
+        <ReviewSummary showSamples />
       </div>
 
       {/* Geri bildirim */}

@@ -1,7 +1,10 @@
-import { ArrowUpRight, BellRing, ChevronRight, Clock, MapPin, Sparkles, UtensilsCrossed, Wine } from 'lucide-react'
+import { ArrowUpRight, BellRing, ChevronRight, Clock, Coffee, MapPin, Phone, Sparkles, UtensilsCrossed, Wifi, Wine } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import { campaign, hotel } from '../data/hotel'
+import { pick } from '../data/menu'
+import { routes } from '../data/routes'
 import { stay } from '../data/stay'
 import { useServices } from '../store/ServiceContext'
 import { ORDER_STEPS, useStay } from '../store/StayContext'
@@ -18,14 +21,20 @@ const quickActions = [
   { to: '/assistant', key: 'action_assistant', icon: Sparkles },
 ]
 
-const activities = [
-  { key: 'act_castle', minutes: 90, km: 1.2 },
-  { key: 'act_sunset', minutes: 150, km: 0.8 },
-  { key: 'act_windmills', minutes: 60, km: 2.5 },
-]
+// Günün saatine göre önerilen rotalar: akşamüstü gün batımı rotaları öne çıkar
+function suggestedRoutes(hour: number) {
+  const sunsetFirst = hour >= 15 && hour < 20
+  return [...routes]
+    .sort((a, b) => {
+      const score = (r: (typeof routes)[number]) => (sunsetFirst && r.tags.includes('sunset') ? 2 : 0) + (r.featured ? 1 : 0)
+      return score(b) - score(a)
+    })
+    .slice(0, 4)
+}
 
 export default function Home() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const lang = i18n.resolvedLanguage
   const { orders } = useStay()
   const { requests } = useServices()
 
@@ -102,8 +111,11 @@ export default function Home() {
       {/* Kampanya kartı — Deep Blue */}
       <section className="relative mx-5 overflow-hidden rounded-card bg-campaign p-5 text-card">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-card/70">{t('home.campaign_tag')}</span>
-        <h2 className="mt-2 max-w-[80%] text-xl font-bold leading-snug">{t('home.campaign_title')}</h2>
-        <p className="mt-1 text-sm text-card/80">{t('home.campaign_text')}</p>
+        <h2 className="mt-2 max-w-[80%] text-xl font-bold leading-snug">{pick(campaign.title, lang)}</h2>
+        <p className="mt-1 text-sm text-card/80">{pick(campaign.description, lang)}</p>
+        <Link to="/services/table?venue=rooftop" className="mt-3 inline-flex h-9 items-center rounded-full bg-card px-4 text-xs font-bold text-campaign">
+          {pick(campaign.cta, lang)}
+        </Link>
         <span className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-card/15">
           <ArrowUpRight size={18} />
         </span>
@@ -130,16 +142,41 @@ export default function Home() {
           <Link to="/explore" className="text-sm font-medium text-accent">{t('home.see_all')}</Link>
         </div>
         <div className="flex gap-3 overflow-x-auto px-5 pb-1">
-          {activities.map((a) => (
-            <article key={a.key} className="w-[220px] shrink-0 rounded-card bg-activity p-4">
-              <div className="mb-10 h-8 w-8 rounded-full bg-card/60" />
-              <h3 className="font-bold leading-snug">{t(`home.${a.key}`)}</h3>
+          {suggestedRoutes(new Date().getHours()).map((route) => (
+            <Link key={route.id} to={`/explore/${route.id}`} className="flex w-[220px] shrink-0 flex-col rounded-card bg-activity p-4">
+              <span className="mb-8 flex h-8 w-8 items-center justify-center rounded-full bg-card/60 text-base">
+                {route.tags.includes('sunset') ? '🌅' : route.tags.includes('food') ? '🍽️' : '🏛️'}
+              </span>
+              <h3 className="font-bold leading-snug">{pick(route.title, lang)}</h3>
               <div className="mt-2 flex gap-3 text-xs text-ink/70">
-                <span className="flex items-center gap-1"><Clock size={13} />{t('home.min', { count: a.minutes })}</span>
-                <span className="flex items-center gap-1"><MapPin size={13} />{t('home.km', { count: a.km })}</span>
+                <span className="flex items-center gap-1"><Clock size={13} />{t('home.min', { count: route.minutes })}</span>
+                <span className="flex items-center gap-1"><MapPin size={13} />{t('home.km', { count: route.km })}</span>
               </div>
-            </article>
+            </Link>
           ))}
+        </div>
+      </section>
+
+      {/* Otel bilgileri (askHermis içeriği) */}
+      <section className="px-5">
+        <div className="rounded-card border border-line bg-card p-4">
+          <h2 className="mb-3 text-sm font-bold">{t('home.info')}</h2>
+          <div className="grid grid-cols-2 gap-3 text-xs">
+            {[
+              { icon: Wifi, label: t('home.wifi'), value: `${hotel.wifi.name} · ${hotel.wifi.password}` },
+              { icon: Coffee, label: t('home.breakfast'), value: hotel.breakfast },
+              { icon: Clock, label: t('home.checkout'), value: hotel.checkOut },
+              { icon: Phone, label: t('home.reception'), value: pick(hotel.reception, lang) },
+            ].map(({ icon: Icon, label, value }) => (
+              <div key={label} className="flex gap-2">
+                <Icon size={16} className="mt-0.5 shrink-0 text-accent" />
+                <div className="min-w-0">
+                  <p className="text-muted">{label}</p>
+                  <p className="break-words font-semibold">{value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

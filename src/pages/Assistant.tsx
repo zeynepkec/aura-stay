@@ -1,25 +1,32 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { ArrowUp, Sparkles, Star } from 'lucide-react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import { ArrowUp, Check, Info, Plus, Sparkles, Star, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { amenityItems, optionName, tableVenues, transferDestinations } from '../data/hotel'
 import { menuItems, pick, price } from '../data/menu'
 import { routes } from '../data/routes'
-import { understand, type AssistantAction } from '../lib/assistant'
+import { PRICE_ON_REQUEST } from '../data/stay'
+import { reply, type BotMessage, type Chip, type Flow, type PendingRecord } from '../lib/concierge'
+import { useShared } from '../lib/shared'
 import { useServices } from '../store/ServiceContext'
 import { useStay } from '../store/StayContext'
-import { routeIcons } from './Explore'
+import { routeIcon } from './Explore'
 import '../translations/assistant'
 import '../translations/explore'
 import '../translations/services'
 
-type Message = { id: number; from: 'user' | 'bot'; text: string; action?: AssistantAction; done?: boolean }
+type ChatItem = { id: number; from: 'user'; text: string } | { id: number; from: 'bot'; msg: BotMessage }
+
+let nextId = 1
 
 export default function Assistant() {
   const { t, i18n } = useTranslation()
-  const lang = i18n.resolvedLanguage
-  const { quantityOf, setQuantity } = useStay()
+  const lang = i18n.resolvedLanguage ?? 'en'
+  const { placeDirectOrder } = useStay()
   const { sendRequest } = useServices()
-  const [messages, setMessages] = useState<Message[]>([])
+  const [soldOut] = useShared<string[]>('aura-soldout', [])
+  const [chat, setChat] = useState<ChatItem[]>([])
+  const [flow, setFlow] = useState<Flow>(null)
   const [input, setInput] = useState('')
   const [typing, setTyping] = useState(false)
   const endRef = useRef<HTMLDivElement>(null)
@@ -27,27 +34,61 @@ export default function Assistant() {
   // Yeni mesaj gelince en alta kaydır
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, typing])
+  }, [chat, typing])
 
-  const replyText = (action: AssistantAction) => {
-    if (action.type === 'service' || action.type === 'form') {
-      return t(`assistant.replies.${action.type}`, { service: t(`services.types.${action.service}.title`) })
+  const addBot = (messages: BotMessage[]) =>
+    setChat((prev) => [...prev, ...messages.map((msg) => ({ id: nextId++, from: 'bot' as const, msg }))])
+
+  // Onay kartını güncelle (yapıldı / iptal)
+  const updateConfirm = (id: number, status: 'done' | 'cancelled', resultId?: string) =>
+    setChat((prev) =>
+      prev.map((c) => (c.id === id && c.from === 'bot' && c.msg.kind === 'confirm' ? { ...c, msg: { ...c.msg, status, resultId } } : c)),
+    )
+
+  const lastPendingConfirm = () =>
+    [...chat].reverse().find((c) => c.from === 'bot' && c.msg.kind === 'confirm' && c.msg.status === 'pending')
+
+  // Onaylanan siparişi mutfağa / talebi personele gönder
+  const execute = (id: number, record: PendingRecord) => {
+    if (record.kind === 'order') {
+      const available = record.items.filter((i) => !soldOut.includes(i.id))
+      const order = placeDirectOrder(available)
+      if (!order) return
+      updateConfirm(id, 'done', order.id)
+      addBot([{ kind: 'text', key: 'order_done' }])
+    } else {
+      const request = sendRequest(record.service, { ...record.details, note: '' })
+      updateConfirm(id, 'done', request.id)
+      addBot([{ kind: 'text', key: 'request_done' }])
     }
-    return t(`assistant.replies.${action.type}`)
+    setFlow(null)
   }
 
-  // Mesaj gönder → asistan 0,7 sn sonra cevap verir
+  const cancel = (id: number) => {
+    updateConfirm(id, 'cancelled')
+    addBot([{ kind: 'text', key: 'cancelled' }])
+    setFlow(null)
+  }
+
+  // Mesaj gönder → asistan 0,6 sn sonra cevap verir
   const send = (text: string) => {
     const clean = text.trim()
     if (!clean || typing) return
-    setMessages((prev) => [...prev, { id: Date.now(), from: 'user', text: clean }])
+    setChat((prev) => [...prev, { id: nextId++, from: 'user', text: clean }])
     setInput('')
     setTyping(true)
     setTimeout(() => {
-      const action = understand(clean)
-      setMessages((prev) => [...prev, { id: Date.now(), from: 'bot', text: replyText(action), action }])
+      const result = reply(clean, lang, flow, soldOut)
+      const pending = lastPendingConfirm()
+      if (result.action && pending && pending.from === 'bot' && pending.msg.kind === 'confirm') {
+        if (result.action === 'confirm') execute(pending.id, pending.msg.record)
+        else cancel(pending.id)
+      } else {
+        addBot(result.messages)
+        setFlow(result.flow)
+      }
       setTyping(false)
-    }, 700)
+    }, 600)
   }
 
   const onSubmit = (e: FormEvent) => {
@@ -55,125 +96,176 @@ export default function Assistant() {
     send(input)
   }
 
-  const markDone = (id: number) => setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, done: true } : m)))
-
-  const suggestions = t('assistant.suggestions', { returnObjects: true }) as unknown as string[]
-  const suggestionChips = (
+  // ---------- küçük parçalar ----------
+  const chipRow = (chips: Chip[]) => (
     <div className="mt-3 flex flex-wrap gap-2">
-      {suggestions.map((s) => (
-        <button key={s} type="button" onClick={() => send(s)} className="rounded-full border border-line bg-background px-3 py-1.5 text-left text-xs font-medium">
-          {s}
+      {chips.map((c) => (
+        <button key={c.value} type="button" onClick={() => send(c.value)} className="rounded-full border border-line bg-background px-3 py-1.5 text-left text-xs font-medium">
+          {c.label}
         </button>
       ))}
     </div>
   )
 
-  const button = 'mt-3 flex h-10 w-full items-center justify-center rounded-full bg-ink text-sm font-semibold text-card'
-  const doneBox = 'mt-3 flex items-center justify-between gap-2 rounded-2xl bg-service px-3 py-2 text-sm font-semibold'
+  const suggestions = (t('assistant.suggestions', { returnObjects: true }) as unknown as string[]).map((s) => ({ label: s, value: s }))
 
-  // Asistan cevabının altındaki kart/buton
-  const renderAction = (m: Message) => {
-    const action = m.action
-    if (!action) return null
+  const dateLabel = (date?: string) => {
+    if (!date) return ''
+    const today = new Date().toLocaleDateString('sv')
+    const tomorrow = new Date(Date.now() + 86400000).toLocaleDateString('sv')
+    if (date === today) return t('assistant.buttons.today')
+    if (date === tomorrow) return t('assistant.buttons.tomorrow')
+    return date
+  }
 
-    if (action.type === 'order') {
-      const total = action.items.reduce((sum, i) => sum + (menuItems.find((x) => x.id === i.id)?.price ?? 0) * i.quantity, 0)
+  // Talebin ayrıntıları tek satırda: "Atina Havalimanı · Bugün 18:00 · 2 kişi"
+  const requestSummary = (record: Extract<PendingRecord, { kind: 'request' }>) => {
+    const d = record.details
+    const parts: string[] = []
+    if (d.slot) parts.push(d.slot === 'now' ? t('services.form.now') : d.slot)
+    if (d.items) parts.push(d.items.split(',').map((id) => optionName(amenityItems, id, lang)).join(', '))
+    if (d.destination) parts.push(optionName(transferDestinations, d.destination, lang))
+    if (d.venue) parts.push(optionName(tableVenues, d.venue, lang))
+    if (d.time) parts.push(`${dateLabel(d.date)} ${d.time}`)
+    if (d.people) parts.push(`${d.people} 👤`)
+    return parts.join(' · ')
+  }
+
+  const renderConfirm = (id: number, msg: Extract<BotMessage, { kind: 'confirm' }>) => {
+    const { record } = msg
+    return (
+      <>
+        <p>{t(record.kind === 'order' ? 'assistant.ai.confirm_order' : 'assistant.ai.confirm_request')}</p>
+        <div className="mt-2 rounded-2xl bg-background p-3">
+          {record.kind === 'order' ? (
+            <ul className="space-y-1">
+              {record.items.map((i) => {
+                const item = menuItems.find((x) => x.id === i.id)
+                return (
+                  <li key={i.id} className="flex justify-between gap-2">
+                    <span>
+                      <b>{i.quantity}×</b> {item ? pick(item.name, lang) : i.id}
+                    </span>
+                    <span className="text-muted">{price((item?.price ?? 0) * i.quantity, lang)}</span>
+                  </li>
+                )
+              })}
+              <li className="flex justify-between border-t border-line pt-1 font-semibold">
+                <span>{t('assistant.buttons.total')}</span>
+                <span>{price(record.items.reduce((s, i) => s + (menuItems.find((x) => x.id === i.id)?.price ?? 0) * i.quantity, 0), lang)}</span>
+              </li>
+            </ul>
+          ) : (
+            <>
+              <p className="font-semibold">{t(`services.types.${record.service}.title`)}</p>
+              <p className="text-xs text-muted">{requestSummary(record)}</p>
+            </>
+          )}
+        </div>
+        {record.kind === 'request' && PRICE_ON_REQUEST.includes(record.service) && (
+          <p className="mt-2 flex gap-1.5 text-xs text-muted">
+            <Info size={13} className="mt-px shrink-0 text-accent" />
+            {t('assistant.ai.price_rule')}
+          </p>
+        )}
+
+        {msg.status === 'pending' && (
+          <div className="mt-3 flex gap-2">
+            <button type="button" onClick={() => cancel(id)} className="flex h-10 flex-1 items-center justify-center gap-1 rounded-full border border-line text-sm font-semibold">
+              <X size={15} />
+              {t('assistant.buttons.no')}
+            </button>
+            <button type="button" onClick={() => execute(id, record)} className="flex h-10 flex-[1.4] items-center justify-center gap-1 rounded-full bg-ink text-sm font-semibold text-card">
+              <Check size={15} />
+              {t('assistant.buttons.yes')}
+            </button>
+          </div>
+        )}
+        {msg.status === 'done' && (
+          <Link
+            to={record.kind === 'order' ? `/orders/${msg.resultId}` : '/services'}
+            className="mt-3 flex items-center justify-between gap-2 rounded-2xl bg-service px-3 py-2 text-sm font-semibold"
+          >
+            <span className="flex items-center gap-1.5"><Check size={15} /> #{msg.resultId}</span>
+            <span className="underline">{t(record.kind === 'order' ? 'assistant.buttons.track_order' : 'assistant.buttons.see_requests')}</span>
+          </Link>
+        )}
+        {msg.status === 'cancelled' && <p className="mt-2 text-xs font-semibold text-muted">{t('assistant.buttons.cancelled')}</p>}
+      </>
+    )
+  }
+
+  const renderMessage = (id: number, msg: BotMessage): ReactNode => {
+    if (msg.kind === 'text') {
       return (
-        <div className="mt-2">
-          <ul className="space-y-1 rounded-2xl bg-background p-3">
-            {action.items.map((i) => {
-              const item = menuItems.find((x) => x.id === i.id)
+        <>
+          {msg.raw ?? t(`assistant.ai.${msg.key}`, msg.params)}
+          {msg.chips && chipRow(msg.chips)}
+          {msg.suggest && chipRow(suggestions)}
+        </>
+      )
+    }
+    if (msg.kind === 'confirm') return renderConfirm(id, msg)
+    if (msg.kind === 'menu') {
+      return (
+        <>
+          {t('assistant.ai.menu_hint')}
+          <ul className="mt-2 space-y-1.5">
+            {msg.itemIds.map((itemId) => {
+              const item = menuItems.find((m) => m.id === itemId)
+              if (!item) return null
               return (
-                <li key={i.id} className="flex justify-between gap-2">
-                  <span><b>{i.quantity}×</b> {item ? pick(item.name, lang) : i.id}</span>
-                  <span className="text-muted">{price((item?.price ?? 0) * i.quantity, lang)}</span>
+                <li key={itemId} className="flex items-center gap-2 rounded-2xl bg-background p-2">
+                  <span className="text-xl">{item.image}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-semibold">{pick(item.name, lang)}</span>
+                    <span className="block text-xs text-muted">{price(item.price, lang)}</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => send(`1 ${pick(item.name, lang)}`)}
+                    aria-label={t('assistant.buttons.add')}
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-line bg-card"
+                  >
+                    <Plus size={15} />
+                  </button>
                 </li>
               )
             })}
-            <li className="flex justify-between border-t border-line pt-1 font-semibold">
-              <span>{t('assistant.buttons.total')}</span>
-              <span>{price(total, lang)}</span>
-            </li>
           </ul>
-          {m.done ? (
-            <div className={doneBox}>
-              {t('assistant.buttons.added')}
-              <Link to="/cart" className="underline">{t('assistant.buttons.go_cart')}</Link>
-            </div>
-          ) : (
-            <button
-              type="button"
-              className={button}
-              onClick={() => {
-                action.items.forEach((i) => setQuantity(i.id, quantityOf(i.id) + i.quantity))
-                markDone(m.id)
-              }}
-            >
-              {t('assistant.buttons.add_to_cart')}
-            </button>
-          )}
-        </div>
+          <Link to="/dining" className="mt-2 block text-xs font-semibold text-accent underline">{t('assistant.buttons.open_menu')}</Link>
+        </>
       )
     }
-
-    if (action.type === 'service') {
-      return m.done ? (
-        <div className={doneBox}>
-          {t('assistant.buttons.request_sent')}
-          <Link to="/services" className="underline">{t('assistant.buttons.see_requests')}</Link>
-        </div>
-      ) : (
-        <button
-          type="button"
-          className={button}
-          onClick={() => {
-            const note = t('assistant.via')
-            sendRequest(action.service, action.service === 'towels' ? { quantity: '2', note } : { slot: 'now', note })
-            markDone(m.id)
-          }}
-        >
-          {t('assistant.buttons.send_request')}
-        </button>
-      )
-    }
-
-    if (action.type === 'form') {
-      return <Link to={`/services/${action.service}`} className={button}>{t('assistant.buttons.open_form')}</Link>
-    }
-
-    if (action.type === 'menu') {
-      return <Link to="/dining" className={button}>{t('assistant.buttons.open_menu')}</Link>
-    }
-
-    if (action.type === 'routes') {
-      return (
-        <div className="mt-2 space-y-2">
-          {action.routeIds.map((id) => {
-            const route = routes.find((r) => r.id === id)
-            if (!route) return null
-            const Icon = routeIcons[route.category]
-            return (
-              <Link key={id} to={`/explore/${id}`} className="flex items-center gap-3 rounded-2xl bg-background p-2">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-activity">
-                  <Icon size={18} />
-                </span>
-                <span className="min-w-0 flex-1 truncate font-semibold">{pick(route.title, lang)}</span>
-                <span className="flex items-center gap-0.5 text-xs font-semibold">
-                  <Star size={12} className="fill-accent text-accent" />
-                  {route.rating}
-                </span>
-              </Link>
-            )
-          })}
-        </div>
-      )
-    }
-
-    return suggestionChips
+    // route
+    const route = routes.find((r) => r.id === msg.routeId)
+    if (!route) return null
+    const Icon = routeIcon(route)
+    return (
+      <>
+        {t('assistant.ai.route_intro')}
+        <Link to={`/explore/${route.id}`} className="mt-2 flex items-center gap-3 rounded-2xl bg-background p-2">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-activity">
+            <Icon size={18} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate font-semibold">{pick(route.title, lang)}</span>
+            <span className="block text-xs text-muted">{t('explore.min', { count: route.minutes })} · {t('explore.km', { count: route.km })}</span>
+          </span>
+          <span className="flex items-center gap-0.5 text-xs font-semibold">
+            <Star size={12} className="fill-accent text-accent" />
+            {route.rating}
+          </span>
+        </Link>
+        <p className="mt-2 text-xs text-ink/70">💡 {pick(route.tip, lang)}</p>
+        {chipRow(msg.chips)}
+        <Link to="/explore" className="mt-2 block text-xs font-semibold text-accent underline">{t('assistant.buttons.all_routes')}</Link>
+      </>
+    )
   }
 
   // Asistan baloncuğu
-  const botBubble = (key: number, children: React.ReactNode) => (
+  const botBubble = (key: number, children: ReactNode) => (
     <div key={key} className="flex gap-2">
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-discover to-discover-pink">
         <Sparkles size={16} />
@@ -195,24 +287,18 @@ export default function Assistant() {
           -1,
           <>
             {t('assistant.welcome')}
-            {messages.length === 0 && suggestionChips}
+            {chat.length === 0 && chipRow(suggestions)}
           </>,
         )}
 
         {/* Sohbet */}
-        {messages.map((m) =>
-          m.from === 'user' ? (
-            <div key={m.id} className="flex justify-end">
-              <p className="max-w-[85%] rounded-card rounded-tr-md bg-ink px-4 py-3 text-sm text-card">{m.text}</p>
+        {chat.map((c) =>
+          c.from === 'user' ? (
+            <div key={c.id} className="flex justify-end">
+              <p className="max-w-[85%] rounded-card rounded-tr-md bg-ink px-4 py-3 text-sm text-card">{c.text}</p>
             </div>
           ) : (
-            botBubble(
-              m.id,
-              <>
-                {m.text}
-                {renderAction(m)}
-              </>,
-            )
+            botBubble(c.id, renderMessage(c.id, c.msg))
           ),
         )}
 

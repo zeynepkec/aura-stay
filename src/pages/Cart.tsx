@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { menuItems, pick, price } from '../data/menu'
 import { useShared } from '../lib/shared'
 import { useStay } from '../store/StayContext'
-import { categoryIcons } from './Dining'
 import '../translations/dining'
 import '../translations/orders'
 import '../translations/soldOut'
@@ -52,16 +51,13 @@ export default function Cart() {
             {cart.map((line) => {
               const item = menuItems.find((m) => m.id === line.id)
               if (!item) return null
-              const Icon = categoryIcons[item.category]
               const isSoldOut = soldOut.includes(line.id)
               return (
                 <li
                   key={line.id}
                   className={`flex items-center gap-3 rounded-card border bg-card p-3 ${isSoldOut ? 'border-ink' : 'border-line'}`}
                 >
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-background text-ink/60">
-                    <Icon size={20} strokeWidth={1.6} />
-                  </span>
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-background text-2xl">{item.image}</span>
                   <div className="min-w-0 flex-1">
                     <p className={`truncate text-sm font-semibold ${isSoldOut ? 'line-through opacity-60' : ''}`}>
                       {pick(item.name, lang)}

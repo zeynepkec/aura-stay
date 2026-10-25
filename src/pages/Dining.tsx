@@ -2,11 +2,14 @@ import { useState } from 'react'
 import { CakeSlice, ChefHat, Coffee, Croissant, Plus, Salad } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { categories, menuItems, pick, price } from '../data/menu'
+import { allergenLabels, categories, menuItems, pick, price, type DietTag } from '../data/menu'
 import { useShared } from '../lib/shared'
 import { useStay } from '../store/StayContext'
 import '../translations/dining'
 import '../translations/soldOut'
+import '../translations/menuExtra'
+
+const DIET_FILTERS: ('all' | DietTag)[] = ['all', 'vegan', 'vegetarian', 'gluten_free']
 
 export const categoryIcons: Record<string, typeof ChefHat> = {
   breakfast: Croissant,
@@ -22,6 +25,7 @@ export default function Dining() {
   const { cartCount, cartTotal, quantityOf, addToCart } = useStay()
   const [soldOut] = useShared<string[]>('aura-soldout', [])
   const [active, setActive] = useState(categories[0].id)
+  const [diet, setDiet] = useState<'all' | DietTag>('all')
 
   const goTo = (id: string) => {
     setActive(id)
@@ -50,16 +54,31 @@ export default function Dining() {
         ))}
       </nav>
 
+      {/* Diyet filtresi */}
+      <div className="flex gap-2 overflow-x-auto px-5 pb-2">
+        {DIET_FILTERS.map((f) => (
+          <button
+            key={f}
+            type="button"
+            onClick={() => setDiet(f)}
+            className={`h-8 shrink-0 rounded-full px-3 text-xs font-semibold ${
+              diet === f ? 'bg-accent text-card' : 'bg-accent/10 text-accent'
+            }`}
+          >
+            {t(`dining.filters.${f}`)}
+          </button>
+        ))}
+      </div>
+
       <div className="space-y-7 px-5 pt-2">
         {categories.map((c) => {
-          const Icon = categoryIcons[c.id]
+          const items = menuItems.filter((item) => item.category === c.id && (diet === 'all' || item.tags.includes(diet)))
+          if (items.length === 0) return null
           return (
             <section key={c.id} id={c.id} className="scroll-mt-16">
               <h2 className="mb-3 text-base font-bold">{pick(c.name, lang)}</h2>
               <div className="space-y-2.5">
-                {menuItems
-                  .filter((item) => item.category === c.id)
-                  .map((item) => {
+                {items.map((item) => {
                     const qty = quantityOf(item.id)
                     const isSoldOut = soldOut.includes(item.id)
                     return (
@@ -67,12 +86,15 @@ export default function Dining() {
                         key={item.id}
                         className={`flex gap-3 rounded-card border border-line bg-card p-3 ${isSoldOut ? 'opacity-60' : ''}`}
                       >
-                        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-background text-ink/60">
-                          <Icon size={24} strokeWidth={1.6} />
-                        </span>
+                        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-background text-3xl">{item.image}</span>
                         <div className="min-w-0 flex-1">
                           <h3 className="text-sm font-semibold">{pick(item.name, lang)}</h3>
                           <p className="mt-0.5 text-xs text-muted">{pick(item.description, lang)}</p>
+                          {item.allergens.length > 0 && (
+                            <p className="mt-0.5 text-[11px] text-muted">
+                              {t('dining.allergens')}: {item.allergens.map((a) => pick(allergenLabels[a], lang)).join(', ')}
+                            </p>
+                          )}
                           <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                             <span className="mr-1 text-sm font-semibold">{price(item.price, lang)}</span>
                             {isSoldOut && (

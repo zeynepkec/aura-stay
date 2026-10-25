@@ -22,6 +22,7 @@ i18n.addResourceBundle('tr', 'translation', {
       services: 'Hizmetler',
       no_items: 'Henüz harcama yok',
       free: 'Ücretsiz',
+      on_request: 'Ücreti resepsiyon onaylar',
     },
   },
 }, true, true)
@@ -48,6 +49,7 @@ i18n.addResourceBundle('en', 'translation', {
       services: 'Services',
       no_items: 'No charges yet',
       free: 'Free',
+      on_request: 'Price confirmed by reception',
     },
   },
 }, true, true)
@@ -74,6 +76,7 @@ i18n.addResourceBundle('el', 'translation', {
       services: 'Υπηρεσίες',
       no_items: 'Δεν υπάρχουν χρεώσεις ακόμα',
       free: 'Δωρεάν',
+      on_request: 'Η τιμή επιβεβαιώνεται από τη ρεσεψιόν',
     },
   },
 }, true, true)
