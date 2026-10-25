@@ -5,15 +5,12 @@ const session = getSession()
 
 // Konaklama bilgileri — QR ile giriş yapılan odadan gelir
 export const stay = {
-  hotelName: session?.hotelName ?? HOTEL.name,
-  roomNumber: session?.room ?? '204',
+  hotelName: HOTEL.name,
+  roomNumber: session?.room ?? '302',
   checkIn: session?.joinedAt ?? Date.now(),
   checkOut: (session?.joinedAt ?? Date.now()) + 5 * day,
 }
 
-// Transfer ücretleri (₺) — diğer hizmetler ücretsiz
-export const transferPrices: Record<string, number> = {
-  airport: 900,
-  center: 400,
-  marina: 400,
-}
+// Ücretli hizmetler: transfer ücreti resepsiyon tarafından onaylanır (asistan ve uygulama fiyat uydurmaz).
+// Diğer hizmetler ücretsiz. Oda hesabında transfer "Resepsiyon onaylar" olarak görünür.
+export const PRICE_ON_REQUEST = ['transfer']

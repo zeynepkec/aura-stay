@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Star } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import ReviewSummary from '../components/ReviewSummary'
 import { useShared } from '../lib/shared'
 import type { Feedback, FeedbackStatus, Review } from '../store/FeedbackContext'
 import '../translations/reception'
@@ -123,6 +124,11 @@ export default function StaffFeedback() {
         {/* Sağ: oda değerlendirmeleri */}
         <section>
           <h2 className="mb-4 text-base font-bold">{t('feedback.reviews')}</h2>
+
+          {/* AI yorum özeti (askHermis) */}
+          <div className="mb-4">
+            <ReviewSummary />
+          </div>
 
           {/* Ortalama puan kartı — lila-pembe geçiş */}
           <div className="mb-4 rounded-card bg-gradient-to-br from-discover to-discover-pink p-5">

@@ -1,26 +1,32 @@
 import { useState } from 'react'
-import { Clock, Compass, Landmark, MapPin, Mountain, Sailboat, Star, Utensils } from 'lucide-react'
+import { Clock, Compass, Footprints, Landmark, MapPin, Palette, Star, Sunset, Trees, Users, Utensils } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { pick } from '../data/menu'
-import { routes, type RouteCategory } from '../data/routes'
+import { routes, routeTags, type RouteTag, type TravelRoute } from '../data/routes'
 import '../translations/explore'
 import { Link } from 'react-router-dom'
 
-export const routeIcons: Record<RouteCategory, typeof Compass> = {
-  culture: Landmark,
-  nature: Mountain,
+export const routeIcons: Record<RouteTag, typeof Compass> = {
+  history: Landmark,
   food: Utensils,
-  activity: Sailboat,
+  sunset: Sunset,
+  family: Users,
+  easy: Footprints,
+  culture: Palette,
+  nature: Trees,
 }
 
-const filters: ('all' | RouteCategory)[] = ['all', 'culture', 'nature', 'food', 'activity']
+// Rotanın ikonu: ilk etiketine göre
+export const routeIcon = (route: TravelRoute) => routeIcons[route.tags[0]] ?? Compass
+
+const filters: ('all' | RouteTag)[] = ['all', ...(Object.keys(routeTags) as RouteTag[])]
 
 export default function Explore() {
   const { t, i18n } = useTranslation()
   const lang = i18n.resolvedLanguage
-  const [filter, setFilter] = useState<'all' | RouteCategory>('all')
+  const [filter, setFilter] = useState<'all' | RouteTag>('all')
 
-  const visible = filter === 'all' ? routes : routes.filter((r) => r.category === filter)
+  const visible = filter === 'all' ? routes : routes.filter((r) => r.tags.includes(filter))
 
   return (
     <div>
@@ -44,7 +50,7 @@ export default function Explore() {
               filter === f ? 'bg-ink text-card' : 'border border-line bg-card'
             }`}
           >
-            {t(`explore.categories.${f}`)}
+            {f === 'all' ? t('explore.categories.all') : `${routeTags[f].emoji} ${pick(routeTags[f].name, lang)}`}
           </button>
         ))}
       </nav>
@@ -54,7 +60,7 @@ export default function Explore() {
       {/* Rota kartları */}
       <ul className="space-y-3 px-5">
         {visible.map((route) => {
-          const Icon = routeIcons[route.category]
+          const Icon = routeIcon(route)
           return (
             <li key={route.id}>
               <Link to={`/explore/${route.id}`} className="flex gap-4 rounded-card border border-line bg-card p-3">              {/* Sol taraf — Peach Salmon */}

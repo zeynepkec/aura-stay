@@ -2,7 +2,7 @@ import { ArrowLeft, Info } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { price } from '../data/menu'
-import { stay, transferPrices } from '../data/stay'
+import { PRICE_ON_REQUEST, stay } from '../data/stay'
 import { useServices } from '../store/ServiceContext'
 import { useStay } from '../store/StayContext'
 import { serviceIcons } from './Services'
@@ -19,13 +19,9 @@ export default function Bill() {
   const time = (ms: number) =>
     new Date(ms).toLocaleString(lang, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
 
-  // Hizmet ücreti: sadece transfer ücretli
-  const serviceCost = (type: string, details: Record<string, string>) =>
-    type === 'transfer' ? transferPrices[details.destination] ?? 0 : 0
-
+  // Hizmetler ücretsiz; transfer ücreti resepsiyon tarafından onaylanır (uygulama fiyat uydurmaz)
   const ordersTotal = orders.reduce((sum, o) => sum + o.total, 0)
-  const servicesTotal = requests.reduce((sum, r) => sum + serviceCost(r.type, r.details), 0)
-  const total = ordersTotal + servicesTotal
+  const total = ordersTotal
 
   return (
     <div>
@@ -83,7 +79,6 @@ export default function Bill() {
         <section>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-base font-bold">{t('stay.bill.services')}</h2>
-            <span className="text-sm font-semibold">{price(servicesTotal, lang)}</span>
           </div>
           {requests.length === 0 ? (
             <p className="rounded-card border border-line bg-card p-4 text-center text-sm text-muted">{t('stay.bill.no_items')}</p>
@@ -91,7 +86,7 @@ export default function Bill() {
             <ul className="divide-y divide-line rounded-card border border-line bg-card">
               {requests.map((r) => {
                 const Icon = serviceIcons[r.type]
-                const cost = serviceCost(r.type, r.details)
+                const onRequest = PRICE_ON_REQUEST.includes(r.type)
                 return (
                   <li key={r.id} className="flex items-center gap-3 p-4">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-service">
@@ -101,8 +96,8 @@ export default function Bill() {
                       <p className="text-sm font-semibold">{t(`services.types.${r.type}.title`)}</p>
                       <p className="text-xs text-muted">{time(r.createdAt)}</p>
                     </div>
-                    <span className={`text-sm font-semibold ${cost === 0 ? 'text-muted' : ''}`}>
-                      {cost === 0 ? t('stay.bill.free') : price(cost, lang)}
+                    <span className="text-right text-xs font-semibold text-muted">
+                      {onRequest ? t('stay.bill.on_request') : t('stay.bill.free')}
                     </span>
                   </li>
                 )

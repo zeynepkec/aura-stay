@@ -1,49 +1,61 @@
 import { useState } from 'react'
-import { ArrowLeft, Minus, Plus } from 'lucide-react'
+import { ArrowLeft, Info, Minus, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { amenityItems, cleaningSlots, optionName, tableVenues, transferDestinations } from '../data/hotel'
+import { PRICE_ON_REQUEST } from '../data/stay'
 import { useServices, type ServiceType } from '../store/ServiceContext'
 import { serviceIcons } from './Services'
 import '../translations/services'
 
-const today = new Date().toISOString().slice(0, 10)
+// Bugünün tarihi "2026-10-25" biçiminde (yerel saate göre)
+const today = new Date().toLocaleDateString('sv')
 
 export default function ServiceRequest() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const lang = i18n.resolvedLanguage
   const navigate = useNavigate()
+  const [params] = useSearchParams()
   const { sendRequest } = useServices()
   const type = (useParams().type ?? 'cleaning') as ServiceType
   const Icon = serviceIcons[type] ?? serviceIcons.cleaning
 
-  // Form alanları
+  // Form alanları (kampanya linki ?venue=rooftop ile gelebilir)
   const [slot, setSlot] = useState('now')
-  const [destination, setDestination] = useState('airport')
+  const [items, setItems] = useState<string[]>(['towel'])
+  const [destination, setDestination] = useState(transferDestinations[0].id)
+  const [venue, setVenue] = useState(params.get('venue') ?? tableVenues[0].id)
   const [date, setDate] = useState(today)
-  const [time, setTime] = useState('20:00')
-  const [count, setCount] = useState(type === 'towels' ? 2 : 2)
+  const [time, setTime] = useState(type === 'table' ? '20:00' : '12:00')
+  const [count, setCount] = useState(2)
   const [note, setNote] = useState('')
   const [sent, setSent] = useState(false)
 
+  const toggleItem = (id: string) =>
+    setItems((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+
+  const canSend = type !== 'towels' || items.length > 0
+
   const submit = () => {
-    const details: Record<string, string> = { note }
+    const details: Record<string, string> = { note: note.trim() }
     if (type === 'cleaning') details.slot = slot
+    if (type === 'towels') Object.assign(details, { items: items.join(','), quantity: String(count) })
     if (type === 'transfer') Object.assign(details, { destination, date, time, people: String(count) })
-    if (type === 'table') Object.assign(details, { date, time, people: String(count) })
-    if (type === 'towels') details.quantity = String(count)
+    if (type === 'table') Object.assign(details, { venue, date, time, people: String(count) })
     sendRequest(type, details)
     setSent(true)
     setTimeout(() => navigate('/services'), 1200)
   }
 
   // Seçilebilir buton (ör. saat dilimi)
-  const choice = (value: string, current: string, set: (v: string) => void, label: string) => (
+  const choice = (value: string, active: boolean, onClick: () => void, text: string) => (
     <button
       key={value}
       type="button"
-      onClick={() => set(value)}
-      className={`h-10 rounded-full px-4 text-sm font-medium ${current === value ? 'bg-ink text-card' : 'border border-line bg-card'}`}
+      onClick={onClick}
+      className={`h-10 rounded-full px-4 text-sm font-medium ${active ? 'bg-ink text-card' : 'border border-line bg-card'}`}
     >
-      {label}
+      {text}
     </button>
   )
 
@@ -74,8 +86,20 @@ export default function ServiceRequest() {
           <section>
             {label(t('services.form.when'))}
             <div className="flex flex-wrap gap-2">
-              {choice('now', slot, setSlot, t('services.form.now'))}
-              {['11:00–13:00', '13:00–15:00', '15:00–17:00'].map((s) => choice(s, slot, setSlot, s))}
+              {choice('now', slot === 'now', () => setSlot('now'), t('services.form.now'))}
+              {cleaningSlots.map((s) => choice(s, slot === s, () => setSlot(s), s))}
+            </div>
+          </section>
+        )}
+
+        {/* Havlu ve malzeme: birden fazla seçilebilir */}
+        {type === 'towels' && (
+          <section>
+            {label(t('services.form.items'))}
+            <div className="flex flex-wrap gap-2">
+              {amenityItems.map((item) =>
+                choice(item.id, items.includes(item.id), () => toggleItem(item.id), optionName(amenityItems, item.id, lang)),
+              )}
             </div>
           </section>
         )}
@@ -85,7 +109,19 @@ export default function ServiceRequest() {
           <section>
             {label(t('services.form.where'))}
             <div className="flex flex-wrap gap-2">
-              {['airport', 'center', 'marina'].map((d) => choice(d, destination, setDestination, t(`services.form.${d}`)))}
+              {transferDestinations.map((d) =>
+                choice(d.id, destination === d.id, () => setDestination(d.id), optionName(transferDestinations, d.id, lang)),
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* Masa: restoran mı teras mı */}
+        {type === 'table' && (
+          <section>
+            {label(t('services.form.venue'))}
+            <div className="flex flex-wrap gap-2">
+              {tableVenues.map((v) => choice(v.id, venue === v.id, () => setVenue(v.id), optionName(tableVenues, v.id, lang)))}
             </div>
           </section>
         )}
@@ -104,7 +140,7 @@ export default function ServiceRequest() {
           </section>
         )}
 
-        {/* Kişi sayısı ya da havlu adedi */}
+        {/* Kişi sayısı ya da adet */}
         {type !== 'cleaning' && (
           <section>
             {label(type === 'towels' ? t('services.form.quantity') : t('services.form.people'))}
@@ -118,6 +154,14 @@ export default function ServiceRequest() {
               </button>
             </div>
           </section>
+        )}
+
+        {/* Ücret bilgisi: transfer ücretini resepsiyon onaylar */}
+        {PRICE_ON_REQUEST.includes(type) && (
+          <p className="flex gap-2 rounded-2xl bg-accent/10 p-3 text-xs text-ink/80">
+            <Info size={14} className="mt-px shrink-0 text-accent" />
+            {t('services.form.price_note')}
+          </p>
         )}
 
         {/* Not */}
@@ -135,8 +179,8 @@ export default function ServiceRequest() {
         <button
           type="button"
           onClick={submit}
-          disabled={sent}
-          className={`h-14 w-full rounded-full text-sm font-semibold ${sent ? 'bg-service text-ink' : 'bg-ink text-card'}`}
+          disabled={sent || !canSend}
+          className={`h-14 w-full rounded-full text-sm font-semibold disabled:opacity-40 ${sent ? 'bg-service text-ink' : 'bg-ink text-card'}`}
         >
           {sent ? t('services.form.sent') : t('services.form.send')}
         </button>

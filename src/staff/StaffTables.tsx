@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { CalendarDays, Check, StickyNote, Users, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { optionName, tableVenues } from '../data/hotel'
 import { useShared } from '../lib/shared'
 import type { RequestStatus, ServiceRequest } from '../store/ServiceContext'
 import '../translations/tables'
@@ -92,6 +93,7 @@ export default function StaffTables() {
                 <p className="flex items-center gap-1 text-sm text-ink/70">
                   <Users size={14} />
                   {t('tables.people', { count: Number(r.details.people ?? 1) })}
+                  {r.details.venue && <span className="ml-1 rounded-full bg-background px-2 py-0.5 text-xs font-medium">{optionName(tableVenues, r.details.venue, lang)}</span>}
                 </p>
                 {r.details.note && (
                   <p className="mt-2 flex gap-2 rounded-2xl bg-activity/40 p-2.5 text-sm">

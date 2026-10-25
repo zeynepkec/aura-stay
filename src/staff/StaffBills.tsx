@@ -2,14 +2,15 @@ import { useState } from 'react'
 import { ChevronDown, Lock, Receipt, Unlock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { menuItems, pick, price } from '../data/menu'
-import { transferPrices } from '../data/stay'
+import { optionName, transferDestinations } from '../data/hotel'
 import { useShared } from '../lib/shared'
 import type { ServiceRequest } from '../store/ServiceContext'
 import type { Order } from '../store/StayContext'
 import '../translations/reception'
 import '../translations/services'
 
-type Line = { id: string; label: string; detail: string; time: number; amount: number }
+// amount: null → ücreti resepsiyon belirler (transfer)
+type Line = { id: string; label: string; detail: string; time: number; amount: number | null }
 
 export default function StaffBills() {
   const { t, i18n } = useTranslation()
@@ -42,9 +43,9 @@ export default function StaffBills() {
     add(r.room, {
       id: r.id,
       label: `${t('bills.transfer')} #${r.id}`,
-      detail: `${t(`services.form.${r.details.destination}`)} · ${r.details.date ?? ''} ${r.details.time ?? ''}`,
+      detail: `${optionName(transferDestinations, r.details.destination, lang)} · ${r.details.date ?? ''} ${r.details.time ?? ''}`,
       time: r.createdAt,
-      amount: transferPrices[r.details.destination] ?? 0,
+      amount: null,
     })
   })
 
@@ -52,7 +53,7 @@ export default function StaffBills() {
     .map(([room, lines]) => ({
       room,
       lines: lines.sort((a, b) => b.time - a.time),
-      total: lines.reduce((sum, l) => sum + l.amount, 0),
+      total: lines.reduce((sum, l) => sum + (l.amount ?? 0), 0),
       isClosed: Boolean(closed[room]),
     }))
     .sort((a, b) => a.room.localeCompare(b.room))
@@ -136,7 +137,9 @@ export default function StaffBills() {
                             <p className="text-xs text-muted">{line.detail}</p>
                             <p className="text-xs text-muted">{time(line.time)}</p>
                           </div>
-                          <span className="text-sm font-semibold">{price(line.amount, lang)}</span>
+                          <span className={`text-sm font-semibold ${line.amount === null ? 'text-right text-xs text-muted' : ''}`}>
+                            {line.amount === null ? t('bills.on_request') : price(line.amount, lang)}
+                          </span>
                         </li>
                       ))}
                     </ul>

@@ -30,6 +30,7 @@ type StayContextType = {
   clearCart: () => void
   orders: Order[]
   placeOrder: () => Order | null
+  placeDirectOrder: (lines: { id: string; quantity: number }[], note?: string) => Order | null
   getOrder: (id: string) => Order | undefined
 }
 
@@ -81,6 +82,25 @@ export function StayProvider({ children }: { children: ReactNode }) {
     return order
   }
 
+  // Asistan onaylı siparişi sepete uğramadan doğrudan mutfağa gönderir
+  const placeDirectOrder = (lines: { id: string; quantity: number }[], orderNote = ''): Order | null => {
+    const priced = lines
+      .map((l) => ({ ...l, unitPrice: menuItems.find((m) => m.id === l.id)?.price ?? 0 }))
+      .filter((l) => l.quantity > 0 && l.unitPrice > 0)
+    if (priced.length === 0) return null
+    const order: Order = {
+      id: 'A' + Math.floor(1000 + Math.random() * 9000),
+      room: stay.roomNumber,
+      lines: priced,
+      note: orderNote,
+      total: priced.reduce((sum, l) => sum + l.unitPrice * l.quantity, 0),
+      status: 'received',
+      createdAt: Date.now(),
+    }
+    setOrders((prev) => [order, ...prev])
+    return order
+  }
+
   const value: StayContextType = {
     cart,
     cartCount: cart.reduce((sum, l) => sum + l.quantity, 0),
@@ -93,6 +113,7 @@ export function StayProvider({ children }: { children: ReactNode }) {
     clearCart,
     orders,
     placeOrder,
+    placeDirectOrder,
     getOrder: (id) => orders.find((o) => o.id === id),
   }
 

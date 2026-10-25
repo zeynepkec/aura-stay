@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Clock, StickyNote } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { amenityItems, optionName, transferDestinations } from '../data/hotel'
 import { getStaff, type StaffRole } from '../lib/staff'
 import { useShared } from '../lib/shared'
 import { serviceIcons } from '../pages/Services'
@@ -18,7 +19,8 @@ const COLUMNS: RequestStatus[] = ['pending', 'in_progress', 'done']
 const NEXT: Partial<Record<RequestStatus, RequestStatus>> = { pending: 'in_progress', in_progress: 'done' }
 const DOT: Record<string, string> = { pending: 'bg-accent', in_progress: 'bg-activity', done: 'bg-service' }
 export default function StaffTasks() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const lang = i18n.resolvedLanguage
   const role = getStaff()?.role ?? 'housekeeping'
   const types = TYPES_BY_ROLE[role]
   const [requests, setRequests] = useShared<ServiceRequest[]>('aura-requests', [])
@@ -45,9 +47,12 @@ export default function StaffTasks() {
   const describe = (r: ServiceRequest) => {
     const d = r.details
     if (r.type === 'cleaning') return !d.slot || d.slot === 'now' ? t('services.form.now') : d.slot
-    if (r.type === 'towels') return t('tasks.quantity', { count: Number(d.quantity ?? 1) })
+    if (r.type === 'towels') {
+      const names = (d.items ?? 'towel').split(',').filter(Boolean).map((id) => optionName(amenityItems, id, lang))
+      return `${names.join(', ')} · ${t('tasks.quantity', { count: Number(d.quantity ?? 1) })}`
+    }
     if (r.type === 'transfer') {
-      return `${t(`services.form.${d.destination}`)} · ${d.date} ${d.time} · ${t('tasks.people', { count: Number(d.people ?? 1) })}`
+      return `${optionName(transferDestinations, d.destination, lang)} · ${d.date} ${d.time} · ${t('tasks.people', { count: Number(d.people ?? 1) })}`
     }
     return ''
   }

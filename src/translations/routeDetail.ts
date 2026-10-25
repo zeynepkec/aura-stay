@@ -3,6 +3,8 @@ import i18n from '../i18n'
 i18n.addResourceBundle('tr', 'translation', {
   routeDetail: {
     back: 'Keşfet',
+    tip: 'Yerel ipucu',
+    open_map: 'Haritada aç',
     about: 'Rota hakkında',
     map: 'Harita',
     stops: 'Duraklar',
@@ -14,6 +16,8 @@ i18n.addResourceBundle('tr', 'translation', {
 i18n.addResourceBundle('en', 'translation', {
   routeDetail: {
     back: 'Explore',
+    tip: 'Local tip',
+    open_map: 'Open in maps',
     about: 'About this route',
     map: 'Map',
     stops: 'Stops',
@@ -25,6 +29,8 @@ i18n.addResourceBundle('en', 'translation', {
 i18n.addResourceBundle('el', 'translation', {
   routeDetail: {
     back: 'Εξερεύνηση',
+    tip: 'Τοπική συμβουλή',
+    open_map: 'Άνοιγμα στον χάρτη',
     about: 'Σχετικά με τη διαδρομή',
     map: 'Χάρτης',
     stops: 'Στάσεις',

@@ -3,6 +3,7 @@ import { LogOut } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet } from 'react-router-dom'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import { hotel } from '../data/hotel'
 import { useShared } from '../lib/shared'
 import { staffLogout, tabsFor, type StaffSession } from '../lib/staff'
 import type { Feedback } from '../store/FeedbackContext'
@@ -70,7 +71,7 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
             </span>
             <div>
               <p className="text-sm font-bold leading-tight">{t('staff.title')}</p>
-              <p className="text-xs text-muted">Aegean Bay Hotel · {t(`staff.roles.${staff.role}`)}</p>
+              <p className="text-xs text-muted">{hotel.name} · {t(`staff.roles.${staff.role}`)}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">

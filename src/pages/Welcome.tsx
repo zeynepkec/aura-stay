@@ -2,12 +2,14 @@ import { QrCode } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import { hotel } from '../data/hotel'
+import { pick } from '../data/menu'
 import { joinPath } from '../lib/session'
 import '../translations/join'
 import '../translations/qr'
 
 export default function Welcome() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const steps = t('join.steps', { returnObjects: true }) as unknown as string[]
 
   return (
@@ -23,7 +25,10 @@ export default function Welcome() {
           <QrCode size={48} strokeWidth={1.5} />
         </span>
 
-        <h1 className="mt-8 text-4xl font-bold leading-tight">{t('join.welcome_title')}</h1>
+        <p className="mt-8 text-xs font-semibold uppercase tracking-wider text-ink/60">
+          {hotel.name} · {pick(hotel.area, i18n.resolvedLanguage)}
+        </p>
+        <h1 className="mt-2 text-4xl font-bold leading-tight">{t('join.welcome_title')}</h1>
         <p className="mt-3 text-base text-ink/70">{t('join.welcome_text')}</p>
 
         {/* 3 adım */}
@@ -38,7 +43,7 @@ export default function Welcome() {
       </div>
 
             {/* Demo girişi — sunum sırasında QR okutmadan girmek için */}
-      <Link to={joinPath('204')} className="flex h-14 items-center justify-center rounded-full bg-ink text-sm font-semibold text-card">
+      <Link to={joinPath('302')} className="flex h-14 items-center justify-center rounded-full bg-ink text-sm font-semibold text-card">
         {t('join.demo')}
       </Link>
       <Link to="/qr" className="mt-4 text-center text-xs font-medium text-ink/60 underline">
