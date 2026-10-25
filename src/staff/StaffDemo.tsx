@@ -1,6 +1,7 @@
 import { Database, RotateCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { buildDemoData } from '../lib/demoData'
+import { replaceShared } from '../lib/sync'
 import '../translations/demo'
 
 // Uygulamanın kullandığı tüm veri anahtarları
@@ -9,20 +10,21 @@ const DATA_KEYS = ['aura-orders', 'aura-requests', 'aura-feedback', 'aura-review
 export default function StaffDemo() {
   const { t } = useTranslation()
 
-  const loadDemo = () => {
+  // Örnek verileri yükle (veritabanı bağlıysa tüm cihazlar görür)
+  const loadDemo = async () => {
     const data = buildDemoData()
-    localStorage.setItem('aura-orders', JSON.stringify(data.orders))
-    localStorage.setItem('aura-requests', JSON.stringify(data.requests))
-    localStorage.setItem('aura-feedback', JSON.stringify(data.feedback))
-    localStorage.setItem('aura-reviews', JSON.stringify(data.reviews))
-    localStorage.setItem('aura-soldout', JSON.stringify(data.soldOut))
-    localStorage.removeItem('aura-closed-bills')
+    await replaceShared('aura-orders', data.orders)
+    await replaceShared('aura-requests', data.requests)
+    await replaceShared('aura-feedback', data.feedback)
+    await replaceShared('aura-reviews', data.reviews)
+    await replaceShared('aura-soldout', data.soldOut)
+    await replaceShared('aura-closed-bills', undefined)
     window.location.reload()
   }
 
-  const resetAll = () => {
+  const resetAll = async () => {
     if (!window.confirm(t('demo.reset_confirm'))) return
-    DATA_KEYS.forEach((key) => localStorage.removeItem(key))
+    for (const key of DATA_KEYS) await replaceShared(key, undefined)
     window.location.reload()
   }
 

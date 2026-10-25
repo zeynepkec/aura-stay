@@ -3,6 +3,7 @@ import { LogOut } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet } from 'react-router-dom'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import SyncBadge from '../components/SyncBadge'
 import { hotel } from '../data/hotel'
 import { useShared } from '../lib/shared'
 import { staffLogout, tabsFor, type StaffSession } from '../lib/staff'
@@ -75,6 +76,7 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <SyncBadge />
             <LanguageSwitcher />
             <button
               type="button"
