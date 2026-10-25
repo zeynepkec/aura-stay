@@ -1,15 +1,11 @@
-import { hotel } from '../data/hotel'
+import { currentHotel, hotelById } from '../data/hotels'
 
-// Otel ve odalar — veritabanı adımında veritabanından gelecek
-export const HOTEL = { id: hotel.id, name: hotel.name }
+// Açık olan otel ve odaları. Odalar ve giriş kodları her otelin kendi dosyasında (src/data/hotels/).
+export const HOTEL = { id: currentHotel.id, name: currentHotel.name }
 
 // Her odanın QR koduna gizli bir anahtar (token) koyuyoruz. Böylece kimse
 // linkteki oda numarasını değiştirerek başka bir odaya giremez.
-export const ROOMS: Record<string, string> = {
-  '101': 'k7p2', '102': 'm4x9', '103': 'r8d3', '104': 't2v6', '105': 'w5n1',
-  '201': 'b3h8', '202': 'c9f4', '203': 'g6j2', '204': 'q1z7', '205': 'y4s5',
-  '301': 'd5k3', '302': 'h2p8', '303': 'n7t4', '304': 'v3x6', '305': 'z8m2',
-}
+export const ROOMS: Record<string, string> = currentHotel.rooms
 
 // Misafir nasıl giriş yaptı: QR kod, oda numarası + kod ya da oda kartı (NFC)
 export type LoginMethod = 'qr' | 'code' | 'card'
@@ -37,15 +33,16 @@ export function getSession(): Session | null {
 // Bilgileri kontrol et, doğruysa oturumu başlat
 export function startSession(hotelId: string, room: string, token: string, method: LoginMethod = 'qr'): Session | null {
   const code = token.trim().toLowerCase()
-  if (hotelId !== HOTEL.id || !ROOMS[room] || ROOMS[room] !== code) return null
-  const session: Session = { v: 2, hotelId, hotelName: HOTEL.name, room, joinedAt: Date.now(), method }
+  const target = hotelById(hotelId)
+  if (!target || !target.rooms[room] || target.rooms[room] !== code) return null
+  const session: Session = { v: 2, hotelId, hotelName: target.name, room, joinedAt: Date.now(), method }
   localStorage.setItem(KEY, JSON.stringify(session))
   return session
 }
 
 // Oda numarası + giriş kodu ile giriş (kod, oda kartının ve QR kartın üzerinde yazar)
-export function startSessionWithCode(room: string, code: string): Session | null {
-  return startSession(HOTEL.id, room.trim(), code, 'code')
+export function startSessionWithCode(hotelId: string, room: string, code: string): Session | null {
+  return startSession(hotelId, room.trim(), code, 'code')
 }
 
 // QR koddan ya da oda kartından okunan linki çöz: .../join?hotel=..&room=..&token=..
@@ -65,6 +62,7 @@ export function endSession() {
 }
 
 // Bir odanın QR koduna yazılacak link
-export function joinPath(room: string) {
-  return `/join?hotel=${HOTEL.id}&room=${room}&token=${ROOMS[room]}`
+export function joinPath(room: string, hotelId = HOTEL.id) {
+  const rooms = hotelById(hotelId)?.rooms ?? ROOMS
+  return `/join?hotel=${hotelId}&room=${room}&token=${rooms[room]}`
 }

@@ -49,7 +49,7 @@ export default function StaffTasks() {
     if (r.type === 'cleaning') return !d.slot || d.slot === 'now' ? t('services.form.now') : d.slot
     if (r.type === 'towels') {
       const names = (d.items ?? 'towel').split(',').filter(Boolean).map((id) => optionName(amenityItems, id, lang))
-      return `${names.join(',')} · ${t('tasks.quantity', { count: Number(d.quantity ?? 1) })}`
+      return `${names.join(', ')} · ${t('tasks.quantity', { count: Number(d.quantity ?? 1) })}`
     }
     if (r.type === 'transfer') {
       return `${optionName(transferDestinations, d.destination, lang)} · ${d.date} ${d.time} · ${t('tasks.people', { count: Number(d.people ?? 1) })}`
@@ -71,7 +71,7 @@ export default function StaffTasks() {
             key={f}
             type="button"
             onClick={() => setFilter(f)}
-            className={`h-9 rounded-full px-4 text-sm font-medium ${filter === f ? 'bg-primary text-card' : 'border border-line bg-card'}`}
+            className={`h-9 rounded-full px-4 text-sm font-medium ${filter === f ? 'bg-ink text-card' : 'border border-line bg-card'}`}
           >
             {f === 'all' ? t('tasks.all') : t(`services.types.${f}.title`)}
           </button>
@@ -132,7 +132,7 @@ export default function StaffTasks() {
                           <button
                             type="button"
                             onClick={() => advance(r.id)}
-                            className="mt-4 h-11 w-full rounded-xl bg-primary text-sm font-semibold text-card active:scale-[0.99]"
+                            className="mt-4 h-11 w-full rounded-full bg-ink text-sm font-semibold text-card active:scale-[0.99]"
                           >
                             {t(`tasks.actions.${status}`)}
                           </button>

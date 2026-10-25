@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { LogOut, KeyRound, QrCode } from 'lucide-react'
+import { LogOut, QrCode } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet } from 'react-router-dom'
 import LanguageSwitcher from '../components/LanguageSwitcher'
@@ -67,17 +67,17 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
       <header className="border-b border-line bg-card">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-card">
-              <KeyRound size={20} />
+            <span className="h-9 w-9 rounded-xl bg-ink p-2">
+              <span className="block h-full w-full rounded-full bg-gradient-to-br from-discover to-discover-pink" />
             </span>
             <div>
-              <p className="font-bold leading-tight">{t('staff.title')}</p>
-              <p className="text-xs text-muted">{t(`staff.roles.${staff.role}`)}, {hotel.name}</p>
+              <p className="text-sm font-bold leading-tight">{t('staff.title')}</p>
+              <p className="text-xs text-muted">{hotel.name} · {t(`staff.roles.${staff.role}`)}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             {staff.role === 'reception' && (
-              <a href="/qr" className="hidden h-10 items-center gap-1.5 rounded-xl border border-line px-4 text-sm font-medium sm:flex">
+              <a href={`/qr?hotel=${hotel.id}`} className="hidden h-10 items-center gap-1.5 rounded-full border border-line px-4 text-sm font-medium sm:flex">
                 <QrCode size={16} />
                 {t('staff.qr_codes')}
               </a>
@@ -90,7 +90,7 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
                 staffLogout()
                 window.location.replace('/staff')
               }}
-              className="flex h-10 items-center gap-1.5 rounded-xl border border-line px-4 text-sm font-medium"
+              className="flex h-10 items-center gap-1.5 rounded-full border border-line px-4 text-sm font-medium"
             >
               <LogOut size={16} />
               <span className="hidden sm:inline">{t('staff.logout')}</span>
@@ -107,8 +107,8 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
                 key={tab.key}
                 to={`/staff/${tab.key}`}
                 className={({ isActive }) =>
-                  `flex h-10 shrink-0 items-center rounded-full px-4 text-sm font-semibold ${
-                    isActive ? 'bg-primary text-card' : 'text-muted hover:bg-background'
+                  `flex h-9 shrink-0 items-center rounded-full px-4 text-sm font-medium ${
+                    isActive ? 'bg-ink text-card' : 'text-muted hover:bg-background'
                   }`
                 }
               >
@@ -117,8 +117,8 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
                     {t(`staff.tabs.${tab.key}`)}
                     {count > 0 && (
                       <span
-                        className={`ml-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-xs font-bold ${
-                          isActive ? 'bg-card text-primary' : 'bg-primary text-card'
+                        className={`ml-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[11px] font-bold ${
+                          isActive ? 'bg-card text-ink' : 'bg-accent text-card'
                         }`}
                       >
                         {count}

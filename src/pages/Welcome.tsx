@@ -1,54 +1,60 @@
-import { BriefcaseBusiness, ChevronRight, KeyRound } from 'lucide-react'
+import { ArrowRight, KeyRound, UserCog } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import LanguageSwitcher from '../components/LanguageSwitcher'
-import { hotel } from '../data/hotel'
-import { pick } from '../data/menu'
 import '../translations/guestLogin'
 
 // Uygulamanın ilk ekranı: misafir mi, personel mi?
 export default function Welcome() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-background px-5 pb-8 pt-5">
+    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-gradient-to-br from-discover to-discover-pink px-6 pb-8 pt-6">
       <div className="flex items-center justify-between">
-        <p className="text-base font-semibold">AURA Stay</p>
+        <p className="text-sm font-bold uppercase tracking-[0.2em]">AURA Stay</p>
         <LanguageSwitcher />
       </div>
 
-      <div className="pt-12">
-        <p className="text-lg text-muted">
-          {hotel.name}, {pick(hotel.area, i18n.resolvedLanguage)}
-        </p>
-        <h1 className="mt-1 text-[34px] font-bold leading-tight">{t('start.title')}</h1>
-        <p className="mt-2 text-lg">{t('start.question')}</p>
+      <div className="mt-12">
+        <h1 className="text-4xl font-bold leading-tight">{t('start.title')}</h1>
+        <p className="mt-3 text-base text-ink/70">{t('start.subtitle')}</p>
+        <p className="mt-6 text-sm font-semibold">{t('start.question')}</p>
       </div>
 
-      <div className="mt-8 space-y-3">
-        {/* Misafir girişi — ana seçenek, koyu mavi */}
-        <Link to="/guest" className="flex min-h-[88px] items-center gap-4 rounded-card bg-primary px-5 py-4 text-card">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-card/15">
-            <KeyRound size={24} />
-          </span>
-          <span className="flex-1">
-            <span className="block text-lg font-semibold">{t('start.guest')}</span>
-            <span className="block text-sm text-card/75">{t('start.guest_text')}</span>
-          </span>
-          <ChevronRight size={22} className="text-card/75" />
-        </Link>
+      <div className="mt-4 flex flex-col gap-4">
+        {/* 1. seçenek: Misafir */}
+        <section className="rounded-card bg-card p-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-discover/40">
+              <KeyRound size={24} strokeWidth={1.75} />
+            </span>
+            <div>
+              <h2 className="text-lg font-bold">{t('start.guest')}</h2>
+              <p className="text-sm text-muted">{t('start.guest_text')}</p>
+            </div>
+          </div>
+          <Link to="/guest" className="mt-5 flex h-12 items-center justify-center gap-2 rounded-full bg-ink text-sm font-semibold text-card">
+            {t('start.guest')}
+            <ArrowRight size={16} />
+          </Link>
+        </section>
 
-        {/* Personel girişi — /staff ayrı bir uygulama olduğu için sayfa baştan yüklenir (a etiketi) */}
-        <a href="/staff" className="flex min-h-[88px] items-center gap-4 rounded-card border border-line bg-card px-5 py-4">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-service">
-            <BriefcaseBusiness size={24} />
-          </span>
-          <span className="flex-1">
-            <span className="block text-lg font-semibold">{t('start.staff')}</span>
-            <span className="block text-sm text-muted">{t('start.staff_text')}</span>
-          </span>
-          <ChevronRight size={22} className="text-muted" />
-        </a>
+        {/* 2. seçenek: Personel — /staff ayrı bir uygulama olduğu için sayfa baştan yüklenir (a etiketi) */}
+        <section className="rounded-card bg-card p-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-service">
+              <UserCog size={24} strokeWidth={1.75} />
+            </span>
+            <div>
+              <h2 className="text-lg font-bold">{t('start.staff')}</h2>
+              <p className="text-sm text-muted">{t('start.staff_text')}</p>
+            </div>
+          </div>
+          <a href="/staff" className="mt-5 flex h-12 items-center justify-center gap-2 rounded-full border border-ink text-sm font-semibold">
+            {t('start.staff')}
+            <ArrowRight size={16} />
+          </a>
+        </section>
       </div>
     </div>
   )

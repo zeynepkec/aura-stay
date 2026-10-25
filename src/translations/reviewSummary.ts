@@ -2,8 +2,8 @@ import i18n from '../i18n'
 
 i18n.addResourceBundle('tr', 'translation', {
   reviewSummary: {
-    title: 'Misafirler ne diyor',
-    note: 'Misafir yorumlarından otomatik hazırlanan özet',
+    title: 'AI Yorum Özeti',
+    note: 'Misafir yorumlarından otomatik özetlendi',
     praise: 'Misafirler en çok {{list}} konusunu övüyor.',
     complain: 'Geliştirilebilecek alan: {{list}}.',
     and: 've',
@@ -15,8 +15,8 @@ i18n.addResourceBundle('tr', 'translation', {
 
 i18n.addResourceBundle('en', 'translation', {
   reviewSummary: {
-    title: 'What guests say',
-    note: 'Summary prepared automatically from guest reviews',
+    title: 'AI Review Summary',
+    note: 'Automatically summarised from guest reviews',
     praise: 'Guests praise the {{list}} the most.',
     complain: 'Room for improvement: {{list}}.',
     and: 'and',
@@ -28,7 +28,7 @@ i18n.addResourceBundle('en', 'translation', {
 
 i18n.addResourceBundle('el', 'translation', {
   reviewSummary: {
-    title: 'Τι λένε οι επισκέπτες',
+    title: 'Σύνοψη Κριτικών AI',
     note: 'Αυτόματη σύνοψη από κριτικές επισκεπτών',
     praise: 'Οι επισκέπτες επαινούν κυρίως: {{list}}.',
     complain: 'Προς βελτίωση: {{list}}.',

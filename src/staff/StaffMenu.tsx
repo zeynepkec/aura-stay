@@ -19,7 +19,7 @@ export default function StaffMenu() {
           <h1 className="text-2xl font-bold">{t('staffMenu.title')}</h1>
           <p className="mt-1 text-sm text-muted">{t('staffMenu.subtitle')}</p>
         </div>
-        <span className={`rounded-full px-3 py-1.5 text-sm font-semibold ${soldOut.length ? 'bg-primary text-card' : 'bg-service'}`}>
+        <span className={`rounded-full px-3 py-1.5 text-sm font-semibold ${soldOut.length ? 'bg-ink text-card' : 'bg-service'}`}>
           {soldOut.length ? t('staffMenu.count', { count: soldOut.length }) : t('staffMenu.all_available')}
         </span>
       </header>

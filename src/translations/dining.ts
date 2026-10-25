@@ -3,7 +3,7 @@ import i18n from '../i18n'
 i18n.addResourceBundle('tr', 'translation', {
   dining: {
     title: 'Yemek',
-    subtitle: 'Oda servisi her gün 07:00 – 23:00 arası',
+    subtitle: 'Oda servisi · {{hours}}',
     tags: { vegetarian: 'Vejetaryen', vegan: 'Vegan', gluten_free: 'Glutensiz' },
     add: 'Ekle',
     view_cart: 'Sepeti gör',
@@ -22,7 +22,7 @@ i18n.addResourceBundle('tr', 'translation', {
 i18n.addResourceBundle('en', 'translation', {
   dining: {
     title: 'Dining',
-    subtitle: 'Room service daily, 07:00 – 23:00',
+    subtitle: 'Room service · {{hours}}',
     tags: { vegetarian: 'Vegetarian', vegan: 'Vegan', gluten_free: 'Gluten-free' },
     add: 'Add',
     view_cart: 'View cart',
@@ -41,7 +41,7 @@ i18n.addResourceBundle('en', 'translation', {
 i18n.addResourceBundle('el', 'translation', {
   dining: {
     title: 'Φαγητό',
-    subtitle: 'Room service καθημερινά, 07:00 – 23:00',
+    subtitle: 'Room service · {{hours}}',
     tags: { vegetarian: 'Χορτοφαγικό', vegan: 'Vegan', gluten_free: 'Χωρίς γλουτένη' },
     add: 'Προσθήκη',
     view_cart: 'Δες το καλάθι',

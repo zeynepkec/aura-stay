@@ -106,7 +106,7 @@ export default function KitchenOrders() {
                       <button
                         type="button"
                         onClick={() => advance(o.id)}
-                        className="mt-4 h-11 w-full rounded-xl bg-primary text-sm font-semibold text-card active:scale-[0.99]"
+                        className="mt-4 h-11 w-full rounded-full bg-ink text-sm font-semibold text-card active:scale-[0.99]"
                       >
                         {t(`kitchen.actions.${status}`)}
                       </button>

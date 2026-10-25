@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { XCircle } from 'lucide-react'
-import KeyTag from '../components/KeyTag'
+import { CheckCircle2, XCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { startSession } from '../lib/session'
@@ -24,21 +23,20 @@ export default function Join() {
   }, [session])
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col items-center justify-center bg-background px-6 text-center">
+    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col items-center justify-center bg-gradient-to-br from-discover to-discover-pink px-6 text-center">
       {session ? (
         <>
-          <h1 className="text-4xl font-bold">{t('join.success_title')}</h1>
-          <div className="mt-6 w-[260px] text-left">
-            <KeyTag caption={session.hotelName}>{session.room}</KeyTag>
-          </div>
-          <p className="mt-6 text-muted">{t('join.connecting')}</p>
+          <CheckCircle2 size={64} strokeWidth={1.5} />
+          <h1 className="mt-6 text-4xl font-bold">{t('join.success_title')}</h1>
+          <p className="mt-2 text-lg font-semibold">{t('join.success_text', { room: session.room, hotel: session.hotelName })}</p>
+          <p className="mt-6 animate-pulse text-sm text-ink/60">{t('join.connecting')}</p>
         </>
       ) : (
         <>
-          <XCircle size={56} strokeWidth={1.5} className="text-muted" />
+          <XCircle size={64} strokeWidth={1.5} />
           <h1 className="mt-6 text-3xl font-bold">{t('join.invalid_title')}</h1>
-          <p className="mt-2 text-muted">{t('join.invalid_text')}</p>
-          <Link to="/" className="mt-8 flex h-12 items-center rounded-xl bg-primary px-6 font-semibold text-card">
+          <p className="mt-2 text-sm text-ink/70">{t('join.invalid_text')}</p>
+          <Link to="/" className="mt-8 flex h-12 items-center rounded-full bg-ink px-6 text-sm font-semibold text-card">
             {t('join.back')}
           </Link>
         </>

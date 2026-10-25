@@ -14,7 +14,7 @@
 //  Gerçek bir yapay zekâ bağlanacaksa (veritabanı adımı): reply() yerine API
 //  çağrısı konur, bu kurallar da modele sistem talimatı olarak verilir.
 // =============================================================
-import { amenityItems, cleaningSlots, faq, optionName, tableVenues, transferDestinations } from '../data/hotel'
+import { amenityItems, cleaningSlots, destinationWords, faq, optionName, tableVenues, transferDestinations } from '../data/hotel'
 import { menuItems, pick } from '../data/menu'
 import { routes, routeTags, type RouteTag, type TravelRoute } from '../data/routes'
 import type { ServiceType } from '../store/ServiceContext'
@@ -115,14 +115,14 @@ const W = {
 
 // Hizmet talepleri (sıra önemli: transfer önce, "book a taxi" masa değil)
 const SERVICE_KEYWORDS: [ServiceType, string[]][] = [
-  ['transfer', ['transfer', 'taksi', 'taxi', 'havalimani', 'airport', 'liman', 'port', 'pire', 'piraeus', 'ταξι', 'αεροδρομ', 'μεταφορ']],
+  ['transfer', ['transfer', 'taksi', 'taxi', 'havalimani', 'airport', 'liman', 'port', 'pire', 'piraeus', 'sabiha', 'ταξι', 'αεροδρομ', 'μεταφορ']],
   ['cleaning', ['temizlik', 'temizle', 'temzlik', 'clean', 'cleaning', 'housekeeping', 'καθαρισ']],
   ['towels', ['havlu', 'yastik', 'battaniye', 'towel', 'pillow', 'blanket', 'πετσετ', 'μαξιλαρ', 'κουβερτ']],
   ['table', ['masa', 'rezervasyon', 'rezerv', 'table', 'book', 'reservation', 'τραπεζι', 'κρατηση']],
 ]
 
 const TAG_WORDS: Record<RouteTag, string[]> = {
-  history: ['tarih', 'antik', 'history', 'historic', 'ancient', 'akropolis', 'acropolis', 'ιστορ', 'αρχαι', 'ακροπολ'],
+  history: ['tarih', 'antik', 'history', 'historic', 'ancient', 'akropolis', 'acropolis', 'ayasofya', 'saray', 'palace', 'ιστορ', 'αρχαι', 'ακροπολ'],
   food: ['yerel lezzet', 'street food', 'pazar', 'market', 'gastronomi', 'αγορα', 'γαστρονομ'],
   sunset: ['gun batimi', 'gunbatimi', 'sunset', 'manzara', 'view', 'ηλιοβασιλ', 'θεα'],
   family: ['aile', 'cocuk', 'family', 'kids', 'child', 'οικογεν', 'παιδι'],
@@ -132,11 +132,7 @@ const TAG_WORDS: Record<RouteTag, string[]> = {
 }
 
 const OPTION_WORDS: Record<'destinations' | 'venues' | 'items', Record<string, string[]>> = {
-  destinations: {
-    airport: ['havalimani', 'havaalani', 'airport', 'ucak', 'αεροδρομ'],
-    piraeus: ['pire', 'piraeus', 'liman', 'port', 'feribot', 'ferry', 'πειραια', 'λιμαν'],
-    city: ['sehir', 'city', 'merkez', 'center', 'centre', 'πολη', 'κεντρο'],
-  },
+  destinations: destinationWords, // her otelin kendi varış yerleri (src/data/hotels/)
   venues: {
     rooftop: ['teras', 'rooftop', 'roof', 'cati', 'ταρατσα'],
     restaurant: ['restoran', 'restaurant', 'εστιατοριο'],

@@ -37,13 +37,13 @@ export default function StaffDemo() {
 
       <div className="grid gap-4 md:grid-cols-2">
         {/* Örnek veriler — lila-pembe geçiş */}
-        <section className="flex flex-col rounded-card bg-discover/40 p-5">
+        <section className="flex flex-col rounded-card bg-gradient-to-br from-discover to-discover-pink p-5">
           <span className="flex h-11 w-11 items-center justify-center rounded-full bg-card/60">
             <Database size={20} />
           </span>
           <h2 className="mt-4 text-lg font-bold">{t('demo.load_title')}</h2>
           <p className="mt-1 flex-1 text-sm text-ink/70">{t('demo.load_text')}</p>
-          <button type="button" onClick={loadDemo} className="mt-5 h-12 rounded-full bg-primary text-sm font-semibold text-card">
+          <button type="button" onClick={loadDemo} className="mt-5 h-12 rounded-full bg-ink text-sm font-semibold text-card">
             {t('demo.load')}
           </button>
         </section>

@@ -84,7 +84,7 @@ export default function AddRoute() {
     navigate(`/explore/${id}`, { replace: true })
   }
 
-  const field = 'w-full rounded-xl border border-line bg-card px-4 text-base outline-none focus:border-primary'
+  const field = 'w-full rounded-2xl border border-line bg-card px-4 text-sm outline-none focus:border-accent'
   const linePoints = stops.map((s) => [s.lat, s.lng] as [number, number])
 
   return (
@@ -123,7 +123,7 @@ export default function AddRoute() {
                   type="button"
                   onClick={() => toggleTag(tag)}
                   aria-pressed={on}
-                  className={`flex h-10 items-center gap-1.5 rounded-full border px-4 text-sm font-semibold ${on ? 'border-primary bg-primary text-card' : 'border-line bg-card'}`}
+                  className={`flex h-10 items-center gap-1.5 rounded-full border px-4 text-sm font-semibold ${on ? 'border-ink bg-ink text-card' : 'border-line bg-card'}`}
                 >
                   <Icon size={16} />
                   {pick(routeTags[tag].name, lang)}
@@ -189,7 +189,7 @@ export default function AddRoute() {
               type="button"
               onClick={addStop}
               disabled={!point || !stopName.trim()}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border-2 border-primary font-semibold text-primary disabled:border-line disabled:text-muted"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-ink text-sm font-semibold disabled:border-line disabled:text-muted"
             >
               <Plus size={18} />
               {point ? t('addRoute.stop_add') : t('addRoute.stop_pick')}
@@ -204,7 +204,7 @@ export default function AddRoute() {
               <ol className="mt-3 divide-y divide-line overflow-hidden rounded-card border border-line bg-card">
                 {stops.map((s, i) => (
                   <li key={`${s.place}-${i}`} className="flex items-center gap-3 px-4 py-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-card">{i + 1}</span>
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-card">{i + 1}</span>
                     <span className="flex-1">
                       <span className="block font-medium">{s.name.tr}</span>
                       <span className="block text-sm text-muted">{t('explore.min', { count: s.minutes })}</span>
@@ -237,9 +237,9 @@ export default function AddRoute() {
           <input id="route-author" value={author} onChange={(e) => setAuthor(e.target.value)} maxLength={30} placeholder={t('addRoute.your_name_ph', { room })} className={`${field} h-12`} />
         </div>
 
-        {showMissing && !ready && <p role="alert" className="rounded-xl bg-activity/50 p-3 text-sm">{t('addRoute.missing')}</p>}
+        {showMissing && !ready && <p role="alert" className="rounded-2xl bg-activity/60 p-3 text-sm font-medium">{t('addRoute.missing')}</p>}
 
-        <button type="submit" className="flex h-14 w-full items-center justify-center rounded-xl bg-primary text-base font-semibold text-card">
+        <button type="submit" className="flex h-14 w-full items-center justify-center rounded-full bg-ink text-sm font-semibold text-card">
           {t('addRoute.submit')}
         </button>
       </div>
