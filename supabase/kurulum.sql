@@ -39,3 +39,6 @@ begin
     alter publication supabase_realtime add table public.records;
   end if;
 end $$;
+
+-- Supabase'in tabloyu hemen tanıması için
+notify pgrst, 'reload schema';
