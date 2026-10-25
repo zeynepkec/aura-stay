@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { Clock, Compass, Footprints, Landmark, MapPin, Palette, Star, Sunset, Trees, Users, Utensils } from 'lucide-react'
+import { Clock, Compass, Plus, Footprints, Landmark, MapPin, Palette, Star, Sunset, Trees, Users, Utensils } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { pick } from '../data/menu'
-import { routes, routeTags, type RouteTag, type TravelRoute } from '../data/routes'
+import { routeTags, type RouteTag, type TravelRoute } from '../data/routes'
+import { useAllRoutes } from '../lib/routesStore'
+import '../translations/addRoute'
 import '../translations/explore'
 import { Link } from 'react-router-dom'
 
@@ -26,13 +28,19 @@ export default function Explore() {
   const lang = i18n.resolvedLanguage
   const [filter, setFilter] = useState<'all' | RouteTag>('all')
 
-  const visible = filter === 'all' ? routes : routes.filter((r) => r.tags.includes(filter))
+  const { all } = useAllRoutes()
+  const visible = filter === 'all' ? all : all.filter((r) => r.tags.includes(filter))
 
   return (
     <div>
       <header className="px-5 pt-6">
         <h1 className="text-3xl font-bold">{t('explore.hero_title')}</h1>
         <p className="mt-1 text-muted">{t('explore.hero_text')}</p>
+        {/* Misafir kendi rotasını ekleyebilir */}
+        <Link to="/explore/new" className="mt-4 flex h-12 items-center justify-center gap-2 rounded-xl bg-primary font-semibold text-card">
+          <Plus size={20} />
+          {t('addRoute.button')}
+        </Link>
       </header>
 
       {/* Kategori filtreleri */}
@@ -78,8 +86,14 @@ export default function Explore() {
                 <div className="flex items-start justify-between gap-2">
                   <h2 className="font-semibold leading-snug">{pick(route.title, lang)}</h2>
                   <span className="flex shrink-0 items-center gap-0.5 text-xs font-semibold">
-                    <Star size={14} className="fill-primary text-primary" />
-                    {route.rating}
+                    {route.rating > 0 ? (
+                      <>
+                        <Star size={14} className="fill-primary text-primary" />
+                        {route.rating}
+                      </>
+                    ) : (
+                      <span className="rounded-md bg-primary-soft px-2 py-0.5 text-primary">{t('addRoute.new')}</span>
+                    )}
                   </span>
                 </div>
                 <p className="mt-0.5 text-sm text-muted">{t('explore.shared_by', { name: route.sharedBy })}</p>

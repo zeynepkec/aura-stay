@@ -20,8 +20,10 @@ export type TravelRoute = {
   sharedBy: string
   minutes: number
   km: number
-  rating: number
+  rating: number          // 0 = yeni paylaşılan rota (henüz puan yok)
   stops: Stop[]
+  room?: string           // misafirin eklediği rotalarda: ekleyen oda
+  createdAt?: number
 }
 
 export const routeTags: Record<RouteTag, { name: Text; emoji: string }> = {

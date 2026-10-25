@@ -1,17 +1,14 @@
-import { BriefcaseBusiness, ChevronRight, QrCode } from 'lucide-react'
+import { BriefcaseBusiness, ChevronRight, KeyRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import KeyTag from '../components/KeyTag'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import { hotel } from '../data/hotel'
 import { pick } from '../data/menu'
-import { joinPath } from '../lib/session'
-import '../translations/join'
-import '../translations/qr'
+import '../translations/guestLogin'
 
+// Uygulamanın ilk ekranı: misafir mi, personel mi?
 export default function Welcome() {
   const { t, i18n } = useTranslation()
-  const steps = t('join.steps', { returnObjects: true }) as unknown as string[]
 
   return (
     <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-background px-5 pb-8 pt-5">
@@ -20,56 +17,39 @@ export default function Welcome() {
         <LanguageSwitcher />
       </div>
 
-      {/* Otel ve anahtar etiketi: odanın anahtarı QR kod */}
-      <div className="pt-10">
+      <div className="pt-12">
         <p className="text-lg text-muted">
           {hotel.name}, {pick(hotel.area, i18n.resolvedLanguage)}
         </p>
-        <h1 className="mt-1 text-[34px] font-bold leading-tight">{t('join.welcome_title')}</h1>
-        <div className="mt-6 w-[280px]">
-          <KeyTag caption={t('join.key_caption')}>
-            <QrCode size={44} strokeWidth={1.75} />
-          </KeyTag>
-        </div>
+        <h1 className="mt-1 text-[34px] font-bold leading-tight">{t('start.title')}</h1>
+        <p className="mt-2 text-lg">{t('start.question')}</p>
       </div>
 
-      {/* Misafir girişi: QR adımları gerçekten sıralı olduğu için numaralı */}
-      <section className="mt-10">
-        <h2 className="text-xl font-bold">{t('join.guest_title')}</h2>
-        <ol className="mt-4 space-y-3">
-          {steps.map((step, i) => (
-            <li key={step} className="flex items-center gap-3">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-primary text-sm font-bold text-primary">
-                {i + 1}
-              </span>
-              <span>{step}</span>
-            </li>
-          ))}
-        </ol>
-
-        {/* Demo girişi — sunum sırasında QR okutmadan girmek için */}
-        <Link to={joinPath('302')} className="mt-6 flex h-14 items-center justify-center rounded-xl bg-primary text-base font-semibold text-card">
-          {t('join.demo')}
-        </Link>
-      </section>
-
-      {/* Personel girişi: ikincil seçenek */}
-      <section className="mt-auto pt-10">
-        {/* /staff ayrı bir uygulama olduğu için sayfa baştan yüklenir (a etiketi) */}
-        <a href="/staff" className="flex min-h-[64px] items-center gap-4 rounded-card border border-line bg-card px-4 py-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-service">
-            <BriefcaseBusiness size={20} />
+      <div className="mt-8 space-y-3">
+        {/* Misafir girişi — ana seçenek, koyu mavi */}
+        <Link to="/guest" className="flex min-h-[88px] items-center gap-4 rounded-card bg-primary px-5 py-4 text-card">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-card/15">
+            <KeyRound size={24} />
           </span>
           <span className="flex-1">
-            <span className="block font-semibold">{t('join.staff_title')}</span>
-            <span className="block text-sm text-muted">{t('join.staff_text')}</span>
+            <span className="block text-lg font-semibold">{t('start.guest')}</span>
+            <span className="block text-sm text-card/75">{t('start.guest_text')}</span>
           </span>
-          <ChevronRight size={20} className="text-muted" />
-        </a>
-        <Link to="/qr" className="mt-4 block py-2 text-center text-sm text-muted underline">
-          {t('qr.staff_link')}
+          <ChevronRight size={22} className="text-card/75" />
         </Link>
-      </section>
+
+        {/* Personel girişi — /staff ayrı bir uygulama olduğu için sayfa baştan yüklenir (a etiketi) */}
+        <a href="/staff" className="flex min-h-[88px] items-center gap-4 rounded-card border border-line bg-card px-5 py-4">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-service">
+            <BriefcaseBusiness size={24} />
+          </span>
+          <span className="flex-1">
+            <span className="block text-lg font-semibold">{t('start.staff')}</span>
+            <span className="block text-sm text-muted">{t('start.staff_text')}</span>
+          </span>
+          <ChevronRight size={22} className="text-muted" />
+        </a>
+      </div>
     </div>
   )
 }

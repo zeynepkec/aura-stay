@@ -6,7 +6,8 @@ import KeyTag from '../components/KeyTag'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import { campaign, hotel } from '../data/hotel'
 import { pick } from '../data/menu'
-import { routes } from '../data/routes'
+import type { TravelRoute } from '../data/routes'
+import { useAllRoutes } from '../lib/routesStore'
 import { stay } from '../data/stay'
 import { useServices } from '../store/ServiceContext'
 import { ORDER_STEPS, useStay } from '../store/StayContext'
@@ -30,11 +31,11 @@ const actions: Action[] = [
 ]
 
 // Günün saatine göre önerilen rotalar: akşamüstü gün batımı rotaları öne çıkar
-function suggestedRoutes(hour: number) {
+function suggestedRoutes(routes: TravelRoute[], hour: number) {
   const sunsetFirst = hour >= 15 && hour < 20
   return [...routes]
     .sort((a, b) => {
-      const score = (r: (typeof routes)[number]) => (sunsetFirst && r.tags.includes('sunset') ? 2 : 0) + (r.featured ? 1 : 0)
+      const score = (r: TravelRoute) => (sunsetFirst && r.tags.includes('sunset') ? 2 : 0) + (r.featured ? 1 : 0)
       return score(b) - score(a)
     })
     .slice(0, 4)
@@ -51,6 +52,7 @@ export default function Home() {
   const lang = i18n.resolvedLanguage
   const { orders } = useStay()
   const { requests } = useServices()
+  const { all } = useAllRoutes()
   const [copied, setCopied] = useState(false)
   const hour = new Date().getHours()
 
@@ -190,7 +192,7 @@ export default function Home() {
           <Link to="/explore" className="text-sm font-semibold text-primary">{t('home.see_all')}</Link>
         </div>
         <div className="flex snap-x scroll-px-5 gap-3 overflow-x-auto px-5 pb-1">
-          {suggestedRoutes(hour).map((route) => {
+          {suggestedRoutes(all, hour).map((route) => {
             const Icon = routeIcon(route)
             return (
               <Link key={route.id} to={`/explore/${route.id}`} className="flex w-[232px] shrink-0 snap-start flex-col rounded-card bg-activity p-4">
