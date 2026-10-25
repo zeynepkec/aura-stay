@@ -14,7 +14,7 @@ export const hotel = {
   roomService: '07:00 – 23:00',
   rooftop: '17:00 – 00:00',
   wifi: { name: 'Hermis-Guest', password: 'athens2026' },
-  reception: {"tr": "7/24 açık · Odadan 9’u tuşlayın", "en": "Open 24/7 · Dial 9 from your room", "el": "Ανοιχτή 24/7 · Καλέστε 9"} as Text,
+  reception: {"tr": "7/24 açık, odadan 9’u tuşla", "en": "Open 24/7, dial 9 from your room", "el": "Ανοιχτή 24/7, καλέστε το 9"} as Text,
 }
 
 // Asistanın cevaplayabildiği sık sorulan sorular

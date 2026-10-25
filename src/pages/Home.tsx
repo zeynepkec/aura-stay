@@ -1,6 +1,8 @@
-import { ArrowUpRight, BellRing, ChevronRight, Clock, Coffee, MapPin, Phone, Sparkles, UtensilsCrossed, Wifi, Wine } from 'lucide-react'
+import { useState } from 'react'
+import { Bath, Car, Check, ChevronRight, Copy, MessageCircle, SprayCan, UtensilsCrossed, Wine, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import KeyTag from '../components/KeyTag'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import { campaign, hotel } from '../data/hotel'
 import { pick } from '../data/menu'
@@ -8,17 +10,23 @@ import { routes } from '../data/routes'
 import { stay } from '../data/stay'
 import { useServices } from '../store/ServiceContext'
 import { ORDER_STEPS, useStay } from '../store/StayContext'
+import { routeIcon } from './Explore'
 import { serviceIcons } from './Services'
 import '../translations/home'
 import '../translations/orders'
 import '../translations/services'
 import '../translations/tables'
 
-const quickActions = [
-  { to: '/dining', key: 'action_food', icon: UtensilsCrossed },
-  { to: '/services/cleaning', key: 'action_cleaning', icon: BellRing },
-  { to: '/services/table', key: 'action_table', icon: Wine },
-  { to: '/assistant', key: 'action_assistant', icon: Sparkles },
+type Action = { to: string; key: string; icon: LucideIcon; tile: string; desc?: string }
+
+// Ne yapmak istersin? — en sık kullanılanlar üstte
+const actions: Action[] = [
+  { to: '/dining', key: 'action_food', icon: UtensilsCrossed, tile: 'bg-service', desc: 'action_food_desc' },
+  { to: '/services/cleaning', key: 'action_cleaning', icon: SprayCan, tile: 'bg-service' },
+  { to: '/services/towels', key: 'action_towels', icon: Bath, tile: 'bg-service' },
+  { to: '/services/table', key: 'action_table', icon: Wine, tile: 'bg-service' },
+  { to: '/services/transfer', key: 'action_transfer', icon: Car, tile: 'bg-service' },
+  { to: '/assistant', key: 'action_assistant', icon: MessageCircle, tile: 'bg-discover', desc: 'action_assistant_desc' },
 ]
 
 // Günün saatine göre önerilen rotalar: akşamüstü gün batımı rotaları öne çıkar
@@ -32,11 +40,19 @@ function suggestedRoutes(hour: number) {
     .slice(0, 4)
 }
 
+function greetingKey(hour: number) {
+  if (hour < 12) return 'home.greeting_morning'
+  if (hour < 18) return 'home.greeting_day'
+  return 'home.greeting_evening'
+}
+
 export default function Home() {
   const { t, i18n } = useTranslation()
   const lang = i18n.resolvedLanguage
   const { orders } = useStay()
   const { requests } = useServices()
+  const [copied, setCopied] = useState(false)
+  const hour = new Date().getHours()
 
   // Teslim edilmemiş en yeni sipariş
   const activeOrder = orders.find((o) => o.status !== 'delivered')
@@ -45,58 +61,66 @@ export default function Home() {
   // Bekleyen ya da işlemdeki talepler (en fazla 3)
   const activeRequests = requests.filter((r) => r.status === 'pending' || r.status === 'in_progress').slice(0, 3)
 
+  const date = (time: number) => new Date(time).toLocaleDateString(lang, { day: 'numeric', month: 'short' })
+
+  const copyPassword = async () => {
+    try {
+      await navigator.clipboard.writeText(hotel.wifi.password)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Kopyalama desteklenmiyorsa şifre zaten ekranda yazıyor
+    }
+  }
+
   return (
-    <div className="space-y-7 pt-6">
-      {/* Karşılama + dil seçimi */}
-      <header className="flex items-start justify-between gap-3 px-5">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-muted">{stay.hotelName}</p>
-          <h1 className="mt-1 text-3xl font-bold leading-tight">
-            {t('home.welcome')}
-            <br />
-            {t('home.room', { number: stay.roomNumber })}
-          </h1>
-        </div>
+    <div className="pb-6 pt-5">
+      <header className="flex items-center justify-between px-5">
+        <p className="text-base font-semibold">AURA Stay</p>
         <LanguageSwitcher />
       </header>
 
-      {/* Aktif sipariş — mutfak durumu değiştirdikçe ilerler */}
-      {activeOrder && (
-        <section className="px-5">
-          <Link to={`/orders/${activeOrder.id}`} className="block rounded-card border border-accent bg-card p-4 ring-2 ring-accent/15">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-muted">
-                {t('home.active_order')} · {t('home.order_no', { id: activeOrder.id })}
-              </span>
-              <ChevronRight size={18} className="text-muted" />
-            </div>
-            <p className="mt-1 text-lg font-bold">{t(`orders.status.${activeOrder.status}`)}</p>
-            <p className="text-xs text-muted">{t(`orders.status_desc.${activeOrder.status}`)}</p>
-            <div className="mt-3 grid grid-cols-4 gap-1.5">
-              {ORDER_STEPS.map((s, i) => (
-                <span key={s} className={`h-1.5 rounded-full ${i <= step ? 'bg-accent' : 'bg-line'}`} />
-              ))}
-            </div>
-          </Link>
-        </section>
-      )}
+      {/* Anahtar etiketi: oda numarası ve konaklama tarihleri */}
+      <section className="px-5 pt-6">
+        <p className="text-lg text-muted">{t(greetingKey(hour))}</p>
+        <div className="mt-3">
+          <KeyTag caption={`${hotel.name}, ${date(stay.checkIn)} – ${date(stay.checkOut)}`}>{stay.roomNumber}</KeyTag>
+        </div>
+      </section>
 
-      {/* Devam eden hizmet talepleri */}
-      {activeRequests.length > 0 && (
-        <section className="px-5">
-          <h2 className="mb-3 text-base font-bold">{t('home.active_requests')}</h2>
-          <div className="space-y-2">
+      {/* Şu an: sipariş ve talep durumları (personel değiştirdikçe canlı güncellenir) */}
+      {(activeOrder || activeRequests.length > 0) && (
+        <section className="px-5 pt-8">
+          <h2 className="mb-3 text-xl font-bold">{t('home.right_now')}</h2>
+          <div className="divide-y divide-line overflow-hidden rounded-card border border-line bg-card">
+            {activeOrder && (
+              <Link to={`/orders/${activeOrder.id}`} className="block p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm text-muted">{t('home.order_no', { id: activeOrder.id })}</p>
+                    <p className="text-lg font-semibold">{t(`orders.status.${activeOrder.status}`)}</p>
+                  </div>
+                  <ChevronRight size={20} className="text-muted" />
+                </div>
+                <div className="mt-3 grid grid-cols-4 gap-1.5">
+                  {ORDER_STEPS.map((s, i) => (
+                    <span key={s} className={`h-1.5 rounded-full ${i <= step ? 'bg-primary' : 'bg-line'}`} />
+                  ))}
+                </div>
+                <p className="mt-2 text-sm text-muted">{t(`orders.status_desc.${activeOrder.status}`)}</p>
+              </Link>
+            )}
             {activeRequests.map((r) => {
               const Icon = serviceIcons[r.type]
               return (
-                <Link key={r.id} to="/services" className="flex items-center gap-3 rounded-card border border-line bg-card p-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-service">
-                    <Icon size={16} />
+                <Link key={r.id} to="/services" className="flex items-center gap-3 p-4">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-service">
+                    <Icon size={18} />
                   </span>
-                  <span className="flex-1 text-sm font-semibold">{t(`services.types.${r.type}.title`)}</span>
+                  <span className="flex-1 font-medium">{t(`services.types.${r.type}.title`)}</span>
                   <span
-                    className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-                      r.status === 'in_progress' ? 'bg-accent/15 text-accent' : 'bg-background text-muted'
+                    className={`rounded-full px-3 py-1 text-sm font-medium ${
+                      r.status === 'in_progress' ? 'bg-primary-soft text-primary' : 'bg-background text-muted'
                     }`}
                   >
                     {t(`services.status.${r.status}`)}
@@ -108,87 +132,106 @@ export default function Home() {
         </section>
       )}
 
-      {/* Kampanya kartı — Deep Blue */}
-      <section className="relative mx-5 overflow-hidden rounded-card bg-campaign p-5 text-card">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-card/70">{t('home.campaign_tag')}</span>
-        <h2 className="mt-2 max-w-[80%] text-xl font-bold leading-snug">{pick(campaign.title, lang)}</h2>
-        <p className="mt-1 text-sm text-card/80">{pick(campaign.description, lang)}</p>
-        <Link to="/services/table?venue=rooftop" className="mt-3 inline-flex h-9 items-center rounded-full bg-card px-4 text-xs font-bold text-campaign">
-          {pick(campaign.cta, lang)}
-        </Link>
-        <span className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-card/15">
-          <ArrowUpRight size={18} />
-        </span>
-        <span className="pointer-events-none absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-accent/40" />
-      </section>
-
-      {/* Hızlı işlemler — beyaz kartlar */}
-      <section className="px-5">
-        <h2 className="mb-3 text-base font-bold">{t('home.quick_actions')}</h2>
-        <div className="grid grid-cols-2 gap-3">
-          {quickActions.map(({ to, key, icon: Icon }) => (
-            <Link key={key} to={to} className="flex min-h-[96px] flex-col justify-between rounded-card border border-line bg-card p-4">
-              <Icon size={22} />
-              <span className="text-sm font-semibold">{t(`home.${key}`)}</span>
-            </Link>
+      {/* Ne yapmak istersin? — büyük, okunaklı satırlar */}
+      <section className="px-5 pt-8">
+        <h2 className="mb-3 text-xl font-bold">{t('home.what_need')}</h2>
+        <ul className="divide-y divide-line overflow-hidden rounded-card border border-line bg-card">
+          {actions.map(({ to, key, icon: Icon, tile, desc }) => (
+            <li key={key}>
+              <Link to={to} className="flex min-h-[64px] items-center gap-4 px-4 py-3 active:bg-background">
+                <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${tile}`}>
+                  <Icon size={20} />
+                </span>
+                <span className="flex-1">
+                  <span className="block font-semibold">{t(`home.${key}`)}</span>
+                  {desc && <span className="block text-sm text-muted">{t(`home.${desc}`, { hours: hotel.roomService })}</span>}
+                </span>
+                <ChevronRight size={20} className="text-muted" />
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
-      {/* Aktiviteler — Peach Salmon */}
-      <section>
-        <div className="mb-3 flex items-center justify-between px-5">
-          <h2 className="text-base font-bold">{t('home.today_near')}</h2>
-          <Link to="/explore" className="text-sm font-medium text-accent">{t('home.see_all')}</Link>
-        </div>
-        <div className="flex gap-3 overflow-x-auto px-5 pb-1">
-          {suggestedRoutes(new Date().getHours()).map((route) => (
-            <Link key={route.id} to={`/explore/${route.id}`} className="flex w-[220px] shrink-0 flex-col rounded-card bg-activity p-4">
-              <span className="mb-8 flex h-8 w-8 items-center justify-center rounded-full bg-card/60 text-base">
-                {route.tags.includes('sunset') ? '🌅' : route.tags.includes('food') ? '🍽️' : '🏛️'}
-              </span>
-              <h3 className="font-bold leading-snug">{pick(route.title, lang)}</h3>
-              <div className="mt-2 flex gap-3 text-xs text-ink/70">
-                <span className="flex items-center gap-1"><Clock size={13} />{t('home.min', { count: route.minutes })}</span>
-                <span className="flex items-center gap-1"><MapPin size={13} />{t('home.km', { count: route.km })}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Otel bilgileri (askHermis içeriği) */}
-      <section className="px-5">
-        <div className="rounded-card border border-line bg-card p-4">
-          <h2 className="mb-3 text-sm font-bold">{t('home.info')}</h2>
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            {[
-              { icon: Wifi, label: t('home.wifi'), value: `${hotel.wifi.name} · ${hotel.wifi.password}` },
-              { icon: Coffee, label: t('home.breakfast'), value: hotel.breakfast },
-              { icon: Clock, label: t('home.checkout'), value: hotel.checkOut },
-              { icon: Phone, label: t('home.reception'), value: pick(hotel.reception, lang) },
-            ].map(({ icon: Icon, label, value }) => (
-              <div key={label} className="flex gap-2">
-                <Icon size={16} className="mt-0.5 shrink-0 text-accent" />
-                <div className="min-w-0">
-                  <p className="text-muted">{label}</p>
-                  <p className="break-words font-semibold">{value}</p>
-                </div>
-              </div>
-            ))}
+      {/* Wi-Fi: şifre tek dokunuşla kopyalanır */}
+      <section className="px-5 pt-8">
+        <div className="flex items-center gap-4 rounded-card border border-line bg-card p-4">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm text-muted">{t('home.wifi')}, {hotel.wifi.name}</p>
+            <p className="mt-0.5 text-xl font-semibold tracking-wide">{hotel.wifi.password}</p>
           </div>
+          <button
+            type="button"
+            onClick={copyPassword}
+            className="flex h-11 shrink-0 items-center gap-2 rounded-xl border border-line px-4 text-sm font-semibold"
+          >
+            {copied ? <Check size={16} /> : <Copy size={16} />}
+            {copied ? t('home.copied') : t('home.copy')}
+          </button>
         </div>
       </section>
 
-      {/* Konaklamam — lila-pembe geçiş */}
-      <section className="px-5">
-        <Link to="/stay" className="flex items-center gap-4 rounded-card border border-line bg-card p-4">
-          <span className="h-11 w-11 shrink-0 rounded-full bg-gradient-to-br from-discover to-discover-pink" />
-          <span className="flex-1">
-            <span className="block text-sm font-bold">{t('home.my_stay')}</span>
-            <span className="block text-xs text-muted">{t('home.my_stay_text')}</span>
+      {/* Kampanya — düz koyu mavi şerit */}
+      <section className="px-5 pt-4">
+        <Link to="/services/table?venue=rooftop" className="block rounded-card bg-campaign p-5 text-card">
+          <p className="text-sm text-card/70">{t('home.campaign_tag')}, {hotel.rooftop}</p>
+          <h2 className="mt-1 text-xl font-bold leading-snug">{pick(campaign.title, lang)}</h2>
+          <p className="mt-1 text-card/80">{pick(campaign.description, lang)}</p>
+          <span className="mt-4 inline-flex h-11 items-center rounded-xl bg-card px-4 text-sm font-semibold text-campaign">
+            {pick(campaign.cta, lang)}
           </span>
-          <ChevronRight size={18} className="text-muted" />
+        </Link>
+      </section>
+
+      {/* Rotalar — Peach Salmon */}
+      <section className="pt-8">
+        <div className="mb-3 flex items-baseline justify-between px-5">
+          <h2 className="text-xl font-bold">{t('home.today_near')}</h2>
+          <Link to="/explore" className="text-sm font-semibold text-primary">{t('home.see_all')}</Link>
+        </div>
+        <div className="flex snap-x scroll-px-5 gap-3 overflow-x-auto px-5 pb-1">
+          {suggestedRoutes(hour).map((route) => {
+            const Icon = routeIcon(route)
+            return (
+              <Link key={route.id} to={`/explore/${route.id}`} className="flex w-[232px] shrink-0 snap-start flex-col rounded-card bg-activity p-4">
+                <Icon size={24} strokeWidth={1.75} />
+                <h3 className="mt-6 text-lg font-semibold leading-snug">{pick(route.title, lang)}</h3>
+                <p className="mt-1 text-sm text-ink/70">
+                  {t('home.min', { count: route.minutes })}, {t('home.km', { count: route.km })}
+                </p>
+              </Link>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* Saatler */}
+      <section className="px-5 pt-8">
+        <h2 className="mb-3 text-xl font-bold">{t('home.hours')}</h2>
+        <dl className="divide-y divide-line rounded-card border border-line bg-card">
+          {[
+            [t('home.breakfast'), hotel.breakfast],
+            [t('home.room_service'), hotel.roomService],
+            [t('home.rooftop'), hotel.rooftop],
+            [t('home.checkout'), hotel.checkOut],
+            [t('home.reception'), pick(hotel.reception, lang)],
+          ].map(([label, value]) => (
+            <div key={label} className="flex items-baseline justify-between gap-4 px-4 py-3">
+              <dt className="text-muted">{label}</dt>
+              <dd className="text-right font-medium">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* Konaklamam */}
+      <section className="px-5 pt-4">
+        <Link to="/stay" className="flex min-h-[64px] items-center gap-4 rounded-card border border-line bg-card px-4 py-3">
+          <span className="flex-1">
+            <span className="block font-semibold">{t('home.my_stay')}</span>
+            <span className="block text-sm text-muted">{t('home.my_stay_text')}</span>
+          </span>
+          <ChevronRight size={20} className="text-muted" />
         </Link>
       </section>
     </div>

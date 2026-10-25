@@ -33,10 +33,10 @@ export default function StaffLogin() {
       </div>
 
       <div className="w-full max-w-xs text-center">
-        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-ink text-card">
+        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-card">
           <Lock size={26} />
         </span>
-        <p className="mt-6 text-xs font-bold uppercase tracking-[0.2em] text-muted">AURA Stay</p>
+        <p className="mt-6 font-semibold text-muted">AURA Stay</p>
         <h1 className="mt-1 text-3xl font-bold">{t('staff.login_title')}</h1>
         <p className="mt-2 text-sm text-muted">{t('staff.login_text')}</p>
 

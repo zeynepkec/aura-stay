@@ -2,8 +2,8 @@ import i18n from '../i18n'
 
 i18n.addResourceBundle('tr', 'translation', {
   explore: {
-    hero_title: 'Çevreni keşfet',
-    hero_text: 'Misafirlerin paylaştığı rotalar ve duraklar',
+    hero_title: 'Atina’da yürüyüş rotaları',
+    hero_text: 'Otelden başlayan, misafirlerin denediği rotalar.',
     categories: { all: 'Tümü', culture: 'Kültür', nature: 'Doğa', food: 'Lezzet', activity: 'Aktivite' },
     shared_by: '{{name}} paylaştı',
     stops: '{{count}} durak',
@@ -15,8 +15,8 @@ i18n.addResourceBundle('tr', 'translation', {
 
 i18n.addResourceBundle('en', 'translation', {
   explore: {
-    hero_title: 'Discover your surroundings',
-    hero_text: 'Routes and stops shared by guests',
+    hero_title: 'Walks around Athens',
+    hero_text: 'Routes from the hotel, tried by other guests.',
     categories: { all: 'All', culture: 'Culture', nature: 'Nature', food: 'Food', activity: 'Activity' },
     shared_by: 'Shared by {{name}}',
     stops: '{{count}} stops',
@@ -28,8 +28,8 @@ i18n.addResourceBundle('en', 'translation', {
 
 i18n.addResourceBundle('el', 'translation', {
   explore: {
-    hero_title: 'Ανακάλυψε την περιοχή',
-    hero_text: 'Διαδρομές και στάσεις που μοιράστηκαν οι επισκέπτες',
+    hero_title: 'Βόλτες στην Αθήνα',
+    hero_text: 'Διαδρομές από το ξενοδοχείο, δοκιμασμένες από επισκέπτες.',
     categories: { all: 'Όλα', culture: 'Πολιτισμός', nature: 'Φύση', food: 'Γεύση', activity: 'Δραστηριότητα' },
     shared_by: 'Από {{name}}',
     stops: '{{count}} στάσεις',

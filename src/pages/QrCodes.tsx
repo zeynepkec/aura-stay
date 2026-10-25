@@ -18,7 +18,7 @@ export default function QrCodes() {
         <button
           type="button"
           onClick={() => window.print()}
-          className="flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-card"
+          className="flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-card"
         >
           <Printer size={18} />
           {t('qr.print')}
@@ -34,7 +34,7 @@ export default function QrCodes() {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {Object.keys(ROOMS).map((room) => (
           <div key={room} className="flex flex-col items-center rounded-card border border-line bg-card p-5 text-center break-inside-avoid">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">AURA Stay</p>
+            <p className="text-xs font-semibold text-muted">AURA Stay</p>
             <QRCodeSVG value={window.location.origin + joinPath(room)} size={130} className="my-4" />
             <p className="text-xl font-bold">{t('qr.room', { number: room })}</p>
             <p className="text-xs text-muted">{HOTEL.name}</p>

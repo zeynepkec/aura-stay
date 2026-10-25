@@ -33,6 +33,13 @@ npm run build    # yayın öncesi kontrol (Vercel de bunu çalıştırır)
 - **Yeni rota:** `routes.ts` → `routes` listesine ekle. Her durak için `place` (Google Haritalar'da aranacak İngilizce isim) ve `lat/lng` (harita konumu) yaz.
 - **Asistanın cevapladığı sorular:** `hotel.ts` → `faq` listesi (`keywords` + 3 dilde `answer`).
 
+## Tasarım
+
+- **Yazı tipi:** Commissioner (Yunan tasarımcı Kostas Bartsokas). Türkçe ve Yunanca harflerin hepsi var, uygulamanın içinde gelir (internet olmadan da çalışır).
+- **Renkler:** `tailwind.config.js`. Ana düğmeler ve seçili durumlar koyu mavi (`primary`). Yeşil = otel hizmetleri, şeftali = rotalar, lila = konsiyerj, pembe = anı kartı.
+- **İmza öğesi:** `src/components/KeyTag.tsx`. Oda numarası eski otel anahtarlarındaki gibi bir anahtar etiketinin üzerinde durur.
+- **Kullanım kolaylığı:** en az 16 px yazı, en az 44 px dokunma alanı, büyük satırlı listeler, klavye odağı görünür, hareket azaltma ayarına uyar.
+
 ## Asistan kuralları (`src/lib/concierge.ts`)
 
 1. Sipariş ve talepleri personele göndermeden **önce onay ister**.

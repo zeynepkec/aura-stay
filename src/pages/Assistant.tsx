@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import { ArrowUp, Check, Info, Plus, Sparkles, Star, X } from 'lucide-react'
+import { ArrowUp, Check, Info, Plus, Star, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { amenityItems, optionName, tableVenues, transferDestinations } from '../data/hotel'
@@ -100,7 +100,7 @@ export default function Assistant() {
   const chipRow = (chips: Chip[]) => (
     <div className="mt-3 flex flex-wrap gap-2">
       {chips.map((c) => (
-        <button key={c.value} type="button" onClick={() => send(c.value)} className="rounded-full border border-line bg-background px-3 py-1.5 text-left text-xs font-medium">
+        <button key={c.value} type="button" onClick={() => send(c.value)} className="min-h-[36px] rounded-full border border-line bg-background px-3 py-1.5 text-left text-sm font-medium">
           {c.label}
         </button>
       ))}
@@ -118,7 +118,7 @@ export default function Assistant() {
     return date
   }
 
-  // Talebin ayrıntıları tek satırda: "Atina Havalimanı · Bugün 18:00 · 2 kişi"
+  // Talebin ayrıntıları tek satırda: "Atina Havalimanı, Bugün 18:00, 2 kişi"
   const requestSummary = (record: Extract<PendingRecord, { kind: 'request' }>) => {
     const d = record.details
     const parts: string[] = []
@@ -128,7 +128,7 @@ export default function Assistant() {
     if (d.venue) parts.push(optionName(tableVenues, d.venue, lang))
     if (d.time) parts.push(`${dateLabel(d.date)} ${d.time}`)
     if (d.people) parts.push(`${d.people} 👤`)
-    return parts.join(' · ')
+    return parts.join(', ')
   }
 
   const renderConfirm = (id: number, msg: Extract<BotMessage, { kind: 'confirm' }>) => {
@@ -171,11 +171,11 @@ export default function Assistant() {
 
         {msg.status === 'pending' && (
           <div className="mt-3 flex gap-2">
-            <button type="button" onClick={() => cancel(id)} className="flex h-10 flex-1 items-center justify-center gap-1 rounded-full border border-line text-sm font-semibold">
+            <button type="button" onClick={() => cancel(id)} className="flex h-10 flex-1 items-center justify-center gap-1 rounded-xl border border-line text-sm font-semibold">
               <X size={15} />
               {t('assistant.buttons.no')}
             </button>
-            <button type="button" onClick={() => execute(id, record)} className="flex h-10 flex-[1.4] items-center justify-center gap-1 rounded-full bg-ink text-sm font-semibold text-card">
+            <button type="button" onClick={() => execute(id, record)} className="flex h-10 flex-[1.4] items-center justify-center gap-1 rounded-xl bg-primary text-sm font-semibold text-card">
               <Check size={15} />
               {t('assistant.buttons.yes')}
             </button>
@@ -216,8 +216,7 @@ export default function Assistant() {
               if (!item) return null
               return (
                 <li key={itemId} className="flex items-center gap-2 rounded-2xl bg-background p-2">
-                  <span className="text-xl">{item.image}</span>
-                  <span className="min-w-0 flex-1">
+                                    <span className="min-w-0 flex-1">
                     <span className="block truncate font-semibold">{pick(item.name, lang)}</span>
                     <span className="block text-xs text-muted">{price(item.price, lang)}</span>
                   </span>
@@ -233,7 +232,7 @@ export default function Assistant() {
               )
             })}
           </ul>
-          <Link to="/dining" className="mt-2 block text-xs font-semibold text-accent underline">{t('assistant.buttons.open_menu')}</Link>
+          <Link to="/dining" className="mt-2 block text-sm font-semibold text-primary underline">{t('assistant.buttons.open_menu')}</Link>
         </>
       )
     }
@@ -250,16 +249,16 @@ export default function Assistant() {
           </span>
           <span className="min-w-0 flex-1">
             <span className="block truncate font-semibold">{pick(route.title, lang)}</span>
-            <span className="block text-xs text-muted">{t('explore.min', { count: route.minutes })} · {t('explore.km', { count: route.km })}</span>
+            <span className="block text-xs text-muted">{t('explore.min', { count: route.minutes })}, {t('explore.km', { count: route.km })}</span>
           </span>
           <span className="flex items-center gap-0.5 text-xs font-semibold">
-            <Star size={12} className="fill-accent text-accent" />
+            <Star size={12} className="fill-primary text-primary" />
             {route.rating}
           </span>
         </Link>
-        <p className="mt-2 text-xs text-ink/70">💡 {pick(route.tip, lang)}</p>
+        <p className="mt-2 text-sm text-ink/70">{pick(route.tip, lang)}</p>
         {chipRow(msg.chips)}
-        <Link to="/explore" className="mt-2 block text-xs font-semibold text-accent underline">{t('assistant.buttons.all_routes')}</Link>
+        <Link to="/explore" className="mt-2 block text-sm font-semibold text-primary underline">{t('assistant.buttons.all_routes')}</Link>
       </>
     )
   }
@@ -267,10 +266,11 @@ export default function Assistant() {
   // Asistan baloncuğu
   const botBubble = (key: number, children: ReactNode) => (
     <div key={key} className="flex gap-2">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-discover to-discover-pink">
-        <Sparkles size={16} />
+      {/* Hermis konsiyerjinin baş harfi */}
+      <span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-discover text-sm font-bold">
+        H
       </span>
-      <div className="max-w-[85%] rounded-card rounded-tl-md border border-line bg-card px-4 py-3 text-sm leading-relaxed">{children}</div>
+      <div className="max-w-[85%] rounded-card rounded-tl-md border border-line bg-card px-4 py-3 text-[15px] leading-relaxed">{children}</div>
     </div>
   )
 
@@ -278,7 +278,7 @@ export default function Assistant() {
     <div className="pb-20">
       <header className="px-5 pb-4 pt-6">
         <h1 className="text-3xl font-bold">{t('assistant.title')}</h1>
-        <p className="mt-1 text-sm text-muted">{t('assistant.subtitle')}</p>
+        <p className="mt-1 text-muted">{t('assistant.subtitle')}</p>
       </header>
 
       <div className="space-y-3 px-5">
@@ -295,7 +295,7 @@ export default function Assistant() {
         {chat.map((c) =>
           c.from === 'user' ? (
             <div key={c.id} className="flex justify-end">
-              <p className="max-w-[85%] rounded-card rounded-tr-md bg-ink px-4 py-3 text-sm text-card">{c.text}</p>
+              <p className="max-w-[85%] rounded-card rounded-tr-md bg-primary px-4 py-3 text-[15px] text-card">{c.text}</p>
             </div>
           ) : (
             botBubble(c.id, renderMessage(c.id, c.msg))
@@ -321,9 +321,10 @@ export default function Assistant() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={t('assistant.placeholder')}
-          className="h-12 flex-1 rounded-full border border-line bg-card px-5 text-sm outline-none focus:border-accent"
+          className="h-12 flex-1 rounded-xl border border-line bg-card px-4 text-base outline-none focus:border-primary"
         />
-        <button type="submit" disabled={!input.trim() || typing} className="flex h-12 w-12 items-center justify-center rounded-full bg-ink text-card disabled:opacity-30">
+        <button type="submit" disabled={!input.trim() || typing} aria-label={t('assistant.buttons.send')}
+          className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-card disabled:opacity-30">
           <ArrowUp size={20} />
         </button>
       </form>

@@ -16,8 +16,8 @@ export default function LanguageSwitcher() {
           key={code}
           type="button"
           onClick={() => i18n.changeLanguage(code)}
-          className={`h-8 min-w-[36px] rounded-full px-2 text-xs font-semibold ${
-            i18n.resolvedLanguage === code ? 'bg-ink text-card' : 'text-muted'
+          className={`h-9 min-w-[40px] rounded-full px-2 text-xs font-semibold ${
+            i18n.resolvedLanguage === code ? 'bg-primary text-card' : 'text-muted'
           }`}
         >
           {label}
