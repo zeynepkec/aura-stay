@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { getStaff, tabsFor } from '../lib/staff'
 import KitchenOrders from './KitchenOrders'
 import StaffBills from './StaffBills'
+import StaffDemo from './StaffDemo'
 import StaffFeedback from './StaffFeedback'
 import StaffLayout from './StaffLayout'
 import StaffLogin from './StaffLogin'
@@ -19,6 +20,7 @@ const SCREENS: Record<string, ReactNode> = {
   tables: <StaffTables />,
   bills: <StaffBills />,
   feedback: <StaffFeedback />,
+  demo: <StaffDemo />,
 }
 
 export default function StaffApp() {

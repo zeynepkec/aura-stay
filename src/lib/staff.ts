@@ -15,6 +15,7 @@ export const STAFF_TABS: { key: string; roles: StaffRole[] }[] = [
   { key: 'tables', roles: ['reception'] },
   { key: 'bills', roles: ['reception'] },
   { key: 'feedback', roles: ['reception'] },
+  { key: 'demo', roles: ['reception'] },
 ]
 
 export type StaffSession = { role: StaffRole; loginAt: number }
