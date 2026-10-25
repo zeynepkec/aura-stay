@@ -55,11 +55,20 @@ src/
   translations/  ekran yazıları (TR / EN / EL)
 ```
 
-## Veri katmanı
+## Veritabanı (Supabase)
 
-Şu an veriler tarayıcının hafızasında (`localStorage`) tutulur: aynı tarayıcıdaki sekmeler birbirini anında görür
-(misafir sekmesi ↔ personel sekmesi). Farklı cihazlar arası senkron için son adımda Supabase bağlanacak;
-ekranlar `src/lib/shared.ts` ve `src/store/` üzerinden çalıştığı için sadece bu katman değişecek.
+Paylaşılan veriler (siparişler, talepler, geri bildirimler, değerlendirmeler, menü durumu, kapatılan hesaplar)
+Supabase'deki tek bir `records` tablosunda tutulur ve tüm cihazlarda **canlı** güncellenir. Sepet ve oturum cihazda kalır.
+
+1. supabase.com'da proje aç → **SQL Editor** → `supabase/kurulum.sql` dosyasının tamamını çalıştır
+2. **Project Settings → API Keys** → Project URL ve anon / publishable anahtarı kopyala
+3. Bilgisayarda: `.env.example` dosyasını `.env.local` adıyla kopyala, bilgileri yaz, `npm run dev`'i yeniden başlat
+4. İnternette: Vercel → proje → **Settings → Environment Variables** → aynı iki değişkeni ekle → **Redeploy**
+
+Personel panelinin sağ üstünde bağlantı durumu görünür: **Canlı** (veritabanı) ya da **Yerel mod** (sadece bu tarayıcı).
+Ekranlar veriye `src/lib/shared.ts` ile ulaşır; senkron `src/lib/sync.ts` içindedir.
+
+> Şimdilik tablo herkese okuma/yazma izni veriyor (demo). Misafir ve personel yetkilerinin ayrılması sıradaki adım.
 
 ## Yol haritası
 
@@ -67,4 +76,5 @@ ekranlar `src/lib/shared.ts` ve `src/store/` üzerinden çalıştığı için sa
 - [x] Personel paneli (mutfak, menü durumu, görevler, masa talepleri, oda hesapları, geri bildirimler, demo)
 - [x] askHermis içeriği ve asistanı ile birleştirme
 - [x] PWA ve Vercel yayını
-- [ ] Veritabanı (Supabase) ve gerçek yapay zekâ modeli
+- [x] Veritabanı (Supabase): cihazlar arası canlı senkron
+- [ ] Misafir / personel yetkileri (RLS) ve gerçek yapay zekâ modeli

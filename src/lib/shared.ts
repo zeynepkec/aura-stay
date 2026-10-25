@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { pushChange } from './sync'
 
 // Aynı sekmedeki diğer ekranlara "bu değer değişti" haberi
 const SAME_TAB_EVENT = 'aura-shared-change'
@@ -15,7 +16,7 @@ export function readShared<T>(key: string, fallback: T): T {
 
 // useState gibi çalışır, ama:
 // 1) değeri tarayıcı hafızasına kaydeder
-// 2) başka sekme YA DA aynı sekmedeki başka ekran değiştirirse kendini günceller
+// 2) başka sekme, aynı sekmedeki başka ekran YA DA başka cihaz (veritabanı) değiştirirse kendini günceller
 export function useShared<T>(key: string, fallback: T) {
   const fallbackRef = useRef(fallback)
   const [value, setValue] = useState<T>(() => readShared(key, fallback))
@@ -45,6 +46,8 @@ export function useShared<T>(key: string, fallback: T) {
       localStorage.setItem(key, JSON.stringify(resolved))
       setValue(resolved)
       window.dispatchEvent(new CustomEvent(SAME_TAB_EVENT, { detail: key }))
+      // Paylaşılan veriyse veritabanına da gönder (başka cihazlar görsün)
+      pushChange(key, prev, resolved)
     },
     [key],
   )
