@@ -9,6 +9,8 @@ import Cart from './pages/Cart'
 import Dining from './pages/Dining'
 import Explore from './pages/Explore'
 import Home from './pages/Home'
+import AddRoute from './pages/AddRoute'
+import GuestLogin from './pages/GuestLogin'
 import Join from './pages/Join'
 import MemoryCard from './pages/MemoryCard'
 import QrCodes from './pages/QrCodes'
@@ -36,6 +38,7 @@ export default function App() {
         <Routes>
           <Route path="/qr" element={<QrCodes />} />
           <Route path="/join" element={<Join />} />
+          <Route path="/guest" element={<GuestLogin />} />
           <Route path="*" element={<Welcome />} />
         </Routes>
       </BrowserRouter>
@@ -58,6 +61,7 @@ export default function App() {
                 <Route path="/orders/:orderId" element={<OrderDetail />} />
                 <Route path="/assistant" element={<Assistant />} />
                 <Route path="/explore" element={<Explore />} />
+                <Route path="/explore/new" element={<AddRoute />} />
                 <Route path="/explore/:routeId" element={<RouteDetail />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/services/:type" element={<ServiceRequest />} />

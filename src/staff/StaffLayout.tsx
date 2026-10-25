@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { LogOut, KeyRound } from 'lucide-react'
+import { LogOut, KeyRound, QrCode } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet } from 'react-router-dom'
 import LanguageSwitcher from '../components/LanguageSwitcher'
@@ -76,6 +76,12 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {staff.role === 'reception' && (
+              <a href="/qr" className="hidden h-10 items-center gap-1.5 rounded-xl border border-line px-4 text-sm font-medium sm:flex">
+                <QrCode size={16} />
+                {t('staff.qr_codes')}
+              </a>
+            )}
             <SyncBadge />
             <LanguageSwitcher />
             <button

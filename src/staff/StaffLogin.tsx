@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Delete, Lock } from 'lucide-react'
+import { ArrowLeft, Delete, Lock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import { staffLogin } from '../lib/staff'
@@ -69,7 +69,10 @@ export default function StaffLogin() {
           </button>
         </div>
 
-        <p className="mt-8 text-xs text-muted">{t('staff.demo_pins')}</p>
+        <a href="/" className="mt-8 inline-flex h-11 items-center gap-1 px-2 text-muted">
+          <ArrowLeft size={18} />
+          {t('staff.back_to_start')}
+        </a>
       </div>
     </div>
   )

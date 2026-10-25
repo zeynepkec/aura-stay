@@ -15,9 +15,16 @@ npm run dev      # http://localhost:5173  (Network adresi telefondan açmak içi
 npm run build    # yayın öncesi kontrol (Vercel de bunu çalıştırır)
 ```
 
-- Misafir uygulaması: `/` → "Demo: Oda 302 ile giriş yap" ya da `/qr` sayfasındaki bir oda kodu
-- Personel paneli: `/staff` → PIN **1111** Mutfak · **2222** Kat hizmetleri · **3333** Resepsiyon
+Uygulama giriş ekranıyla açılır: **Misafir girişi** ya da **Personel girişi**.
+
+- **Misafir girişi** üç yolla yapılır:
+  1. **QR kodu okut:** odadaki QR kod kamerayla (ya da fotoğraftan) okunur
+  2. **Oda numarası gir:** oda numarası + 4 haneli giriş kodu (ör. Oda 302, kod `h2p8`). Kodlar `/qr` sayfasında her odanın altında yazar
+  3. **Oda kartını okut:** NFC oda kartı (sadece Android + Chrome). Kartlar `/qr` sayfasındaki "Karta yaz" ile hazırlanır
+- **Personel girişi:** `/staff` → PIN **1111** Mutfak, **2222** Kat hizmetleri, **3333** Resepsiyon (PIN'ler ekranda yazmaz)
+- Oda QR kodları ve giriş kodları: Resepsiyon paneli → **Oda QR kodları** (ya da `/qr`)
 - Sunum için örnek veriler: Resepsiyon → **Demo** sekmesi
+- Kamera ile QR okuma sadece güvenli adreste (https ya da localhost) açılır; telefonda yerel ağ adresiyle denerken "Fotoğraftan oku"yu kullanın
 
 ## İçerik nasıl düzenlenir?
 
@@ -25,7 +32,7 @@ npm run build    # yayın öncesi kontrol (Vercel de bunu çalıştırır)
 |---|---|
 | Otel bilgileri, Wi-Fi, saatler, SSS, kampanya, hizmet seçenekleri | `src/data/hotel.ts` |
 | Menü (fiyat €, etiket, alerjen, asistan anahtar kelimeleri) | `src/data/menu.ts` |
-| Atina rotaları (duraklar, harita konumları, ipuçları) | `src/data/routes.ts` |
+| Atina rotaları (duraklar, harita konumları, ipuçları) | `src/data/routes.ts` (misafirlerin eklediği rotalar veritabanında: `aura-routes`) |
 | Örnek misafir yorumları | `src/data/reviews.ts` |
 | Ekran yazıları (TR / EN / EL) | `src/translations/*.ts` |
 

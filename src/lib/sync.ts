@@ -21,6 +21,7 @@ const SYNCED: Record<string, { kind: 'list' | 'doc'; idOf?: (x: Item) => string 
   'aura-requests': { kind: 'list', idOf: (x) => x.id ?? '' },
   'aura-feedback': { kind: 'list', idOf: (x) => x.id ?? '' },
   'aura-reviews': { kind: 'list', idOf: (x) => x.room ?? '' }, // her odanın tek değerlendirmesi
+  'aura-routes': { kind: 'list', idOf: (x) => x.id ?? '' }, // misafirlerin eklediği rotalar
   'aura-soldout': { kind: 'doc' },
   'aura-closed-bills': { kind: 'doc' },
 }
