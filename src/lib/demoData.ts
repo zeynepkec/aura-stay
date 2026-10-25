@@ -1,6 +1,16 @@
 import type { Feedback, Review } from '../store/FeedbackContext'
 import type { ServiceRequest } from '../store/ServiceContext'
 import type { Order } from '../store/StayContext'
+import { currentHotel } from '../data/hotels'
+
+// Açık olan otelin menüsünden örnek ürünler (kategori + sıra)
+const menu = currentHotel.menuItems
+const item = (category: string, n = 0) => menu.filter((m) => m.category === category)[n] ?? menu[0]
+const line = (category: string, n: number, quantity: number) => {
+  const m = item(category, n)
+  return { id: m.id, quantity, unitPrice: m.price }
+}
+const total = (lines: { quantity: number; unitPrice: number }[]) => lines.reduce((s, l) => s + l.quantity * l.unitPrice, 0)
 
 const min = 60 * 1000
 
@@ -8,23 +18,15 @@ const min = 60 * 1000
 export function buildDemoData(now = Date.now()) {
   const today = new Date().toLocaleDateString('sv') // "2026-10-25" biçiminde
 
+  const o1 = [line('breakfast', 0, 2), line('drinks', 0, 2)]
+  const o2 = [line('mains', 3, 1), line('drinks', 2, 1)]
+  const o3 = [line('mains', 1, 2)]
+  const o4 = [line('desserts', 2, 2)]
   const orders: Order[] = [
-    {
-      id: 'A1001', room: '101', status: 'received', createdAt: now - 3 * min, note: '', total: 31,
-      lines: [{ id: 'hermis-breakfast', quantity: 2, unitPrice: 12 }, { id: 'greek-coffee', quantity: 2, unitPrice: 3.5 }],
-    },
-    {
-      id: 'A1002', room: '203', status: 'preparing', createdAt: now - 12 * min, note: 'Glutensiz olsun lütfen', total: 23,
-      lines: [{ id: 'seabass', quantity: 1, unitPrice: 19 }, { id: 'lemonade', quantity: 1, unitPrice: 4 }],
-    },
-    {
-      id: 'A1003', room: '105', status: 'on_the_way', createdAt: now - 25 * min, note: '', total: 28,
-      lines: [{ id: 'souvlaki', quantity: 2, unitPrice: 14 }],
-    },
-    {
-      id: 'A1004', room: '302', status: 'delivered', createdAt: now - 90 * min, note: '', total: 12,
-      lines: [{ id: 'baklava', quantity: 2, unitPrice: 6 }],
-    },
+    { id: 'A1001', room: '101', status: 'received', createdAt: now - 3 * min, note: '', total: total(o1), lines: o1 },
+    { id: 'A1002', room: '203', status: 'preparing', createdAt: now - 12 * min, note: 'Glutensiz olsun lütfen', total: total(o2), lines: o2 },
+    { id: 'A1003', room: '105', status: 'on_the_way', createdAt: now - 25 * min, note: '', total: total(o3), lines: o3 },
+    { id: 'A1004', room: '302', status: 'delivered', createdAt: now - 90 * min, note: '', total: total(o4), lines: o4 },
   ]
 
   const requests: ServiceRequest[] = [
@@ -36,7 +38,7 @@ export function buildDemoData(now = Date.now()) {
     },
     {
       id: 'S2004', room: '205', type: 'table', status: 'pending', createdAt: now - 8 * min,
-      details: { venue: 'rooftop', date: today, time: '20:00', people: '4', note: 'Akropolis manzaralı bir masa olursa sevinirim' },
+      details: { venue: 'rooftop', date: today, time: '20:00', people: '4', note: currentHotel.demo.tableNote },
     },
     { id: 'S2005', room: '102', type: 'table', status: 'confirmed', createdAt: now - 60 * min, details: { venue: 'restaurant', date: today, time: '21:00', people: '2', note: '' } },
   ]
@@ -47,11 +49,11 @@ export function buildDemoData(now = Date.now()) {
   ]
 
   const reviews: Review[] = [
-    { room: '102', cleanliness: 5, comfort: 5, service: 4, comment: 'Personel çok ilgiliydi, terastan Akropolis manzarası harika.', createdAt: now - 180 * min },
+    { room: '102', cleanliness: 5, comfort: 5, service: 4, comment: currentHotel.demo.reviewNote, createdAt: now - 180 * min },
     { room: '105', cleanliness: 4, comfort: 4, service: 5, comment: '', createdAt: now - 240 * min },
   ]
 
-  const soldOut = ['loukoumades']
+  const soldOut = [currentHotel.demo.soldOut]
 
   return { orders, requests, feedback, reviews, soldOut }
 }

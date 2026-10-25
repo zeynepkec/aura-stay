@@ -9,7 +9,11 @@
 //
 //  Tarayıcı hafızası (localStorage) önbellek olarak kalır; bağlantı yoksa
 //  uygulama eskisi gibi çalışır. Sepet ve oturum bilgisi cihazda kalır, paylaşılmaz.
+//
+//  Her otelin verisi ayrıdır: veritabanında "hermis:aura-orders", "pera:aura-orders"…
+//  Böylece İstanbul'daki mutfak Atina'nın siparişlerini görmez.
 // =============================================================
+import { currentHotelId } from '../data/hotels'
 import { supabase } from './supabase'
 
 type Row = { collection: string; id: string; data: unknown }
@@ -40,16 +44,24 @@ const setStatus = (next: SyncStatus) => {
 
 export const isSynced = (key: string) => key in SYNCED
 
+// Açık olan otelin veri alanı
+const NS = currentHotelId()
+const col = (key: string) => `${NS}:${key}`
+const keyOf = (collection: string) => (collection.startsWith(`${NS}:`) ? collection.slice(NS.length + 1) : null)
+
+// Tarayıcı hafızasındaki adı: paylaşılan veriler otele göre ayrı tutulur
+export const localKey = (key: string) => (isSynced(key) ? col(key) : key)
+
 // Yerel önbelleğe yaz ve ekranlara haber ver
 function writeLocal(key: string, value: unknown) {
-  if (value === undefined) localStorage.removeItem(key)
-  else localStorage.setItem(key, JSON.stringify(value))
+  if (value === undefined) localStorage.removeItem(localKey(key))
+  else localStorage.setItem(localKey(key), JSON.stringify(value))
   window.dispatchEvent(new CustomEvent(SAME_TAB_EVENT, { detail: key }))
 }
 
 function readLocal<T>(key: string, fallback: T): T {
   try {
-    const saved = localStorage.getItem(key)
+    const saved = localStorage.getItem(localKey(key))
     return saved ? (JSON.parse(saved) as T) : fallback
   } catch {
     return fallback
@@ -61,20 +73,24 @@ const newestFirst = (list: Item[]) => [...list].sort((a, b) => (b.createdAt ?? 0
 
 // Veritabanından gelen tek bir değişikliği önbelleğe uygula
 function applyRow(row: Row, deleted: boolean) {
-  const config = SYNCED[row.collection]
-  if (!config) return
+  const key = keyOf(row.collection ?? '')
+  const config = key ? SYNCED[key] : undefined
+  if (!key || !config) return // başka otelin verisi
   if (config.kind === 'doc') {
-    writeLocal(row.collection, deleted ? undefined : row.data)
+    writeLocal(key, deleted ? undefined : row.data)
     return
   }
-  const list = readLocal<Item[]>(row.collection, []).filter((x) => config.idOf!(x) !== row.id)
-  writeLocal(row.collection, newestFirst(deleted ? list : [row.data as Item, ...list]))
+  const list = readLocal<Item[]>(key, []).filter((x) => config.idOf!(x) !== row.id)
+  writeLocal(key, newestFirst(deleted ? list : [row.data as Item, ...list]))
 }
 
 // Uygulama açılınca: tüm kayıtları indir, sonra canlı değişiklikleri dinle
 export async function startSync() {
   if (!supabase) return
-  const { data, error } = await supabase.from('records').select('collection, id, data')
+  const { data, error } = await supabase
+    .from('records')
+    .select('collection, id, data')
+    .in('collection', Object.keys(SYNCED).map(col))
   if (error) {
     console.error('Veritabanına bağlanılamadı:', error.message)
     setStatus('error')
@@ -82,7 +98,7 @@ export async function startSync() {
   }
   const rows = (data ?? []) as Row[]
   for (const [key, config] of Object.entries(SYNCED)) {
-    const mine = rows.filter((r) => r.collection === key)
+    const mine = rows.filter((r) => r.collection === col(key))
     if (config.kind === 'doc') writeLocal(key, mine.find((r) => r.id === DOC_ID)?.data)
     else writeLocal(key, newestFirst(mine.map((r) => r.data as Item)))
   }
@@ -108,7 +124,7 @@ export function pushChange(key: string, prev: unknown, next: unknown) {
   const config = SYNCED[key]
   if (!supabase || !config) return
   if (config.kind === 'doc') {
-    void supabase.from('records').upsert({ collection: key, id: DOC_ID, data: next, updated_at: new Date().toISOString() }).then(logError)
+    void supabase.from('records').upsert({ collection: col(key), id: DOC_ID, data: next, updated_at: new Date().toISOString() }).then(logError)
     return
   }
   const idOf = config.idOf!
@@ -116,11 +132,11 @@ export function pushChange(key: string, prev: unknown, next: unknown) {
   const nextList = next as Item[]
   const changed = nextList
     .filter((x) => before.get(idOf(x)) !== JSON.stringify(x))
-    .map((x) => ({ collection: key, id: idOf(x), data: x, updated_at: new Date().toISOString() }))
+    .map((x) => ({ collection: col(key), id: idOf(x), data: x, updated_at: new Date().toISOString() }))
   const nextIds = new Set(nextList.map(idOf))
   const removed = [...before.keys()].filter((id) => !nextIds.has(id))
   if (changed.length) void supabase.from('records').upsert(changed).then(logError)
-  if (removed.length) void supabase.from('records').delete().eq('collection', key).in('id', removed).then(logError)
+  if (removed.length) void supabase.from('records').delete().eq('collection', col(key)).in('id', removed).then(logError)
 }
 
 // Demo araçları için: bir veriyi tamamen değiştir (önce sil, sonra yaz)
@@ -128,11 +144,11 @@ export async function replaceShared(key: string, value: unknown) {
   writeLocal(key, value)
   const config = SYNCED[key]
   if (!supabase || !config) return
-  logError(await supabase.from('records').delete().eq('collection', key))
+  logError(await supabase.from('records').delete().eq('collection', col(key)))
   if (value === undefined) return
   const rows =
     config.kind === 'doc'
-      ? [{ collection: key, id: DOC_ID, data: value }]
-      : (value as Item[]).map((x) => ({ collection: key, id: config.idOf!(x), data: x }))
+      ? [{ collection: col(key), id: DOC_ID, data: value }]
+      : (value as Item[]).map((x) => ({ collection: col(key), id: config.idOf!(x), data: x }))
   if (rows.length) logError(await supabase.from('records').insert(rows))
 }

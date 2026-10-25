@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { pushChange } from './sync'
+import { localKey, pushChange } from './sync'
 
 // Aynı sekmedeki diğer ekranlara "bu değer değişti" haberi
 const SAME_TAB_EVENT = 'aura-shared-change'
@@ -7,7 +7,7 @@ const SAME_TAB_EVENT = 'aura-shared-change'
 // Tarayıcı hafızasından oku
 export function readShared<T>(key: string, fallback: T): T {
   try {
-    const saved = localStorage.getItem(key)
+    const saved = localStorage.getItem(localKey(key))
     return saved ? (JSON.parse(saved) as T) : fallback
   } catch {
     return fallback
@@ -24,7 +24,7 @@ export function useShared<T>(key: string, fallback: T) {
   useEffect(() => {
     // Başka sekmede değişiklik
     const onStorage = (e: StorageEvent) => {
-      if (e.key === key) setValue(readShared(key, fallbackRef.current))
+      if (e.key === localKey(key)) setValue(readShared(key, fallbackRef.current))
     }
     // Aynı sekmede değişiklik
     const onLocal = (e: Event) => {
@@ -43,7 +43,7 @@ export function useShared<T>(key: string, fallback: T) {
     (next: T | ((prev: T) => T)) => {
       const prev = readShared(key, fallbackRef.current)
       const resolved = typeof next === 'function' ? (next as (p: T) => T)(prev) : next
-      localStorage.setItem(key, JSON.stringify(resolved))
+      localStorage.setItem(localKey(key), JSON.stringify(resolved))
       setValue(resolved)
       window.dispatchEvent(new CustomEvent(SAME_TAB_EVENT, { detail: key }))
       // Paylaşılan veriyse veritabanına da gönder (başka cihazlar görsün)

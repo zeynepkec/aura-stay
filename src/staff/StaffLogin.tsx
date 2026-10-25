@@ -1,12 +1,18 @@
 import { useState } from 'react'
-import { ArrowLeft, Delete, Lock } from 'lucide-react'
+import { ArrowLeft, Building2, Delete, Lock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import HotelPicker from '../components/HotelPicker'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import { hotelById, type HotelProfile } from '../data/hotels'
+import { pick } from '../data/menu'
 import { staffLogin } from '../lib/staff'
 import '../translations/staff'
+import '../translations/guestLogin'
 
 export default function StaffLogin() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  // Personel önce otelini seçer (bu cihazda hatırlanır), sonra PIN girer
+  const [hotel, setHotel] = useState<HotelProfile | null>(() => hotelById(localStorage.getItem('aura-staff-hotel') ?? undefined) ?? null)
   const [pin, setPin] = useState('')
   const [error, setError] = useState(false)
 
@@ -17,13 +23,36 @@ export default function StaffLogin() {
     setPin(next)
     setError(false)
     if (next.length === 4) {
-      if (staffLogin(next)) {
+      if (hotel && staffLogin(next, hotel.id)) {
         window.location.replace('/staff')
       } else {
         setError(true)
         setTimeout(() => setPin(''), 500)
       }
     }
+  }
+
+  if (!hotel) {
+    return (
+      <div className="mx-auto min-h-screen max-w-md bg-background px-6 pb-10 pt-6">
+        <div className="flex items-center justify-between">
+          <a href="/" className="-ml-2 flex h-11 items-center gap-1 px-2 text-sm text-muted">
+            <ArrowLeft size={18} />
+            {t('staff.back_to_start')}
+          </a>
+          <LanguageSwitcher />
+        </div>
+        <p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-muted">AURA Stay</p>
+        <h1 className="mt-1 text-3xl font-bold">{t('staff.login_title')}</h1>
+        <p className="mb-6 mt-2 text-sm text-muted">{t('picker.text')}</p>
+        <HotelPicker
+          onSelect={(h) => {
+            localStorage.setItem('aura-staff-hotel', h.id)
+            setHotel(h)
+          }}
+        />
+      </div>
+    )
   }
 
   return (
@@ -33,12 +62,28 @@ export default function StaffLogin() {
       </div>
 
       <div className="w-full max-w-xs text-center">
-        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-card">
+        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-ink text-card">
           <Lock size={26} />
         </span>
-        <p className="mt-6 font-semibold text-muted">AURA Stay</p>
+        <p className="mt-6 text-xs font-bold uppercase tracking-[0.2em] text-muted">AURA Stay</p>
         <h1 className="mt-1 text-3xl font-bold">{t('staff.login_title')}</h1>
         <p className="mt-2 text-sm text-muted">{t('staff.login_text')}</p>
+
+        {/* Seçilen otel */}
+        <button
+          type="button"
+          onClick={() => {
+            localStorage.removeItem('aura-staff-hotel')
+            setHotel(null)
+          }}
+          title={t('staff.change_hotel')}
+          className="mx-auto mt-4 flex items-center gap-2 rounded-full border border-line bg-card px-4 py-2 text-sm"
+        >
+          <Building2 size={16} />
+          <span className="font-semibold">{hotel.name}</span>
+          <span className="text-muted">· {pick(hotel.city, i18n.resolvedLanguage)}</span>
+        </button>
+
 
         {/* PIN noktaları */}
         <div className="my-8 flex justify-center gap-4">
@@ -69,8 +114,9 @@ export default function StaffLogin() {
           </button>
         </div>
 
-        <a href="/" className="mt-8 inline-flex h-11 items-center gap-1 px-2 text-muted">
-          <ArrowLeft size={18} />
+        <p className="mt-8 text-xs text-muted">{t('staff.demo_pins')}</p>
+        <a href="/" className="mt-4 inline-flex h-11 items-center gap-1 px-2 text-sm text-muted">
+          <ArrowLeft size={16} />
           {t('staff.back_to_start')}
         </a>
       </div>

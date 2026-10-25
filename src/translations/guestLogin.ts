@@ -123,3 +123,38 @@ i18n.addResourceBundle('el', 'translation', {
     connecting: 'Σύνδεση με το δωμάτιό σου…',
   },
 }, true, true)
+
+// Ülke / şehir / otel seçimi
+i18n.addResourceBundle('tr', 'translation', {
+  picker: {
+    title: 'Otelini seç',
+    text: 'Önce ülkeyi, sonra şehri ve oteli seç.',
+    country: 'Ülke', city: 'Şehir', hotel: 'Otel',
+    rooms: '{{count}} oda',
+    change: 'Değiştir',
+    continue: 'Devam et',
+  },
+  start: { subtitle: 'Otellerde dijital konsiyerj. Şimdilik Türkiye ve Yunanistan’da.' },
+}, true, true)
+i18n.addResourceBundle('en', 'translation', {
+  picker: {
+    title: 'Choose your hotel',
+    text: 'Pick the country first, then the city and hotel.',
+    country: 'Country', city: 'City', hotel: 'Hotel',
+    rooms: '{{count}} rooms',
+    change: 'Change',
+    continue: 'Continue',
+  },
+  start: { subtitle: 'A digital concierge for hotels. For now in Türkiye and Greece.' },
+}, true, true)
+i18n.addResourceBundle('el', 'translation', {
+  picker: {
+    title: 'Διάλεξε ξενοδοχείο',
+    text: 'Διάλεξε πρώτα χώρα, μετά πόλη και ξενοδοχείο.',
+    country: 'Χώρα', city: 'Πόλη', hotel: 'Ξενοδοχείο',
+    rooms: '{{count}} δωμάτια',
+    change: 'Αλλαγή',
+    continue: 'Συνέχεια',
+  },
+  start: { subtitle: 'Ψηφιακός concierge για ξενοδοχεία. Προς το παρόν σε Τουρκία και Ελλάδα.' },
+}, true, true)

@@ -62,7 +62,7 @@ export default function StaffTables() {
             key={v}
             type="button"
             onClick={() => setView(v)}
-            className={`flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium ${view === v ? 'bg-primary text-card' : 'border border-line bg-card'}`}
+            className={`flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium ${view === v ? 'bg-ink text-card' : 'border border-line bg-card'}`}
           >
             {t(`tables.views.${v}`)}
             <span className={`rounded-full px-1.5 text-xs ${view === v ? 'bg-card/20' : 'bg-background'}`}>
@@ -109,7 +109,7 @@ export default function StaffTables() {
                   <button
                     type="button"
                     onClick={() => setStatus(r.id, 'declined')}
-                    className="flex h-11 items-center gap-1.5 rounded-xl border border-line px-4 text-sm font-semibold"
+                    className="flex h-11 items-center gap-1.5 rounded-full border border-line px-4 text-sm font-semibold"
                   >
                     <X size={16} />
                     {t('tables.decline')}
@@ -117,7 +117,7 @@ export default function StaffTables() {
                   <button
                     type="button"
                     onClick={() => setStatus(r.id, 'confirmed')}
-                    className="flex h-11 items-center gap-1.5 rounded-xl bg-primary px-5 text-sm font-semibold text-card"
+                    className="flex h-11 items-center gap-1.5 rounded-full bg-ink px-5 text-sm font-semibold text-card"
                   >
                     <Check size={16} />
                     {t('tables.confirm')}

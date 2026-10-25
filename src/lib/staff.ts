@@ -18,24 +18,26 @@ export const STAFF_TABS: { key: string; roles: StaffRole[] }[] = [
   { key: 'demo', roles: ['reception'] },
 ]
 
-export type StaffSession = { role: StaffRole; loginAt: number }
+export type StaffSession = { role: StaffRole; loginAt: number; hotelId: string }
 
 const KEY = 'aura-staff'
 
 export function getStaff(): StaffSession | null {
   try {
     const saved = localStorage.getItem(KEY)
-    return saved ? JSON.parse(saved) : null
+    const session = saved ? (JSON.parse(saved) as StaffSession) : null
+    // Eski sürümden kalan (otelsiz) oturumlar geçersiz
+    return session?.hotelId ? session : null
   } catch {
     return null
   }
 }
 
 // PIN doğruysa girişi başlat
-export function staffLogin(pin: string): StaffSession | null {
+export function staffLogin(pin: string, hotelId: string): StaffSession | null {
   const role = PINS[pin]
   if (!role) return null
-  const session: StaffSession = { role, loginAt: Date.now() }
+  const session: StaffSession = { role, loginAt: Date.now(), hotelId }
   localStorage.setItem(KEY, JSON.stringify(session))
   return session
 }

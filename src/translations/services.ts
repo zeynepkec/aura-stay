@@ -3,7 +3,7 @@ import i18n from '../i18n'
 i18n.addResourceBundle('tr', 'translation', {
   services: {
     title: 'Hizmetler',
-    subtitle: 'Kat hizmetleri ve resepsiyon talebini hemen görür.',
+    subtitle: 'Ne istersen bir dokunuşla',
     types: {
       cleaning: { title: 'Oda temizliği', desc: 'Uygun saati seç' },
       transfer: { title: 'Transfer', desc: 'Havalimanı, Pire Limanı, şehir içi' },
@@ -11,7 +11,7 @@ i18n.addResourceBundle('tr', 'translation', {
       towels: { title: 'Havlu & malzeme', desc: 'Havlu, yastık, battaniye, banyo seti' },
     },
     my_requests: 'Taleplerim',
-    no_requests: 'Henüz talebin yok. Yukarıdan bir hizmet seç.',
+    no_requests: 'Henüz bir talebin yok',
     status: { pending: 'Bekliyor', in_progress: 'İşlemde', done: 'Tamamlandı' },
     form: {
       when: 'Ne zaman?', now: 'Hemen',
@@ -26,7 +26,7 @@ i18n.addResourceBundle('tr', 'translation', {
 i18n.addResourceBundle('en', 'translation', {
   services: {
     title: 'Services',
-    subtitle: 'Housekeeping and reception see your request right away.',
+    subtitle: 'Anything you need, one tap away',
     types: {
       cleaning: { title: 'Room cleaning', desc: 'Choose a convenient time' },
       transfer: { title: 'Transfer', desc: 'Airport, Piraeus port or city' },
@@ -34,7 +34,7 @@ i18n.addResourceBundle('en', 'translation', {
       towels: { title: 'Towels & amenities', desc: 'Towels, pillows, blankets, toiletries' },
     },
     my_requests: 'My requests',
-    no_requests: 'No requests yet. Pick a service above.',
+    no_requests: 'No requests yet',
     status: { pending: 'Pending', in_progress: 'In progress', done: 'Done' },
     form: {
       when: 'When?', now: 'Right now',
@@ -49,7 +49,7 @@ i18n.addResourceBundle('en', 'translation', {
 i18n.addResourceBundle('el', 'translation', {
   services: {
     title: 'Υπηρεσίες',
-    subtitle: 'Η καθαριότητα και η ρεσεψιόν βλέπουν το αίτημά σου αμέσως.',
+    subtitle: 'Ό,τι χρειάζεσαι, με ένα άγγιγμα',
     types: {
       cleaning: { title: 'Καθαρισμός δωματίου', desc: 'Διάλεξε την ώρα που σε βολεύει' },
       transfer: { title: 'Μεταφορά', desc: 'Αεροδρόμιο, λιμάνι Πειραιά ή πόλη' },
@@ -57,7 +57,7 @@ i18n.addResourceBundle('el', 'translation', {
       towels: { title: 'Πετσέτες & είδη', desc: 'Πετσέτες, μαξιλάρια, κουβέρτες, είδη μπάνιου' },
     },
     my_requests: 'Τα αιτήματά μου',
-    no_requests: 'Δεν έχεις αιτήματα ακόμα. Διάλεξε μια υπηρεσία.',
+    no_requests: 'Δεν έχεις αιτήματα ακόμα',
     status: { pending: 'Σε αναμονή', in_progress: 'Σε εξέλιξη', done: 'Ολοκληρώθηκε' },
     form: {
       when: 'Πότε;', now: 'Τώρα',

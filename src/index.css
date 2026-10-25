@@ -4,23 +4,8 @@
 
 body {
   @apply bg-background text-ink antialiased;
-  font-family: "Commissioner Variable", Commissioner, system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
+  font-family: Inter, system-ui, sans-serif;
 }
-
-/* Klavye ile gezinirken odak her zaman görünsün */
-:focus-visible {
-  outline: 2px solid #3c4c7f;
-  outline-offset: 2px;
-}
-
-h1,
-h2,
-h3 {
-  letter-spacing: -0.01em;
-}
-
 @keyframes toast-in {
   from {
     opacity: 0;
@@ -29,15 +14,5 @@ h3 {
   to {
     opacity: 1;
     transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 }

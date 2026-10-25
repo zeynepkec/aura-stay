@@ -1,7 +1,15 @@
-# AURA Stay — Hermis Boutique Hotel
+# AURA Stay
 
-Otel misafirleri için dijital konsiyerj (PWA) ve personel paneli.
-Hermis Boutique Hotel (Plaka, Atina) için hazırlandı. React + TypeScript + Vite + Tailwind.
+Otel misafirleri için dijital konsiyerj (PWA) ve personel paneli. React + TypeScript + Vite + Tailwind.
+Tüm dünyadaki oteller için tasarlandı; şimdilik **Türkiye** ve **Yunanistan**:
+
+| Ülke | Şehir | Otel |
+|---|---|---|
+| Yunanistan | Atina | Hermis Boutique Hotel (askHermis içeriği) |
+| Türkiye | İstanbul | Pera Lale Otel (demo otel, hayali) |
+
+Her otelin menüsü, para birimi, rotaları, SSS'si, odaları ve giriş kodları ayrıdır; verileri de veritabanında ayrı tutulur
+(İstanbul mutfağı Atina'nın siparişlerini görmez). Yeni otel: `src/data/hotels/` içine bir dosya ekle, `hotels/index.ts` listesine yaz.
 
 Bu repo iki ekip çalışmasının birleşimidir:
 - **AURA Stay** (uygulama yapısı): sayfalar, misafir ↔ personel bağlantısı, rollerle personel paneli, bildirimler, harita, anı kartı, QR giriş, Vercel yayını
@@ -17,11 +25,11 @@ npm run build    # yayın öncesi kontrol (Vercel de bunu çalıştırır)
 
 Uygulama giriş ekranıyla açılır: **Misafir girişi** ya da **Personel girişi**.
 
-- **Misafir girişi** üç yolla yapılır:
+- **Misafir girişi:** önce ülke → şehir → otel seçilir, sonra üç yoldan biriyle odaya girilir:
   1. **QR kodu okut:** odadaki QR kod kamerayla (ya da fotoğraftan) okunur
-  2. **Oda numarası gir:** oda numarası + 4 haneli giriş kodu (ör. Oda 302, kod `h2p8`). Kodlar `/qr` sayfasında her odanın altında yazar
+  2. **Oda numarası gir:** oda numarası + 4 haneli giriş kodu (ör. Hermis Oda 302 kod `h2p8`, Pera Lale Oda 302 kod `x2w7`). Kodlar `/qr` sayfasında her odanın altında yazar
   3. **Oda kartını okut:** NFC oda kartı (sadece Android + Chrome). Kartlar `/qr` sayfasındaki "Karta yaz" ile hazırlanır
-- **Personel girişi:** `/staff` → PIN **1111** Mutfak, **2222** Kat hizmetleri, **3333** Resepsiyon (PIN'ler ekranda yazmaz)
+- **Personel girişi:** `/staff` → otel seçilir → PIN **1111** Mutfak, **2222** Kat hizmetleri, **3333** Resepsiyon (PIN'ler ekranda yazmaz)
 - Oda QR kodları ve giriş kodları: Resepsiyon paneli → **Oda QR kodları** (ya da `/qr`)
 - Sunum için örnek veriler: Resepsiyon → **Demo** sekmesi
 - Kamera ile QR okuma sadece güvenli adreste (https ya da localhost) açılır; telefonda yerel ağ adresiyle denerken "Fotoğraftan oku"yu kullanın
@@ -30,22 +38,13 @@ Uygulama giriş ekranıyla açılır: **Misafir girişi** ya da **Personel giri�
 
 | Ne | Dosya |
 |---|---|
-| Otel bilgileri, Wi-Fi, saatler, SSS, kampanya, hizmet seçenekleri | `src/data/hotel.ts` |
-| Menü (fiyat €, etiket, alerjen, asistan anahtar kelimeleri) | `src/data/menu.ts` |
-| Atina rotaları (duraklar, harita konumları, ipuçları) | `src/data/routes.ts` (misafirlerin eklediği rotalar veritabanında: `aura-routes`) |
-| Örnek misafir yorumları | `src/data/reviews.ts` |
+| Oteller: bilgiler, Wi-Fi, saatler, SSS, kampanya, odalar, menü, rotalar, örnek yorumlar | `src/data/hotels/hermis.ts`, `src/data/hotels/pera.ts` |
+| Misafirlerin eklediği rotalar | veritabanında (`aura-routes`) |
 | Ekran yazıları (TR / EN / EL) | `src/translations/*.ts` |
 
 - **Yeni ürün:** `menu.ts` → `menuItems` listesine ekle. `id` benzersiz olmalı. `keywords` asistanın ürünü tanımasını sağlar.
 - **Yeni rota:** `routes.ts` → `routes` listesine ekle. Her durak için `place` (Google Haritalar'da aranacak İngilizce isim) ve `lat/lng` (harita konumu) yaz.
 - **Asistanın cevapladığı sorular:** `hotel.ts` → `faq` listesi (`keywords` + 3 dilde `answer`).
-
-## Tasarım
-
-- **Yazı tipi:** Commissioner (Yunan tasarımcı Kostas Bartsokas). Türkçe ve Yunanca harflerin hepsi var, uygulamanın içinde gelir (internet olmadan da çalışır).
-- **Renkler:** `tailwind.config.js`. Ana düğmeler ve seçili durumlar koyu mavi (`primary`). Yeşil = otel hizmetleri, şeftali = rotalar, lila = konsiyerj, pembe = anı kartı.
-- **İmza öğesi:** `src/components/KeyTag.tsx`. Oda numarası eski otel anahtarlarındaki gibi bir anahtar etiketinin üzerinde durur.
-- **Kullanım kolaylığı:** en az 16 px yazı, en az 44 px dokunma alanı, büyük satırlı listeler, klavye odağı görünür, hareket azaltma ayarına uyar.
 
 ## Asistan kuralları (`src/lib/concierge.ts`)
 
