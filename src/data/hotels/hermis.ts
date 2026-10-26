@@ -14,6 +14,8 @@ export const hermis: HotelProfile = {
     '201': 'b3h8', '202': 'c9f4', '203': 'g6j2', '204': 'q1z7', '205': 'y4s5',
     '301': 'd5k3', '302': 'h2p8', '303': 'n7t4', '304': 'v3x6', '305': 'z8m2',
   },
+  // Personel PIN kodları (yalnızca bu otelde geçerli)
+  staffPins: { '1111': 'kitchen', '2222': 'housekeeping', '3333': 'reception' },
   name: 'Hermis Boutique Hotel',
   area: {"tr": "Plaka, Atina", "en": "Plaka, Athens", "el": "Πλάκα, Αθήνα"},
   checkIn: '14:00',

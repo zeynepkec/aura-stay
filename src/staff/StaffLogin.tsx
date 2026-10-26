@@ -5,7 +5,7 @@ import HotelPicker from '../components/HotelPicker'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import type { HotelProfile } from '../data/hotels'
 import { pick } from '../data/menu'
-import { staffLogin } from '../lib/staff'
+import { pinsOf, staffLogin } from '../lib/staff'
 import '../translations/staff'
 import '../translations/guestLogin'
 
@@ -122,7 +122,7 @@ export default function StaffLogin() {
           </button>
         </div>
 
-        <p className="mt-8 text-xs text-muted">{t('staff.demo_pins')}</p>
+        <p className="mt-8 text-xs text-muted">{t('staff.demo_pins', pinsOf(hotel.id))}</p>
         <a href="/" className="mt-4 inline-flex h-11 items-center gap-1 px-2 text-sm text-muted">
           <ArrowLeft size={16} />
           {t('staff.back_to_start')}

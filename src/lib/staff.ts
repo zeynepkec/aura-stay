@@ -1,11 +1,14 @@
+import { hotelById } from '../data/hotels'
 import { resetOnFreshOpen } from './session'
-// Personel rolleri ve demo PIN kodları — Adım 23'te gerçek kullanıcı girişiyle değişecek
+// Personel rolleri. PIN kodları her otelin kendi profilinde (staffPins): bir otelin PIN'i başka otelde çalışmaz.
 export type StaffRole = 'kitchen' | 'housekeeping' | 'reception'
 
-const PINS: Record<string, StaffRole> = {
-  '1111': 'kitchen',
-  '2222': 'housekeeping',
-  '3333': 'reception',
+// Otelin PIN listesi: rol → PIN (giriş ekranındaki ipucu için)
+export function pinsOf(hotelId: string): Record<StaffRole, string> {
+  const pins = hotelById(hotelId)?.staffPins ?? {}
+  const out = { kitchen: '', housekeeping: '', reception: '' }
+  for (const [pin, role] of Object.entries(pins)) out[role] = pin
+  return out
 }
 
 // Panel sekmeleri ve her sekmeyi hangi rollerin görebileceği
@@ -41,7 +44,7 @@ export function getStaff(): StaffSession | null {
 
 // PIN doğruysa girişi başlat
 export function staffLogin(pin: string, hotelId: string): StaffSession | null {
-  const role = PINS[pin]
+  const role = hotelById(hotelId)?.staffPins[pin]
   if (!role) return null
   const session: StaffSession = { role, loginAt: Date.now(), hotelId }
   localStorage.setItem(KEY, JSON.stringify(session))

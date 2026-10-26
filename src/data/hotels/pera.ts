@@ -16,6 +16,8 @@ export const pera: HotelProfile = {
     '201': 'g7t3', '202': 'k1m8', '203': 's5b4', '204': 'f9d2', '205': 'u3c6',
     '301': 'j8h1', '302': 'x2w7', '303': 'o6q3', '304': 'i4n9', '305': 'y7v2',
   },
+  // Personel PIN kodları (yalnızca bu otelde geçerli)
+  staffPins: { '4141': 'kitchen', '5252': 'housekeeping', '6363': 'reception' },
   checkIn: '14:00',
   checkOut: '12:00',
   breakfast: '07:00 – 10:30',

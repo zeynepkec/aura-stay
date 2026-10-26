@@ -29,7 +29,7 @@ Uygulama giriş ekranıyla açılır: **Misafir girişi** ya da **Personel giri�
   1. **QR kodu okut:** odadaki QR kod kamerayla (ya da fotoğraftan) okunur
   2. **Oda numarası gir:** oda numarası + 4 haneli giriş kodu (ör. Hermis Oda 302 kod `h2p8`, Pera Lale Oda 302 kod `x2w7`). Kodlar `/qr` sayfasında her odanın altında yazar
   3. **Oda kartını okut:** NFC oda kartı (sadece Android + Chrome). Kartlar `/qr` sayfasındaki "Karta yaz" ile hazırlanır
-- **Personel girişi:** `/staff` → otel seçilir → PIN **1111** Mutfak, **2222** Kat hizmetleri, **3333** Resepsiyon (PIN'ler ekranda yazmaz)
+- **Personel girişi:** `/staff` → otel seçilir → otelin kendi PIN'i. Hermis: **1111** Mutfak, **2222** Kat hizmetleri, **3333** Resepsiyon. Pera: **4141** Mutfak, **5252** Kat hizmetleri, **6363** Resepsiyon. Bir otelin PIN'i diğer otelde çalışmaz.
 - Oda QR kodları ve giriş kodları: Resepsiyon paneli → **Oda QR kodları** (ya da `/qr`)
 - Sunum için örnek veriler: Resepsiyon → **Demo** sekmesi
 - Kamera ile QR okuma sadece güvenli adreste (https ya da localhost) açılır; telefonda yerel ağ adresiyle denerken "Fotoğraftan oku"yu kullanın

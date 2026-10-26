@@ -15,6 +15,7 @@ export type HotelProfile = {
   currency: 'EUR' | 'TRY'
   location: { lat: number; lng: number }
   rooms: Record<string, string> // oda numarası → giriş kodu
+  staffPins: Record<string, 'kitchen' | 'housekeeping' | 'reception'> // otelin personel PIN kodları (her otelde farklı)
   checkIn: string
   checkOut: string
   breakfast: string
