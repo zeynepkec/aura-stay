@@ -3,7 +3,7 @@ import { ArrowLeft, Building2, Delete, Lock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import HotelPicker from '../components/HotelPicker'
 import LanguageSwitcher from '../components/LanguageSwitcher'
-import { hotelById, type HotelProfile } from '../data/hotels'
+import type { HotelProfile } from '../data/hotels'
 import { pick } from '../data/menu'
 import { staffLogin } from '../lib/staff'
 import '../translations/staff'
@@ -12,7 +12,8 @@ import '../translations/guestLogin'
 export default function StaffLogin() {
   const { t, i18n } = useTranslation()
   // Personel önce otelini seçer (bu cihazda hatırlanır), sonra PIN girer
-  const [hotel, setHotel] = useState<HotelProfile | null>(() => hotelById(localStorage.getItem('aura-staff-hotel') ?? undefined) ?? null)
+  // Personel girişi her zaman ülke seçimiyle başlar (ülke → şehir → otel → PIN)
+  const [hotel, setHotel] = useState<HotelProfile | null>(null)
   const [pin, setPin] = useState('')
   const [error, setError] = useState(false)
 
