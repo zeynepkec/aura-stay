@@ -45,7 +45,7 @@ export default function RouteDetail() {
           {t('routeDetail.back')}
         </Link>
         <div className="mt-1 flex items-center gap-3">
-          <span className="flex h-10 min-w-10 shrink-0 items-center justify-center rounded-lg bg-ink px-1.5 font-display text-[20px] font-extrabold text-card">
+          <span className="flex h-10 min-w-10 shrink-0 items-center justify-center rounded-lg bg-ink px-1.5 font-title text-[20px] font-extrabold text-card">
             R{all.indexOf(route) + 1}
           </span>
           <h1 className="text-[30px] leading-none">{pick(route.title, lang)}</h1>
@@ -74,7 +74,7 @@ export default function RouteDetail() {
         <section>
           <p className="leading-relaxed text-ink/85">{pick(route.description, lang)}</p>
           {pick(route.tip, lang) && (
-            <p className="mt-3 flex gap-2 rounded-card bg-activity p-3 text-sm">
+            <p className="mt-3 flex gap-2 rounded-card bg-primary-soft p-3 text-sm">
               <Lightbulb size={16} className="mt-0.5 shrink-0" />
               <span>
                 <b>{t('routeDetail.tip')}: </b>
@@ -107,7 +107,7 @@ export default function RouteDetail() {
                   {/* Yürüyüş: kesik çizgi */}
                   <li className="flex min-h-[34px] gap-3.5">
                     <span className="relative w-10 shrink-0">
-                      <span className="absolute inset-y-0 left-[17px] w-1.5 bg-[repeating-linear-gradient(#7B92BC_0_6px,transparent_6px_11px)]" />
+                      <span className="absolute inset-y-0 left-[17px] w-1.5 bg-[repeating-linear-gradient(#8A8A8A_0_6px,transparent_6px_11px)]" />
                     </span>
                     <p className="self-center text-sm text-muted">{t('metro.walk', { count: walkMinutes(prev, stop) })}</p>
                   </li>
@@ -119,7 +119,7 @@ export default function RouteDetail() {
                     </span>
                     <div className="flex flex-1 items-start justify-between gap-2 pt-1">
                       <div>
-                        <p className="font-display text-xl font-extrabold leading-tight">{pick(stop.name, lang)}</p>
+                        <p className="font-title text-xl font-extrabold leading-tight">{pick(stop.name, lang)}</p>
                         <p className="text-sm text-muted">
                           {t('explore.min', { count: stop.minutes })}
                           {last ? `, ${t('metro.last_stop')}` : ''}
@@ -151,7 +151,7 @@ export default function RouteDetail() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <Polyline positions={points} pathOptions={{ color: '#7B92BC', weight: 6 }} />
+              <Polyline positions={points} pathOptions={{ color: '#0A0A0A', weight: 6 }} />
               {route.stops.map((stop, i) => (
                 <Marker key={`${stop.place}-${i}`} position={[stop.lat, stop.lng]} icon={numberIcon(i + 1)} />
               ))}

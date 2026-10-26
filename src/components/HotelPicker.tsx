@@ -36,7 +36,7 @@ export default function HotelPicker({ initial, onSelect }: { initial?: string; o
               }}
               className={chip(country === c.id)}
             >
-              <span className="text-lg">{c.flag}</span>
+              
               {pick(c.name, lang)}
             </button>
           ))}

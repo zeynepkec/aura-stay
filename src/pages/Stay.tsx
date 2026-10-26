@@ -28,7 +28,7 @@ export default function Stay() {
       {/* Konaklama kartı — lila-pembe geçiş */}
       <header className="bg-primary px-5 pb-5 pt-4 text-card">
         <p className="font-display text-base font-bold text-card/85">{stay.hotelName}</p>
-        <h1 className="mt-1 font-display text-[64px] leading-[0.9]">{stay.roomNumber}</h1>
+        <h1 className="mt-1 font-title text-[64px] leading-[0.9]">{stay.roomNumber}</h1>
         <div className="mt-5 grid grid-cols-3 gap-2 text-center">
           <div className="rounded-lg bg-card/15 p-2">
             <p className="text-xs text-card/80">{t('stay.check_in')}</p>

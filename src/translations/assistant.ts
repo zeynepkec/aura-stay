@@ -28,7 +28,7 @@ i18n.addResourceBundle('tr', 'translation', {
       amenities_which: 'Ne getirelim?',
       menu_hint: 'Menüden birkaç öneri:',
       greeting: 'Merhaba! Sana nasıl yardımcı olabilirim?',
-      thanks: 'Rica ederim, iyi tatiller! 😊',
+      thanks: 'Rica ederim, iyi tatiller.',
       sold_out_item: '{{name}} şu an tükendi, üzgünüm.',
     },
     buttons: {
@@ -74,7 +74,7 @@ i18n.addResourceBundle('en', 'translation', {
       amenities_which: 'What should we bring?',
       menu_hint: 'A few picks from the menu:',
       greeting: 'Hello! How can I help you?',
-      thanks: 'You’re welcome, enjoy your stay! 😊',
+      thanks: 'You’re welcome, enjoy your stay.',
       sold_out_item: 'Sorry, {{name}} is sold out right now.',
     },
     buttons: {
@@ -120,7 +120,7 @@ i18n.addResourceBundle('el', 'translation', {
       amenities_which: 'Τι να σας φέρουμε;',
       menu_hint: 'Μερικές προτάσεις από το μενού:',
       greeting: 'Γεια σας! Πώς μπορώ να βοηθήσω;',
-      thanks: 'Παρακαλώ, καλή διαμονή! 😊',
+      thanks: 'Παρακαλώ, καλή διαμονή.',
       sold_out_item: 'Λυπάμαι, το {{name}} έχει εξαντληθεί.',
     },
     buttons: {

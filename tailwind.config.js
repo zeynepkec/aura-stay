@@ -1,31 +1,53 @@
 /** @type {import('tailwindcss').Config} */
-// "Metro Hattı" tasarımı: otel tabelası + metro haritası.
-// Her hizmet renkli, harfli bir "hat" rozetiyle gösterilir (Y Yemek, T Temizlik, M Masa/Transfer, R Rotalar, K Konsiyerj).
+// askHermis 2027 tasarım sistemi (Hermis ekibinin gönderdiği): mürekkep, kâğıt ve bej.
+// Arayüz tek renkli; renk yalnızca büyük "boyalı zeminlerde" (field) kullanılır.
+// Hizmet hatları (Y, T, M, R, K, O) korunuyor: rozetler gri tonlu karolar, sayfa başlıkları departman zeminleri.
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        background: '#F7F6F4',      // Warm White — ana zemin
-        card: '#FFFFFF',            // Pure White — içerik kartları
-        ink: '#0A0A0A',             // Ink Black — yazılar ve ana düğmeler
-        muted: '#706C68',           // gri ikincil yazılar
-        line: '#EAE7E3',            // ince kenarlıklar
-        primary: '#3C4C7F',         // Deep Blue — tabela, seçili sekme, aktif durak
-        'primary-soft': '#DCE2F0',  // aktif durağın halkası
-        discover: '#B4A5DC',        // Soft Lilac — Y hattı (yemek)
-        'discover-pink': '#DEACD1', // Dusty Pink — T hattı (temizlik)
-        activity: '#E5BFA8',        // Peach Salmon — M hattı (masa, transfer), ipuçları
-        service: '#C5D1C5',         // Sage Green — R hattı (rotalar)
-        accent: '#7B92BC',          // Muted Blue — rota çizgisi, yıldızlar
-        campaign: '#3C4C7F',        // Deep Blue — kampanyalar
+        background: '#F7F6F4',      // beige — surface-grouped, ana zemin
+        card: '#FFFFFF',            // paper — surface-raised
+        ink: '#0A0A0A',             // ink — yazı ve tek ana düğme (accent)
+        muted: '#3B3B3B',           // label-secondary
+        line: '#E6E5E2',            // separator
+        primary: '#0A0A0A',         // ink hero zemini, seçili sekme, aktif durak
+        'primary-soft': '#E4E3E0',  // accent-tint
+        discover: '#F9BC9A',        // field-peach — F&B (Y hattı, yemek)
+        'discover-pink': '#C2D6C4', // field-sage — temizlik (T hattı)
+        activity: '#E5885A',        // field-ember — Front Office (M hattı, masa ve transfer)
+        service: '#C2D6C4',         // field-sage — sakin zemin (R hattı, rotalar)
+        accent: '#3B3B3B',          // graphite — rota çizgisi, yıldızlar
+        campaign: '#183274',        // field-night — kapanış çağrısı (kampanya)
+        tile: {
+          ink: '#0A0A0A',
+          graphite: '#3B3B3B',
+          stone: '#6B6B6B',
+          silver: '#8A8A8A',
+          sand: '#7A7266',
+        },
+        success: { DEFAULT: '#1E5945', text: '#14503A', tint: 'rgba(30,89,69,0.12)' },
+        warning: { DEFAULT: '#B07A12', text: '#7A5200', tint: 'rgba(176,122,18,0.14)' },
+        danger: { DEFAULT: '#A31D1D', text: '#8E1A1A', tint: 'rgba(163,29,29,0.10)' },
       },
       fontFamily: {
-        sans: ['"Sofia Sans Variable"', '"Sofia Sans"', 'system-ui', 'sans-serif'],
-        display: ['"Sofia Sans Condensed"', '"Sofia Sans Variable"', 'system-ui', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Helvetica Neue"', 'sans-serif'],
+        // Küçük etiket ve düğmeler Inter ile (Comfortaa 20px altında kullanılmaz)
+        display: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Helvetica Neue"', 'sans-serif'],
+        // Başlıklar: Comfortaa (Yunanca harfleri de var)
+        title: ['Comfortaa', 'Inter', '-apple-system', 'sans-serif'],
+        mono: ['"Geist Mono"', 'Inter', 'ui-monospace', 'monospace'],
+      },
+      fontWeight: {
+        extrabold: '700',
       },
       borderRadius: {
-        card: '12px',               // tabela gibi: köşeler hafif yuvarlak
+        card: '14px',               // radius-lg
+      },
+      boxShadow: {
+        card: '0 1px 2px rgba(10,10,10,0.05), 0 8px 24px rgba(10,10,10,0.06)',
+        popover: '0 14px 36px rgba(10,10,10,0.18)',
       },
     },
   },

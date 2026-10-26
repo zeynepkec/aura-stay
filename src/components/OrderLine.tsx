@@ -3,7 +3,7 @@ import { ORDER_STEPS } from '../store/StayContext'
 import '../translations/orders'
 
 // Siparişin durakları yatay bir metro hattı üzerinde: Alındı → Hazırlanıyor → Yolda → Teslim
-export default function OrderLine({ step, color = 'bg-discover' }: { step: number; color?: string }) {
+export default function OrderLine({ step, color = 'bg-ink' }: { step: number; color?: string }) {
   const { t } = useTranslation()
   const pct = (i: number) => `${(i / (ORDER_STEPS.length - 1)) * 100}%`
   return (

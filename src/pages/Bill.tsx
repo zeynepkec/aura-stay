@@ -51,7 +51,7 @@ export default function Bill() {
         {/* Yemek siparişleri */}
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-base font-bold">{t('stay.bill.orders')}</h2>
+            <h2 className="font-sans text-base font-bold">{t('stay.bill.orders')}</h2>
             <span className="text-sm font-semibold">{price(ordersTotal, lang)}</span>
           </div>
           {orders.length === 0 ? (
@@ -78,7 +78,7 @@ export default function Bill() {
         {/* Hizmetler */}
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-base font-bold">{t('stay.bill.services')}</h2>
+            <h2 className="font-sans text-base font-bold">{t('stay.bill.services')}</h2>
           </div>
           {requests.length === 0 ? (
             <p className="rounded-card border border-line bg-card p-4 text-center text-sm text-muted">{t('stay.bill.no_items')}</p>
@@ -89,7 +89,7 @@ export default function Bill() {
                 const onRequest = PRICE_ON_REQUEST.includes(r.type)
                 return (
                   <li key={r.id} className="flex items-center gap-3 p-4">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-service">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-tile-sand text-card">
                       <Icon size={16} />
                     </span>
                     <div className="flex-1">

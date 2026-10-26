@@ -13,7 +13,7 @@ i18n.addResourceBundle('tr', 'translation', {
     share: 'Paylaş',
     download: 'Görsel olarak indir',
     preparing: 'Hazırlanıyor…',
-    share_text: '{{hotel}} konaklamamdan anılar ✨',
+    share_text: '{{hotel}} konaklamamdan anılar',
   },
 }, true, true)
 
@@ -30,7 +30,7 @@ i18n.addResourceBundle('en', 'translation', {
     share: 'Share',
     download: 'Download as image',
     preparing: 'Preparing…',
-    share_text: 'Memories from my stay at {{hotel}} ✨',
+    share_text: 'Memories from my stay at {{hotel}}',
   },
 }, true, true)
 
@@ -47,6 +47,6 @@ i18n.addResourceBundle('el', 'translation', {
     share: 'Κοινοποίηση',
     download: 'Λήψη ως εικόνα',
     preparing: 'Προετοιμασία…',
-    share_text: 'Αναμνήσεις από τη διαμονή μου στο {{hotel}} ✨',
+    share_text: 'Αναμνήσεις από τη διαμονή μου στο {{hotel}}',
   },
 }, true, true)

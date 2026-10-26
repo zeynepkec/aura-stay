@@ -91,7 +91,7 @@ export default function MemoryCard() {
 
       <div className="px-5">
         {/* Anı kartı — resme çevrilen kısım */}
-        <div ref={cardRef} className="relative overflow-hidden rounded-card p-6 bg-discover">
+        <div ref={cardRef} className="field relative overflow-hidden rounded-card p-6 bg-discover">
           <span className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-card/25" />
           <span className="pointer-events-none absolute -bottom-20 -left-10 h-40 w-40 rounded-full bg-accent/25" />
 

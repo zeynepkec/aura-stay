@@ -76,7 +76,7 @@ export default function StaffFeedback() {
                   className={`rounded-card border bg-card p-4 ${f.status === 'new' ? 'border-primary ring-2 ring-primary-soft' : 'border-line'}`}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-display text-xl font-extrabold">
+                    <p className="font-title text-xl font-extrabold">
                       {t('feedback.room', { number: f.room })}
                       <span className="ml-2 rounded-md bg-background px-2 py-0.5 text-xs font-medium text-muted">
                         {t(`review.feedback.categories.${f.category}`)}
@@ -84,7 +84,7 @@ export default function StaffFeedback() {
                     </p>
                     <span
                       className={`rounded-md px-2.5 py-1 text-xs font-semibold ${
-                        f.status === 'resolved' ? 'bg-service' : f.status === 'seen' ? 'bg-accent/15 text-accent' : 'bg-activity'
+                        f.status === 'resolved' ? 'bg-success-tint text-success-text' : f.status === 'seen' ? 'bg-primary-soft text-muted' : 'bg-warning-tint text-warning-text'
                       }`}
                     >
                       {t(`feedback.status.${f.status}`)}
@@ -129,7 +129,7 @@ export default function StaffFeedback() {
           </div>
 
           {/* Ortalama puan kartı — lila-pembe geçiş */}
-          <div className="mb-4 rounded-card p-5 bg-discover">
+          <div className="field mb-4 rounded-card p-5 bg-discover">
             <p className="text-sm text-ink/70">{t('feedback.average')}</p>
             <p className="mt-1 text-4xl font-bold">{reviews.length ? overall.toFixed(1) : '—'}</p>
             <p className="text-xs text-ink/60">{t('feedback.count', { count: reviews.length })}</p>
@@ -153,7 +153,7 @@ export default function StaffFeedback() {
               {reviews.map((r) => (
                 <article key={r.room} className="rounded-card border border-line bg-card p-4">
                   <div className="flex items-center justify-between">
-                    <p className="font-display text-xl font-extrabold">{t('feedback.room', { number: r.room })}</p>
+                    <p className="font-title text-xl font-extrabold">{t('feedback.room', { number: r.room })}</p>
                     <span className="text-xs text-muted">{time(r.createdAt)}</span>
                   </div>
                   <div className="mt-2 space-y-1 text-xs">

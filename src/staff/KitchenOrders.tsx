@@ -18,9 +18,9 @@ const NEXT: Partial<Record<OrderStatus, OrderStatus>> = {
 
 // Sütun başlığındaki renkli nokta
 const DOT: Record<string, string> = {
-  received: 'bg-discover',
-  preparing: 'bg-primary',
-  on_the_way: 'bg-service',
+  received: 'bg-warning',
+  preparing: 'bg-ink',
+  on_the_way: 'bg-tile-silver',
 }
 
 export default function KitchenOrders() {
@@ -76,7 +76,7 @@ export default function KitchenOrders() {
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <p className="font-display text-[30px] font-extrabold leading-none">{t('kitchen.room', { number: o.room ?? '—' })}</p>
+                          <p className="font-title text-[30px] font-extrabold leading-none">{t('kitchen.room', { number: o.room ?? '—' })}</p>
                           <p className="mt-0.5 flex items-center gap-1 text-xs text-muted">
                             #{o.id}, <Clock size={12} /> {ago(o.createdAt)}
                           </p>
@@ -98,7 +98,7 @@ export default function KitchenOrders() {
 
                       {/* Misafirin notu — Peach Salmon ile vurgulu */}
                       {o.note && (
-                        <p className="mt-3 flex gap-2 rounded-xl bg-activity/40 p-3 text-sm">
+                        <p className="mt-3 flex gap-2 rounded-xl bg-primary-soft p-3 text-sm">
                           <StickyNote size={16} className="mt-0.5 shrink-0" />
                           {o.note}
                         </p>

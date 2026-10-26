@@ -2,23 +2,119 @@
 @tailwind components;
 @tailwind utilities;
 
+/* askHermis 2027: fontlar dosya olarak geliyor (CDN yok) */
+@font-face {
+  font-family: 'Comfortaa';
+  src: url('./assets/fonts/Comfortaa-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Comfortaa';
+  src: url('./assets/fonts/Comfortaa-600.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Comfortaa';
+  src: url('./assets/fonts/Comfortaa-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('./assets/fonts/InterVariable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('./assets/fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 body {
   @apply bg-background text-ink antialiased;
-  font-family: 'Sofia Sans Variable', 'Sofia Sans', system-ui, sans-serif;
-  font-size: 15px;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: -0.1px;
 }
 
-/* Başlıklar tabela yazısı gibi: dar ve kalın */
+/* Başlıklar Comfortaa; küçüldükçe ağırlık artar (34px 500, 20px 600) */
 h1,
-h2 {
-  font-family: 'Sofia Sans Condensed', 'Sofia Sans Variable', system-ui, sans-serif;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+h2,
+.font-title {
+  font-family: Comfortaa, Inter, -apple-system, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+}
+h1 {
+  font-weight: 500;
+  letter-spacing: -0.8px;
 }
 
+/* Rakamlar sütunda hizalı dursun */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Odak halkası: 2px mürekkep, kontrolün dışında */
 :focus-visible {
-  outline: 2px solid #3c4c7f;
+  outline: 2px solid #0a0a0a;
   outline-offset: 2px;
+}
+
+/* Basınca tepki: parmak değer değmez küçül (0.97), 100ms */
+button:not(:disabled):active,
+a[href]:active {
+  transform: scale(0.97);
+  transition: transform 100ms ease-out;
+}
+
+/* Boyalı zeminler (PaintedField): düz zemin + fırça şekli + ince sıcak kenar + yumuşak ışık + ince gren */
+.bg-primary,
+.bg-discover,
+.bg-discover-pink,
+.bg-activity,
+.bg-service,
+.bg-campaign {
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1.3 0 0 0 -0.15 1.3 0 0 0 -0.15 1.3 0 0 0 -0.15 0 0 0 0 0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+header.bg-discover,
+.field.bg-discover {
+  background-image: var(--grain), radial-gradient(70% 60% at 30% 25%, rgba(255, 255, 255, 0.1), transparent 70%),
+    radial-gradient(40% 44% at 104% 104%, #cbaff7 0%, #cbaff7 6%, transparent 58%),
+    radial-gradient(58% 70% at 104% -6%, #fce3c8 0%, #fce3c8 56%, transparent 62%),
+    radial-gradient(62% 74% at 104% -6%, #fff2e4 0%, #fff2e4 54%, transparent 64%),
+    radial-gradient(48% 52% at -4% 104%, #f68f72 0%, #f68f72 10%, transparent 66%);
+  background-size: 160px 160px, auto, auto, auto, auto, auto;
+}
+header.bg-service,
+header.bg-discover-pink,
+.field.bg-service {
+  background-image: var(--grain), radial-gradient(70% 60% at 30% 25%, rgba(255, 255, 255, 0.1), transparent 70%),
+    radial-gradient(36% 40% at 96% 100%, #f7d6ba 0%, #f7d6ba 6%, transparent 56%),
+    radial-gradient(58% 70% at 104% -6%, #e5eee4 0%, #e5eee4 56%, transparent 62%),
+    radial-gradient(62% 74% at 104% -6%, #f6faf4 0%, #f6faf4 54%, transparent 64%),
+    radial-gradient(50% 54% at -4% 104%, #9aba9f 0%, #9aba9f 10%, transparent 66%);
+  background-size: 160px 160px, auto, auto, auto, auto, auto;
+}
+header.bg-activity,
+.field.bg-activity {
+  background-image: var(--grain), radial-gradient(70% 60% at 30% 25%, rgba(255, 255, 255, 0.1), transparent 70%),
+    radial-gradient(40% 40% at 28% 22%, #f6c3a0 0%, #f6c3a0 6%, transparent 62%),
+    radial-gradient(56% 70% at 104% 104%, #c85a34 0%, #c85a34 56%, transparent 62%),
+    radial-gradient(60% 74% at 104% 104%, #f2a57a 0%, #f2a57a 54%, transparent 64%),
+    radial-gradient(44% 52% at -6% 100%, #a8452b 0%, #a8452b 10%, transparent 64%);
+  background-size: 160px 160px, auto, auto, auto, auto, auto;
+}
+.bg-campaign {
+  background-image: var(--grain), radial-gradient(70% 60% at 30% 25%, rgba(255, 255, 255, 0.1), transparent 70%),
+    radial-gradient(58% 80% at 104% 106%, #c94624 0%, #c94624 56%, transparent 62%),
+    radial-gradient(62% 84% at 104% 106%, #f68a41 0%, #f68a41 54%, transparent 64%),
+    radial-gradient(46% 52% at -6% -6%, #612860 0%, #612860 20%, transparent 72%);
+  background-size: 160px 160px, auto, auto, auto, auto;
 }
 
 @keyframes toast-in {
@@ -38,5 +134,9 @@ h2 {
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+  button:not(:disabled):active,
+  a[href]:active {
+    transform: none;
   }
 }

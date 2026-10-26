@@ -70,7 +70,7 @@ export default function Services() {
                   <span
                     className={`rounded-md px-2.5 py-1 text-xs font-bold ${
                       r.status === 'done' || r.status === 'confirmed'
-                        ? 'bg-service'
+                        ? 'bg-success-tint text-success-text'
                         : r.status === 'in_progress'
                           ? 'bg-primary-soft text-primary'
                           : 'bg-background text-muted'

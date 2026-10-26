@@ -5,7 +5,7 @@ import '../translations/sync'
 
 const DOT: Record<SyncStatus, string> = {
   live: 'bg-green-500',
-  connecting: 'bg-activity animate-pulse',
+  connecting: 'bg-warning animate-pulse',
   local: 'bg-muted',
   error: 'bg-red-500',
 }

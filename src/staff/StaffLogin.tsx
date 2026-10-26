@@ -109,12 +109,12 @@ export default function StaffLogin() {
         {/* Tuş takımı */}
         <div className="grid grid-cols-3 gap-3">
           {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((d) => (
-            <button key={d} type="button" onClick={() => press(d)} className="h-16 rounded-[10px] border border-line bg-card font-display text-[28px] font-extrabold active:bg-background">
+            <button key={d} type="button" onClick={() => press(d)} className="h-16 rounded-[10px] border border-line bg-card font-title text-[28px] font-extrabold active:bg-background">
               {d}
             </button>
           ))}
           <span />
-          <button type="button" onClick={() => press('0')} className="h-16 rounded-[10px] border border-line bg-card font-display text-[28px] font-extrabold active:bg-background">
+          <button type="button" onClick={() => press('0')} className="h-16 rounded-[10px] border border-line bg-card font-title text-[28px] font-extrabold active:bg-background">
             0
           </button>
           <button type="button" onClick={() => setPin(pin.slice(0, -1))} aria-label={t('staff.delete')} className="flex h-16 items-center justify-center rounded-[10px] text-muted">

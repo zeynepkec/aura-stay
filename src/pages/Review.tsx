@@ -96,7 +96,7 @@ export default function Review() {
         </section>
 
         {saved ? (
-          <div className="flex items-center gap-3 rounded-card bg-service p-4">
+          <div className="flex items-center gap-3 rounded-card bg-success-tint p-4 text-success-text">
             <CheckCircle2 size={22} />
             <p className="text-sm font-semibold">{t('review.thanks')}</p>
           </div>
@@ -164,7 +164,7 @@ export default function Review() {
                     </span>
                     <span
                       className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-                        f.status === 'resolved' ? 'bg-service' : f.status === 'seen' ? 'bg-accent/15 text-accent' : 'bg-background text-muted'
+                        f.status === 'resolved' ? 'bg-success-tint text-success-text' : f.status === 'seen' ? 'bg-primary-soft text-muted' : 'bg-background text-muted'
                       }`}
                     >
                       {t(`review.feedback.status.${f.status}`)}

@@ -96,7 +96,7 @@ export default function Cart() {
 
           {/* Tükenen ürün uyarısı — Peach Salmon */}
           {hasSoldOut && (
-            <p className="mx-5 mt-4 flex gap-2 rounded-card bg-activity/60 p-4 text-sm font-medium">
+            <p className="mx-5 mt-4 flex gap-2 rounded-card bg-primary-soft p-4 text-sm font-medium">
               <AlertTriangle size={18} className="mt-px shrink-0" />
               {t('dining.sold_out_warning')}
             </p>

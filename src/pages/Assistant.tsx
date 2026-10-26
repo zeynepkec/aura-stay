@@ -130,7 +130,7 @@ export default function Assistant() {
     if (d.destination) parts.push(optionName(transferDestinations, d.destination, lang))
     if (d.venue) parts.push(optionName(tableVenues, d.venue, lang))
     if (d.time) parts.push(`${dateLabel(d.date)} ${d.time}`)
-    if (d.people) parts.push(`${d.people} 👤`)
+    if (d.people) parts.push(t('services.form.people_count', { count: Number(d.people) }))
     return parts.join(' · ')
   }
 
@@ -187,7 +187,7 @@ export default function Assistant() {
         {msg.status === 'done' && (
           <Link
             to={record.kind === 'order' ? `/orders/${msg.resultId}` : '/services'}
-            className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-service px-3 py-2 text-sm font-semibold"
+            className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-success-tint px-3 py-2 text-sm font-semibold text-success-text"
           >
             <span className="flex items-center gap-1.5"><Check size={15} /> #{msg.resultId}</span>
             <span className="underline">{t(record.kind === 'order' ? 'assistant.buttons.track_order' : 'assistant.buttons.see_requests')}</span>
@@ -248,7 +248,7 @@ export default function Assistant() {
       <>
         {t('assistant.ai.route_intro')}
         <Link to={`/explore/${route.id}`} className="mt-2 flex items-center gap-3 rounded-xl bg-background p-2">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-activity">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-tile-sand text-card">
             <Icon size={18} />
           </span>
           <span className="min-w-0 flex-1">
@@ -260,7 +260,7 @@ export default function Assistant() {
             {route.rating}
           </span>
         </Link>
-        <p className="mt-2 text-xs text-ink/70">💡 {pick(route.tip, lang)}</p>
+        <p className="mt-2 text-xs text-ink/70">{pick(route.tip, lang)}</p>
         {chipRow(msg.chips)}
         <Link to="/explore" className="mt-2 block text-xs font-semibold text-accent underline">{t('assistant.buttons.all_routes')}</Link>
       </>
@@ -270,7 +270,7 @@ export default function Assistant() {
   // Asistan baloncuğu
   const botBubble = (key: number, children: ReactNode) => (
     <div key={key} className="flex gap-2">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-discover">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ink text-card">
         <span className="font-display text-base font-extrabold">{hotel.name.charAt(0)}</span>
       </span>
       <div className="max-w-[85%] rounded-card rounded-tl-md border border-line bg-card px-4 py-3 text-sm leading-relaxed">{children}</div>
@@ -280,7 +280,7 @@ export default function Assistant() {
   return (
     <div className="pb-20">
       <header className="mb-4 flex items-center gap-3 bg-primary px-5 pb-5 pt-6 text-card">
-        <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-card font-display text-[22px] font-extrabold text-primary">K</span>
+        <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-card font-title text-[22px] font-extrabold text-primary">K</span>
         <div>
           <h1 className="text-[36px] leading-none">{t('assistant.title')}</h1>
           <p className="mt-1 text-sm text-card/85">{t('assistant.subtitle', { hotel: hotel.name.split(' ')[0] })}</p>

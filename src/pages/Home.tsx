@@ -54,7 +54,7 @@ export default function Home() {
           <LanguageSwitcher dark />
         </div>
         <div className="mt-5 flex items-end gap-4">
-          <span className="font-display text-[92px] font-extrabold leading-[0.85] tracking-tight">{stay.roomNumber}</span>
+          <span className="font-title text-[92px] font-extrabold leading-[0.85] tracking-tight">{stay.roomNumber}</span>
           <div className="pb-1">
             <p className="text-[15px] font-bold">{stay.hotelName}</p>
             <p className="text-sm text-card/85">
@@ -81,7 +81,7 @@ export default function Home() {
       {/* Devam eden talepler */}
       {activeRequests.length > 0 && (
         <section className="border-b border-line bg-card px-5 py-3">
-          <h2 className="mb-1 text-lg">{t('metro.requests')}</h2>
+          <h2 className="mb-1 text-xl">{t('metro.requests')}</h2>
           <ul>
             {activeRequests.map((r) => (
               <li key={r.id}>

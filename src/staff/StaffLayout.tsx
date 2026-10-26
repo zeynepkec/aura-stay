@@ -73,11 +73,11 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
       <header className="bg-primary text-card">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4">
           <div className="flex items-center gap-3">
-            <span className="flex h-11 min-w-11 items-center justify-center rounded-lg bg-card font-display text-[24px] font-extrabold text-primary">
+            <span className="flex h-11 min-w-11 items-center justify-center rounded-lg bg-card font-title text-[24px] font-extrabold text-primary">
               {LINES[ROLE_LINE[staff.role]].letter}
             </span>
             <div>
-              <p className="font-display text-[26px] font-extrabold leading-none">{t(`staff.roles.${staff.role}`)}</p>
+              <p className="font-title text-[26px] font-extrabold leading-none">{t(`staff.roles.${staff.role}`)}</p>
               <p className="mt-1 text-sm text-card/85">{t('staff.title')}, {hotel.name}</p>
             </div>
           </div>

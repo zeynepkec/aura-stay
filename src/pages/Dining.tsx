@@ -36,7 +36,7 @@ export default function Dining() {
   return (
     <div className={cartCount > 0 ? 'pb-20' : ''}>
       <header className="flex items-center gap-3 bg-discover px-5 pb-5 pt-6">
-        <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-ink font-display text-[22px] font-extrabold text-card">Y</span>
+        <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-ink font-title text-[22px] font-extrabold text-card">Y</span>
         <div>
         <h1 className="text-[36px] leading-none">{t('dining.title')}</h1>
         <p className="mt-1 text-sm">{t('dining.subtitle', { hours: hotel.roomService })}</p>

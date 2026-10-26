@@ -146,7 +146,7 @@ export default function AddRoute() {
               />
               <PickPoint onPick={setPoint} />
               <Marker position={[HOTEL_LOCATION.lat, HOTEL_LOCATION.lng]} icon={hotelIcon} interactive={false} />
-              {linePoints.length > 1 && <Polyline positions={linePoints} pathOptions={{ color: '#3C4C7F', weight: 4, dashArray: '6 8' }} />}
+              {linePoints.length > 1 && <Polyline positions={linePoints} pathOptions={{ color: '#0A0A0A', weight: 4, dashArray: '6 8' }} />}
               {stops.map((s, i) => (
                 <Marker key={`${s.place}-${i}`} position={[s.lat, s.lng]} icon={numberIcon(i + 1)} />
               ))}
@@ -237,7 +237,7 @@ export default function AddRoute() {
           <input id="route-author" value={author} onChange={(e) => setAuthor(e.target.value)} maxLength={30} placeholder={t('addRoute.your_name_ph', { room })} className={`${field} h-12`} />
         </div>
 
-        {showMissing && !ready && <p role="alert" className="rounded-xl bg-activity/60 p-3 text-sm font-medium">{t('addRoute.missing')}</p>}
+        {showMissing && !ready && <p role="alert" className="rounded-xl bg-danger-tint p-3 text-sm font-medium text-danger-text">{t('addRoute.missing')}</p>}
 
         <button type="submit" className="flex h-14 w-full items-center justify-center rounded-[10px] bg-ink text-sm font-semibold text-card">
           {t('addRoute.submit')}

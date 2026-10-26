@@ -294,11 +294,11 @@ export default function GuestLogin() {
               {options.map(({ mode: m, icon: Icon }) => (
                 <li key={m}>
                   <button type="button" onClick={() => setMode(m)} className="flex min-h-[72px] w-full items-center gap-3.5 px-4 py-3 text-left">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-discover">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-tile-graphite text-card">
                       <Icon size={20} />
                     </span>
                     <span className="flex-1">
-                      <span className="block font-display text-xl font-extrabold">{t(`guest.${m}`)}</span>
+                      <span className="block font-title text-xl font-extrabold">{t(`guest.${m}`)}</span>
                       <span className="block text-sm text-muted">{t(`guest.${m}_text`)}</span>
                     </span>
                     <ChevronRight size={18} className="text-muted" />

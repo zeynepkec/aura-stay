@@ -16,7 +16,7 @@ export default function StaffMenu() {
   return (
     <div>
       <StaffTitle line="food" label="Y2" title={t('staffMenu.title')} subtitle={t('staffMenu.subtitle')}>
-        <span className={`rounded-md px-3 py-1.5 font-display text-base font-bold ${soldOut.length ? 'bg-ink text-card' : 'bg-service'}`}>
+        <span className={`rounded-md px-3 py-1.5 font-display text-base font-bold ${soldOut.length ? 'bg-warning-tint text-warning-text' : 'bg-success-tint text-success-text'}`}>
           {soldOut.length ? t('staffMenu.count', { count: soldOut.length }) : t('staffMenu.all_available')}
         </span>
       </StaffTitle>
@@ -45,7 +45,7 @@ export default function StaffMenu() {
                         role="switch"
                         aria-checked={available}
                         onClick={() => toggle(item.id)}
-                        className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${available ? 'bg-service' : 'bg-ink'}`}
+                        className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${available ? 'bg-ink' : 'bg-[#D6D5D2]'}`}
                       >
                         <span
                           className={`absolute top-1 h-5 w-5 rounded-full bg-card shadow transition-all ${available ? 'left-6' : 'left-1'}`}

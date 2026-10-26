@@ -66,7 +66,7 @@ export default function Welcome() {
                 <KeyRound size={20} />
               </span>
               <span className="flex-1">
-                <span className="block font-display text-xl font-extrabold">{t('start.guest')}</span>
+                <span className="block font-title text-xl font-extrabold">{t('start.guest')}</span>
                 <span className="block text-sm text-muted">{t('start.guest_text')}</span>
               </span>
               <ArrowRight size={22} />
@@ -75,11 +75,11 @@ export default function Welcome() {
           <li>
             {/* /staff ayrı bir uygulama olduğu için sayfa baştan yüklenir (a etiketi) */}
             <a href="/staff" className="flex min-h-[76px] items-center gap-3.5 px-4 py-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-service">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-tile-sand text-card">
                 <UserCog size={20} />
               </span>
               <span className="flex-1">
-                <span className="block font-display text-xl font-extrabold">{t('start.staff')}</span>
+                <span className="block font-title text-xl font-extrabold">{t('start.staff')}</span>
                 <span className="block text-sm text-muted">{t('start.staff_text')}</span>
               </span>
               <ArrowRight size={22} />

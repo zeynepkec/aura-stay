@@ -37,7 +37,7 @@ export default function StaffTables() {
 
   const stat = (value: number, label: string, highlight = false) => (
     <div className={`rounded-card border p-4 ${highlight && value > 0 ? 'border-accent bg-accent/10' : 'border-line bg-card'}`}>
-      <p className="font-display text-[34px] font-extrabold">{value}</p>
+      <p className="font-title text-[34px] font-extrabold">{value}</p>
       <p className="mt-1 text-xs text-muted">{label}</p>
     </div>
   )
@@ -78,7 +78,7 @@ export default function StaffTables() {
             <article key={r.id} className="flex flex-col gap-4 rounded-card border border-line bg-card p-4 sm:flex-row sm:items-center">
               {/* Saat ve tarih */}
               <div className="flex w-28 shrink-0 flex-col items-center rounded-xl bg-background px-3 py-2">
-                <p className="font-display text-[28px] font-extrabold">{r.details.time ?? '—'}</p>
+                <p className="font-title text-[28px] font-extrabold">{r.details.time ?? '—'}</p>
                 <p className="flex items-center gap-1 text-xs text-muted">
                   <CalendarDays size={12} />
                   {dateLabel(r.details.date)}
@@ -87,14 +87,14 @@ export default function StaffTables() {
 
               {/* Oda, kişi sayısı, not */}
               <div className="flex-1">
-                <p className="font-display text-[26px] font-extrabold leading-none">{t('tables.room', { number: r.room ?? '—' })}</p>
+                <p className="font-title text-[26px] font-extrabold leading-none">{t('tables.room', { number: r.room ?? '—' })}</p>
                 <p className="flex items-center gap-1 text-sm text-ink/70">
                   <Users size={14} />
                   {t('tables.people', { count: Number(r.details.people ?? 1) })}
                   {r.details.venue && <span className="ml-1 rounded-md bg-background px-2 py-0.5 text-xs font-medium">{optionName(tableVenues, r.details.venue, lang)}</span>}
                 </p>
                 {r.details.note && (
-                  <p className="mt-2 flex gap-2 rounded-xl bg-activity/40 p-2.5 text-sm">
+                  <p className="mt-2 flex gap-2 rounded-xl bg-primary-soft p-2.5 text-sm">
                     <StickyNote size={16} className="mt-0.5 shrink-0" />
                     {r.details.note}
                   </p>

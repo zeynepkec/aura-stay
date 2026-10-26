@@ -79,15 +79,15 @@ export default function StaffBills() {
       {/* Özet kutuları */}
       <div className="mb-6 grid grid-cols-3 gap-3">
         <div className="rounded-card border border-line bg-card p-4">
-          <p className="font-display text-[34px] font-extrabold">{openBills.length}</p>
+          <p className="font-title text-[34px] font-extrabold">{openBills.length}</p>
           <p className="mt-1 text-xs text-muted">{t('bills.stats.open')}</p>
         </div>
         <div className="rounded-card border border-line bg-card p-4">
-          <p className="font-display text-[34px] font-extrabold">{price(openAmount, lang)}</p>
+          <p className="font-title text-[34px] font-extrabold">{price(openAmount, lang)}</p>
           <p className="mt-1 text-xs text-muted">{t('bills.stats.amount')}</p>
         </div>
         <div className="rounded-card border border-line bg-card p-4">
-          <p className="font-display text-[34px] font-extrabold">{list.length - openBills.length}</p>
+          <p className="font-title text-[34px] font-extrabold">{list.length - openBills.length}</p>
           <p className="mt-1 text-xs text-muted">{t('bills.stats.closed')}</p>
         </div>
       </div>
@@ -110,12 +110,12 @@ export default function StaffBills() {
                     <Receipt size={20} />
                   </span>
                   <div className="flex-1">
-                    <p className="font-display text-2xl font-extrabold leading-none">{t('bills.room', { number: bill.room })}</p>
+                    <p className="font-title text-2xl font-extrabold leading-none">{t('bills.room', { number: bill.room })}</p>
                     <p className="text-xs text-muted">{t('bills.items', { count: bill.lines.length })}</p>
                   </div>
                   <span
                     className={`rounded-md px-2.5 py-1 text-xs font-semibold ${
-                      bill.isClosed ? 'bg-service' : 'bg-accent/15 text-accent'
+                      bill.isClosed ? 'bg-success-tint text-success-text' : 'bg-warning-tint text-warning-text'
                     }`}
                   >
                     {t(`bills.status.${bill.isClosed ? 'closed' : 'open'}`)}

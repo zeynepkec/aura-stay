@@ -360,7 +360,7 @@ export function reply(input: string, lang: string, flow: Flow, soldOut: string[]
       .slice(0, 3)
       .map((tag) => {
         const name = pick(routeTags[tag].name, lang)
-        return { label: `${routeTags[tag].emoji} ${name}`, value: `${name} ${ROUTE_WORD[lang.slice(0, 2)] ?? 'route'}` }
+        return { label: name, value: `${name} ${ROUTE_WORD[lang.slice(0, 2)] ?? 'route'}` }
       })
     return { messages: [{ kind: 'route', routeId: route.id, chips }], flow: null }
   }

@@ -44,7 +44,7 @@ export default function OrderDetail() {
 
       <div className="space-y-4 px-5 pt-5">
         {justPlaced && (
-          <div className="flex items-center gap-3 rounded-card bg-service p-4">
+          <div className="flex items-center gap-3 rounded-card bg-success-tint p-4 text-success-text">
             <CheckCircle2 size={22} />
             <p className="font-bold">{t('orders.placed')}</p>
           </div>
@@ -60,19 +60,19 @@ export default function OrderDetail() {
               <li key={step} className="flex gap-4">
                 {/* Hat ve durak */}
                 <div className="relative w-10 shrink-0">
-                  {!last && <span className={`absolute left-[17px] top-4 h-full w-1.5 ${i < current || delivered ? 'bg-discover' : 'bg-line'}`} />}
+                  {!last && <span className={`absolute left-[17px] top-4 h-full w-1.5 ${i < current || delivered ? 'bg-ink' : 'bg-line'}`} />}
                   <span
                     className={`absolute left-1/2 -translate-x-1/2 rounded-full ${
                       active
                         ? 'top-0 h-[26px] w-[26px] border-[7px] border-primary bg-card ring-[6px] ring-primary-soft'
                         : done
-                          ? 'top-1 h-5 w-5 border-4 border-background bg-discover'
+                          ? 'top-1 h-5 w-5 border-4 border-background bg-ink'
                           : `top-1 h-4 w-4 border-4 border-line bg-card ${last ? 'rounded-[3px]' : ''}`
                     }`}
                   />
                 </div>
                 <div className={`pb-7 ${last ? 'pb-2' : ''}`}>
-                  <p className={`font-display font-extrabold ${active ? 'text-2xl text-primary' : done ? 'text-[19px]' : 'text-[19px] text-muted'}`}>
+                  <p className={`font-title font-extrabold ${active ? 'text-2xl text-primary' : done ? 'text-[19px]' : 'text-[19px] text-muted'}`}>
                     {t(`orders.status.${step}`)}
                   </p>
                   <p className="text-sm text-muted">{t(`orders.status_desc.${step}`)}</p>
@@ -85,7 +85,7 @@ export default function OrderDetail() {
 
         {/* Sipariş içeriği */}
         <section className="rounded-card border border-line bg-card p-4">
-          <h2 className="mb-2 text-lg">{t('orders.content')}</h2>
+          <h2 className="mb-2 text-xl">{t('orders.content')}</h2>
           <ul className="space-y-2">
             {order.lines.map((line) => {
               const item = menuItems.find((m) => m.id === line.id)

@@ -46,14 +46,16 @@ Uygulama giriş ekranıyla açılır: **Misafir girişi** ya da **Personel giri�
 - **Yeni rota:** `routes.ts` → `routes` listesine ekle. Her durak için `place` (Google Haritalar'da aranacak İngilizce isim) ve `lat/lng` (harita konumu) yaz.
 - **Asistanın cevapladığı sorular:** `hotel.ts` → `faq` listesi (`keywords` + 3 dilde `answer`).
 
-## Tasarım: Metro Hattı
+## Tasarım: askHermis 2027
 
-Otel tabelası ve metro haritası fikri. Her hizmet renkli, harfli bir "hat" rozetiyle gösterilir:
-**Y** Yemek (lila), **T** Temizlik (pembe), **M** Masa / transfer (şeftali), **R** Rotalar (yeşil), **K** Konsiyerj (koyu mavi).
-Sipariş durumu ve rota durakları metro hattı üzerinde ilerler.
+Hermis ekibinin tasarım sistemi (askHermis 2027) uygulandı: mürekkep (#0A0A0A), kâğıt (#FFFFFF) ve bej (#F7F6F4).
+Arayüz tek renkli; renk yalnızca sayfa başlıklarındaki "boyalı zeminlerde" var
+(yemek: peach, temizlik ve rotalar: sage, masa/transfer: ember, kampanya: night).
 
-- Yazı tipleri: Sofia Sans (metin) ve Sofia Sans Condensed (başlıklar, numaralar); Türkçe ve Yunanca destekli, uygulamanın içinde gelir
-- Renkler: `tailwind.config.js` · Rozet: `src/components/LineBadge.tsx` · Sipariş hattı: `src/components/OrderLine.tsx`
+- Hizmet hatları korunuyor: **Y** Yemek, **T** Temizlik, **M** Masa / transfer, **R** Rotalar, **K** Konsiyerj, **O** Konaklamam. Rozetler gri tonlu karolar (`tile-*`).
+- Durumlar yalnızca rozetlerde renkli: tamamlandı (yeşil), bekliyor (sarı), hata (kırmızı).
+- Yazı tipleri: Comfortaa (20px ve üstü başlıklar), Inter (metin ve düğmeler), Geist Mono. Dosyalar `src/assets/fonts/` içinde, CDN yok.
+- Renkler: `tailwind.config.js` · Boyalı zeminler ve font tanımları: `src/index.css` · Rozet: `src/components/LineBadge.tsx`
 
 ## Asistan kuralları (`src/lib/concierge.ts`)
 

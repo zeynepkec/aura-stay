@@ -29,7 +29,7 @@ export default function ReviewSummary({ showSamples = false }: { showSamples?: b
   return (
     <div className="space-y-3">
       {/* Özet kartı — lila-pembe geçiş */}
-      <section className="rounded-card p-5 bg-discover">
+      <section className="field rounded-card p-5 bg-discover">
         <div className="flex items-center justify-between">
           <p className="flex items-center gap-1.5 text-sm font-bold">
             <Sparkles size={16} />

@@ -71,7 +71,7 @@ export default function ServiceRequest() {
           {t('services.form.back')}
         </Link>
         <div className="mt-1 flex items-center gap-3">
-        <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-ink px-1.5 font-display text-[20px] font-extrabold text-card">
+        <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-ink px-1.5 font-title text-[20px] font-extrabold text-card">
           {serviceBadge[type].label}
         </span>
         <div>
@@ -181,7 +181,7 @@ export default function ServiceRequest() {
           type="button"
           onClick={submit}
           disabled={sent || !canSend}
-          className={`h-14 w-full rounded-full text-sm font-semibold disabled:opacity-40 ${sent ? 'bg-service text-ink' : 'bg-ink text-card'}`}
+          className={`h-14 w-full rounded-full text-sm font-semibold disabled:opacity-40 ${sent ? 'bg-success-tint text-success-text' : 'bg-ink text-card'}`}
         >
           {sent ? t('services.form.sent') : t('services.form.send')}
         </button>

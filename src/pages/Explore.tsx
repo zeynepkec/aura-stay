@@ -37,13 +37,13 @@ export default function Explore() {
     <div>
       {/* Tabela: rotalar */}
       <header className="bg-service px-5 pb-5 pt-6">
-        <div className="flex items-end justify-between gap-3">
+        <div className="flex flex-col items-start gap-4">
           <div>
-            <h1 className="text-[36px] leading-none">{t('explore.hero_title')}</h1>
+            <h1 className="text-[34px] leading-[1.15]">{t('explore.hero_title')}</h1>
             <p className="mt-1.5 text-sm">{t('explore.hero_text')}</p>
           </div>
           {/* Misafir kendi rotasını ekleyebilir */}
-          <Link to="/explore/new" className="flex h-11 shrink-0 items-center gap-1.5 rounded-[10px] bg-ink px-4 font-display text-base font-extrabold text-card">
+          <Link to="/explore/new" className="flex h-11 shrink-0 items-center gap-1.5 rounded-[10px] bg-ink px-4 font-display text-base font-semibold text-card">
             <Plus size={18} />
             {t('addRoute.button')}
           </Link>
@@ -85,12 +85,12 @@ export default function Explore() {
           return (
             <li key={route.id}>
               <Link to={`/explore/${route.id}`} className="flex items-center gap-3.5 border-b border-line py-3.5">
-                <span className="flex h-10 min-w-10 shrink-0 items-center justify-center rounded-lg bg-service px-1.5 font-display text-[19px] font-extrabold">
+                <span className="flex h-10 min-w-10 shrink-0 items-center justify-center rounded-[6px] bg-tile-silver px-1.5 font-sans text-[16px] font-semibold text-card">
                   R{all.indexOf(route) + 1}
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
-                    <h2 className="text-[19px] leading-tight">{pick(route.title, lang)}</h2>
+                    <h2 className="text-[20px] leading-tight">{pick(route.title, lang)}</h2>
                     <span className="flex shrink-0 items-center gap-0.5 pt-0.5 text-sm font-bold">
                       {score.value > 0 ? (
                         <>

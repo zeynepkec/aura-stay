@@ -19,7 +19,7 @@ export const TYPES_BY_ROLE: Record<StaffRole, ServiceType[]> = {  kitchen: [],
 
 const COLUMNS: RequestStatus[] = ['pending', 'in_progress', 'done']
 const NEXT: Partial<Record<RequestStatus, RequestStatus>> = { pending: 'in_progress', in_progress: 'done' }
-const DOT: Record<string, string> = { pending: 'bg-discover-pink', in_progress: 'bg-primary', done: 'bg-service' }
+const DOT: Record<string, string> = { pending: 'bg-warning', in_progress: 'bg-ink', done: 'bg-success' }
 export default function StaffTasks() {
   const { t, i18n } = useTranslation()
   const lang = i18n.resolvedLanguage
@@ -110,7 +110,7 @@ export default function StaffTasks() {
                         } ${status === 'done' ? 'opacity-70' : ''}`}
                       >
                         <div className="flex items-start justify-between gap-2">
-                          <p className="font-display text-[30px] font-extrabold leading-none">{t('tasks.room', { number: r.room ?? '—' })}</p>
+                          <p className="font-title text-[30px] font-extrabold leading-none">{t('tasks.room', { number: r.room ?? '—' })}</p>
                           <LineBadge line={serviceBadge[r.type].line} label={serviceBadge[r.type].label} />
                         </div>
                         <p className="mt-2 font-display text-lg font-extrabold">{t(`services.types.${r.type}.title`)}</p>
@@ -121,7 +121,7 @@ export default function StaffTasks() {
 
                         {/* Misafirin notu */}
                         {r.details.note && (
-                          <p className="mt-3 flex gap-2 rounded-xl bg-activity/40 p-3 text-sm">
+                          <p className="mt-3 flex gap-2 rounded-xl bg-primary-soft p-3 text-sm">
                             <StickyNote size={16} className="mt-0.5 shrink-0" />
                             {r.details.note}
                           </p>
