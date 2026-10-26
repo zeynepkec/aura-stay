@@ -7,9 +7,11 @@ import { pick } from '../data/menu'
 import { mapsRouteUrl, mapsSearchUrl, routeTags } from '../data/routes'
 import { routeIcon } from './Explore'
 import { numberIcon } from '../lib/mapIcons'
+import { useRouteRatings } from '../lib/routeRatings'
 import { useAllRoutes } from '../lib/routesStore'
 import { getSession } from '../lib/session'
 import '../translations/addRoute'
+import '../translations/rateRoute'
 import '../translations/explore'
 import '../translations/routeDetail'
 
@@ -18,6 +20,7 @@ export default function RouteDetail() {
   const lang = i18n.resolvedLanguage
   const navigate = useNavigate()
   const { all, setGuestRoutes } = useAllRoutes()
+  const { ratingOf, myRating, rate } = useRouteRatings()
   const route = all.find((r) => r.id === useParams().routeId)
 
   if (!route) {
@@ -25,6 +28,8 @@ export default function RouteDetail() {
   }
 
   const Icon = routeIcon(route)
+  const score = ratingOf(route)
+  const mine = myRating(route.id)
   const points = route.stops.map((s) => [s.lat, s.lng] as [number, number])
 
   // Google Haritalar yol tarifi linki: ilk durak → ara duraklar → son durak (yürüyüş)
@@ -44,10 +49,11 @@ export default function RouteDetail() {
             <Icon size={22} />
           </span>
           <span className="flex items-center gap-1 rounded-full bg-card/60 px-3 py-1 text-xs font-semibold">
-            {route.rating > 0 ? (
+            {score.value > 0 ? (
               <>
                 <Star size={13} className="fill-accent text-accent" />
-                {route.rating}
+                {score.value}
+                {score.count > 0 && <span className="font-medium text-ink/60">({t('rateRoute.count', { count: score.count })})</span>}
               </>
             ) : (
               t('addRoute.new')
@@ -140,6 +146,26 @@ export default function RouteDetail() {
           <Navigation size={18} />
           {t('routeDetail.directions')}
         </a>
+
+        {/* Rotayı puanla */}
+        <section className="rounded-card border border-line bg-card p-4 text-center">
+          <h2 className="text-base font-bold">{t(mine ? 'rateRoute.thanks' : 'rateRoute.title')}</h2>
+          <p className="mt-0.5 text-xs text-muted">{t(mine ? 'rateRoute.change' : 'rateRoute.text')}</p>
+          <div className="mt-3 flex justify-center gap-1">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <button
+                key={n}
+                type="button"
+                onClick={() => rate(route.id, n)}
+                aria-label={t('rateRoute.star', { count: n })}
+                aria-pressed={mine === n}
+                className="flex h-11 w-11 items-center justify-center"
+              >
+                <Star size={30} className={n <= mine ? 'fill-accent text-accent' : 'text-line'} />
+              </button>
+            ))}
+          </div>
+        </section>
 
         {/* Misafir kendi eklediği rotayı silebilir */}
         {route.room && route.room === getSession()?.room && (

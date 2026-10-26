@@ -14,6 +14,40 @@ export type Session = { v: 2; hotelId: string; hotelName: string; room: string; 
 
 const KEY = 'aura-session'
 
+// Bu sekmede giriş ekranından geçildi mi? (sessionStorage: sekme kapanınca silinir)
+// Böylece link her açıldığında önce giriş seçenekleri gelir; kayıtlı oturum "Devam et" olarak sunulur.
+const ENTERED = 'aura-entered'
+const REDIRECT = 'aura-redirect' // uygulamanın kendi yönlendirmesi (giriş sonrası), yeni açılış sayılmaz
+
+// Link yeniden açıldıysa (yazarak, tıklayarak, ana ekrandan) giriş seçenekleri tekrar gelsin.
+// Sayfa yenileme ve uygulamanın kendi yönlendirmeleri bu sayılmaz. Sayfa yüklenirken bir kez çalışır.
+export function resetOnFreshOpen(enteredKey: string) {
+  try {
+    const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+    const redirect = sessionStorage.getItem(REDIRECT) === '1'
+    sessionStorage.removeItem(REDIRECT)
+    if (nav?.type === 'navigate' && !redirect) sessionStorage.removeItem(enteredKey)
+  } catch {
+    // tarayıcı desteklemiyorsa bir şey yapma
+  }
+}
+if (!window.location.pathname.startsWith('/staff')) resetOnFreshOpen(ENTERED)
+export function isEntered() {
+  try {
+    return sessionStorage.getItem(ENTERED) === '1'
+  } catch {
+    return true
+  }
+}
+export function markEntered() {
+  try {
+    sessionStorage.setItem(ENTERED, '1')
+    sessionStorage.setItem(REDIRECT, '1')
+  } catch {
+    // sessionStorage kullanılamıyorsa her açılışta oturum doğrudan açılır
+  }
+}
+
 // Giriş yapılmış mı? Yapılmışsa oturum bilgisini döndürür.
 // Eski sürümden kalan (demo) oturumlar geçersiz: uygulama giriş ekranından başlar.
 export function getSession(): Session | null {
@@ -37,6 +71,7 @@ export function startSession(hotelId: string, room: string, token: string, metho
   if (!target || !target.rooms[room] || target.rooms[room] !== code) return null
   const session: Session = { v: 2, hotelId, hotelName: target.name, room, joinedAt: Date.now(), method }
   localStorage.setItem(KEY, JSON.stringify(session))
+  markEntered()
   return session
 }
 
@@ -59,6 +94,11 @@ export function startSessionFromLink(text: string, method: LoginMethod): Session
 // Çıkış yap: oturumu ve bu misafire ait tüm verileri temizle
 export function endSession() {
   ;['aura-session', 'aura-cart'].forEach((k) => localStorage.removeItem(k))
+  try {
+    sessionStorage.removeItem(ENTERED)
+  } catch {
+    // yok say
+  }
 }
 
 // Bir odanın QR koduna yazılacak link

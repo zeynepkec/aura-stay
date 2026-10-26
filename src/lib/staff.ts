@@ -1,3 +1,4 @@
+import { resetOnFreshOpen } from './session'
 // Personel rolleri ve demo PIN kodları — Adım 23'te gerçek kullanıcı girişiyle değişecek
 export type StaffRole = 'kitchen' | 'housekeeping' | 'reception'
 
@@ -21,13 +22,18 @@ export const STAFF_TABS: { key: string; roles: StaffRole[] }[] = [
 export type StaffSession = { role: StaffRole; loginAt: number; hotelId: string }
 
 const KEY = 'aura-staff'
+const ENTERED = 'aura-staff-entered'
+// Panel linki yeniden açılınca PIN tekrar sorulur (yenileme sayılmaz)
+if (window.location.pathname.startsWith('/staff')) resetOnFreshOpen(ENTERED)
 
 export function getStaff(): StaffSession | null {
   try {
     const saved = localStorage.getItem(KEY)
     const session = saved ? (JSON.parse(saved) as StaffSession) : null
-    // Eski sürümden kalan (otelsiz) oturumlar geçersiz
-    return session?.hotelId ? session : null
+    // Eski sürümden kalan (otelsiz) oturumlar geçersiz.
+    // Panel her yeni açılışta PIN ister: PIN bu sekmede girildiyse oturum geçerli.
+    if (!session?.hotelId || sessionStorage.getItem(ENTERED) !== '1') return null
+    return session
   } catch {
     return null
   }
@@ -39,11 +45,22 @@ export function staffLogin(pin: string, hotelId: string): StaffSession | null {
   if (!role) return null
   const session: StaffSession = { role, loginAt: Date.now(), hotelId }
   localStorage.setItem(KEY, JSON.stringify(session))
+  try {
+    sessionStorage.setItem(ENTERED, '1')
+    sessionStorage.setItem('aura-redirect', '1')
+  } catch {
+    // yok say
+  }
   return session
 }
 
 export function staffLogout() {
   localStorage.removeItem(KEY)
+  try {
+    sessionStorage.removeItem(ENTERED)
+  } catch {
+    // yok say
+  }
 }
 
 // Rolün görebildiği sekmeler

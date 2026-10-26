@@ -3,6 +3,7 @@ import { Clock, Compass, Plus, Footprints, Landmark, MapPin, Palette, Star, Suns
 import { useTranslation } from 'react-i18next'
 import { pick } from '../data/menu'
 import { routeTags, type RouteTag, type TravelRoute } from '../data/routes'
+import { useRouteRatings } from '../lib/routeRatings'
 import { useAllRoutes } from '../lib/routesStore'
 import '../translations/addRoute'
 import '../translations/explore'
@@ -29,6 +30,7 @@ export default function Explore() {
   const [filter, setFilter] = useState<'all' | RouteTag>('all')
 
   const { all } = useAllRoutes()
+  const { ratingOf } = useRouteRatings()
   const visible = filter === 'all' ? all : all.filter((r) => r.tags.includes(filter))
 
   return (
@@ -79,10 +81,11 @@ export default function Explore() {
                 <div className="flex items-start justify-between gap-2">
                   <h2 className="text-sm font-bold leading-snug">{pick(route.title, lang)}</h2>
                   <span className="flex shrink-0 items-center gap-0.5 text-xs font-semibold">
-                    {route.rating > 0 ? (
+                    {ratingOf(route).value > 0 ? (
                       <>
                         <Star size={13} className="fill-accent text-accent" />
-                        {route.rating}
+                        {ratingOf(route).value}
+                        {ratingOf(route).count > 0 && <span className="font-medium text-muted">({ratingOf(route).count})</span>}
                       </>
                     ) : (
                       <span className="rounded-full bg-accent/15 px-2 py-0.5 text-[11px] text-accent">{t('addRoute.new')}</span>

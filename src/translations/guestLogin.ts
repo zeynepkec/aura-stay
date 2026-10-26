@@ -134,7 +134,7 @@ i18n.addResourceBundle('tr', 'translation', {
     change: 'Değiştir',
     continue: 'Devam et',
   },
-  start: { subtitle: 'Otellerde dijital konsiyerj. Şimdilik Türkiye ve Yunanistan’da.' },
+  start: { subtitle: 'Otellerde dijital konsiyerj. Şimdilik Türkiye ve Yunanistan’da.', continue_title: 'Kaldığın yerden devam et', continue: 'Devam et', not_me: 'Bu oda benim değil, çıkış yap' },
 }, true, true)
 i18n.addResourceBundle('en', 'translation', {
   picker: {
@@ -145,7 +145,7 @@ i18n.addResourceBundle('en', 'translation', {
     change: 'Change',
     continue: 'Continue',
   },
-  start: { subtitle: 'A digital concierge for hotels. For now in Türkiye and Greece.' },
+  start: { subtitle: 'A digital concierge for hotels. For now in Türkiye and Greece.', continue_title: 'Continue where you left off', continue: 'Continue', not_me: 'Not my room, sign out' },
 }, true, true)
 i18n.addResourceBundle('el', 'translation', {
   picker: {
@@ -156,5 +156,5 @@ i18n.addResourceBundle('el', 'translation', {
     change: 'Αλλαγή',
     continue: 'Συνέχεια',
   },
-  start: { subtitle: 'Ψηφιακός concierge για ξενοδοχεία. Προς το παρόν σε Τουρκία και Ελλάδα.' },
+  start: { subtitle: 'Ψηφιακός concierge για ξενοδοχεία. Προς το παρόν σε Τουρκία και Ελλάδα.', continue_title: 'Συνέχεια από εκεί που έμεινες', continue: 'Συνέχεια', not_me: 'Δεν είναι το δωμάτιό μου, αποσύνδεση' },
 }, true, true)

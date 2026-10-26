@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import BottomNav from './components/BottomNav'
 import StatusToasts from './components/StatusToasts'
 import StaffApp from './staff/StaffApp'
-import { getSession } from './lib/session'
+import { getSession, isEntered } from './lib/session'
 import Assistant from './pages/Assistant'
 import Bill from './pages/Bill'
 import Cart from './pages/Cart'
@@ -31,8 +31,9 @@ export default function App() {
 
   const session = getSession()
 
-  // Giriş yapılmamışsa: sadece karşılama ekranı ve QR linki açılabilir
-  if (!session) {
+  // Link her açıldığında önce giriş seçenekleri gelir (kayıtlı oda varsa "Devam et" ile).
+  // Giriş yapılmamışsa ya da bu açılışta henüz seçim yapılmadıysa: karşılama, QR ve giriş ekranları
+  if (!session || !isEntered()) {
     return (
       <BrowserRouter>
         <Routes>

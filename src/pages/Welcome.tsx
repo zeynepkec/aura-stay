@@ -1,12 +1,16 @@
-import { ArrowRight, KeyRound, UserCog } from 'lucide-react'
+import { ArrowRight, KeyRound, RotateCcw, UserCog } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import { endSession, getSession, markEntered } from '../lib/session'
 import '../translations/guestLogin'
+import '../translations/join'
 
 // Uygulamanın ilk ekranı: misafir mi, personel mi?
 export default function Welcome() {
   const { t } = useTranslation()
+  // Bu telefonda daha önce bir odaya giriş yapıldıysa "Devam et" seçeneği
+  const saved = getSession()
 
   return (
     <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-gradient-to-br from-discover to-discover-pink px-6 pb-8 pt-6">
@@ -20,6 +24,38 @@ export default function Welcome() {
         <p className="mt-3 text-base text-ink/70">{t('start.subtitle')}</p>
         <p className="mt-6 text-sm font-semibold">{t('start.question')}</p>
       </div>
+
+      {saved && (
+        <section className="mt-4 flex items-center gap-3 rounded-card bg-ink p-4 text-card">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-card/15">
+            <RotateCcw size={20} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold">{t('start.continue_title')}</p>
+            <p className="truncate text-xs text-card/75">{t('join.success_text', { room: saved.room, hotel: saved.hotelName })}</p>
+            <button
+              type="button"
+              onClick={() => {
+                endSession()
+                window.location.replace('/')
+              }}
+              className="mt-1 text-xs text-card/75 underline"
+            >
+              {t('start.not_me')}
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              markEntered()
+              window.location.replace('/')
+            }}
+            className="flex h-11 shrink-0 items-center rounded-full bg-card px-4 text-sm font-semibold text-ink"
+          >
+            {t('start.continue')}
+          </button>
+        </section>
+      )}
 
       <div className="mt-4 flex flex-col gap-4">
         {/* 1. seçenek: Misafir */}
