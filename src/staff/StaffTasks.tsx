@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Clock, StickyNote } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import StaffTitle from './StaffTitle'
 import { amenityItems, optionName, transferDestinations } from '../data/hotel'
 import { getStaff, type StaffRole } from '../lib/staff'
 import { useShared } from '../lib/shared'
-import { serviceIcons } from '../pages/Services'
+import LineBadge from '../components/LineBadge'
+import { serviceBadge } from '../pages/Services'
 import type { RequestStatus, ServiceRequest, ServiceType } from '../store/ServiceContext'
 import '../translations/services'
 import '../translations/tasks'
@@ -17,7 +19,7 @@ export const TYPES_BY_ROLE: Record<StaffRole, ServiceType[]> = {  kitchen: [],
 
 const COLUMNS: RequestStatus[] = ['pending', 'in_progress', 'done']
 const NEXT: Partial<Record<RequestStatus, RequestStatus>> = { pending: 'in_progress', in_progress: 'done' }
-const DOT: Record<string, string> = { pending: 'bg-accent', in_progress: 'bg-activity', done: 'bg-service' }
+const DOT: Record<string, string> = { pending: 'bg-discover-pink', in_progress: 'bg-primary', done: 'bg-service' }
 export default function StaffTasks() {
   const { t, i18n } = useTranslation()
   const lang = i18n.resolvedLanguage
@@ -49,20 +51,17 @@ export default function StaffTasks() {
     if (r.type === 'cleaning') return !d.slot || d.slot === 'now' ? t('services.form.now') : d.slot
     if (r.type === 'towels') {
       const names = (d.items ?? 'towel').split(',').filter(Boolean).map((id) => optionName(amenityItems, id, lang))
-      return `${names.join(', ')} · ${t('tasks.quantity', { count: Number(d.quantity ?? 1) })}`
+      return `${names.join(', ')}, ${t('tasks.quantity', { count: Number(d.quantity ?? 1) })}`
     }
     if (r.type === 'transfer') {
-      return `${optionName(transferDestinations, d.destination, lang)} · ${d.date} ${d.time} · ${t('tasks.people', { count: Number(d.people ?? 1) })}`
+      return `${optionName(transferDestinations, d.destination, lang)}, ${d.date} ${d.time}, ${t('tasks.people', { count: Number(d.people ?? 1) })}`
     }
     return ''
   }
 
   return (
     <div>
-      <header className="mb-5">
-        <h1 className="text-2xl font-bold">{t('tasks.title')}</h1>
-        <p className="mt-1 text-sm text-muted">{t('tasks.subtitle')}</p>
-      </header>
+      <StaffTitle line="clean" title={t('tasks.title')} subtitle={t('tasks.subtitle')} />
 
       {/* Tür filtresi */}
       <div className="mb-5 flex flex-wrap gap-2">
@@ -71,7 +70,7 @@ export default function StaffTasks() {
             key={f}
             type="button"
             onClick={() => setFilter(f)}
-            className={`h-9 rounded-full px-4 text-sm font-medium ${filter === f ? 'bg-ink text-card' : 'border border-line bg-card'}`}
+            className={`h-9 rounded-[10px] px-4 text-base font-bold font-display ${filter === f ? 'bg-primary text-card' : 'border border-line bg-card'}`}
           >
             {f === 'all' ? t('tasks.all') : t(`services.types.${f}.title`)}
           </button>
@@ -88,36 +87,36 @@ export default function StaffTasks() {
             .slice(0, status === 'done' ? 6 : undefined)
 
           return (
-            <section key={status} className="rounded-card bg-line/40 p-3">
-              <h2 className="mb-3 flex items-center gap-2 px-1 text-sm font-bold">
-                <span className={`h-2.5 w-2.5 rounded-full ${DOT[status]}`} />
+            <section key={status} className="overflow-hidden rounded-card border border-line bg-card/60">
+              {/* Sütun başlığı: hattın bir durağı */}
+              <h2 className="flex items-center gap-2.5 border-b border-line bg-card px-4 py-3 text-xl">
+                <span className={`h-4 w-4 rounded-full border-[3px] border-card ring-2 ring-line ${DOT[status]}`} />
                 {t(`tasks.columns.${status}`)}
-                <span className="ml-auto rounded-full bg-card px-2 py-0.5 text-xs">{list.length}</span>
+                <span className="ml-auto rounded-md bg-background px-2 py-0.5 font-display text-base">{list.length}</span>
               </h2>
+              <div className={`h-1.5 ${DOT[status]}`} />
+              <div className="p-3">
 
               {list.length === 0 ? (
                 <p className="rounded-xl border border-dashed border-line p-6 text-center text-sm text-muted">{t('tasks.empty')}</p>
               ) : (
                 <div className="space-y-3">
                   {list.map((r) => {
-                    const Icon = serviceIcons[r.type]
                     return (
                       <article
                         key={r.id}
                         className={`rounded-card border bg-card p-4 ${
-                          status === 'pending' ? 'border-accent ring-2 ring-accent/20' : 'border-line'
+                          status === 'pending' ? 'border-primary ring-2 ring-primary-soft' : 'border-line'
                         } ${status === 'done' ? 'opacity-70' : ''}`}
                       >
                         <div className="flex items-start justify-between gap-2">
-                          <p className="text-2xl font-bold">{t('tasks.room', { number: r.room ?? '—' })}</p>
-                          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-service">
-                            <Icon size={18} />
-                          </span>
+                          <p className="font-display text-[30px] font-extrabold leading-none">{t('tasks.room', { number: r.room ?? '—' })}</p>
+                          <LineBadge line={serviceBadge[r.type].line} label={serviceBadge[r.type].label} />
                         </div>
-                        <p className="mt-1 text-sm font-semibold">{t(`services.types.${r.type}.title`)}</p>
+                        <p className="mt-2 font-display text-lg font-extrabold">{t(`services.types.${r.type}.title`)}</p>
                         <p className="text-sm text-ink/70">{describe(r)}</p>
                         <p className="mt-1 flex items-center gap-1 text-xs text-muted">
-                          #{r.id} · <Clock size={12} /> {ago(r.createdAt)}
+                          #{r.id}, <Clock size={12} /> {ago(r.createdAt)}
                         </p>
 
                         {/* Misafirin notu */}
@@ -132,7 +131,7 @@ export default function StaffTasks() {
                           <button
                             type="button"
                             onClick={() => advance(r.id)}
-                            className="mt-4 h-11 w-full rounded-[10px] bg-ink text-sm font-semibold text-card active:scale-[0.99]"
+                            className="mt-4 h-11 w-full rounded-[10px] bg-ink text-base font-bold text-card active:scale-[0.99] font-display"
                           >
                             {t(`tasks.actions.${status}`)}
                           </button>
@@ -142,6 +141,7 @@ export default function StaffTasks() {
                   })}
                 </div>
               )}
+              </div>
             </section>
           )
         })}

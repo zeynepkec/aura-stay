@@ -34,40 +34,47 @@ export default function StaffLogin() {
 
   if (!hotel) {
     return (
-      <div className="mx-auto min-h-screen max-w-md bg-background px-6 pb-10 pt-6">
-        <div className="flex items-center justify-between">
-          <a href="/" className="-ml-2 flex h-11 items-center gap-1 px-2 text-sm text-muted">
-            <ArrowLeft size={18} />
-            {t('staff.back_to_start')}
-          </a>
-          <LanguageSwitcher />
-        </div>
-        <p className="mt-8 text-xs font-bold text-muted font-display">AURA Stay</p>
-        <h1 className="mt-1 text-3xl font-bold">{t('staff.login_title')}</h1>
-        <p className="mb-6 mt-2 text-sm text-muted">{t('picker.text')}</p>
+      <div className="mx-auto min-h-screen max-w-md bg-background pb-10">
+        <header className="bg-primary px-5 pb-6 pt-4 text-card">
+          <div className="flex items-center justify-between">
+            <a href="/" className="-ml-1 flex h-11 items-center gap-1 text-sm text-card/85">
+              <ArrowLeft size={18} />
+              {t('staff.back_to_start')}
+            </a>
+            <LanguageSwitcher dark />
+          </div>
+          <h1 className="mt-6 text-[40px] leading-none">{t('staff.login_title')}</h1>
+          <p className="mt-2 text-card/85">{t('picker.text')}</p>
+        </header>
+        <div className="px-5 pt-6">
         <HotelPicker
           onSelect={(h) => {
             localStorage.setItem('aura-staff-hotel', h.id)
             setHotel(h)
           }}
         />
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6">
-      <div className="absolute right-5 top-5">
-        <LanguageSwitcher />
-      </div>
+    <div className="flex min-h-screen flex-col bg-background">
+      <header className="bg-primary px-5 pb-6 pt-4 text-card">
+        <div className="mx-auto flex max-w-md items-center justify-between">
+          <span className="flex items-center gap-2 font-display text-[17px] font-bold">
+            <Lock size={18} />
+            AURA Stay
+          </span>
+          <LanguageSwitcher dark />
+        </div>
+        <div className="mx-auto max-w-md">
+          <h1 className="mt-6 text-[40px] leading-none">{t('staff.login_title')}</h1>
+          <p className="mt-2 text-card/85">{t('staff.login_text')}</p>
+        </div>
+      </header>
 
-      <div className="w-full max-w-xs text-center">
-        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-ink text-card">
-          <Lock size={26} />
-        </span>
-        <p className="mt-6 text-xs font-bold text-muted font-display">AURA Stay</p>
-        <h1 className="mt-1 text-3xl font-bold">{t('staff.login_title')}</h1>
-        <p className="mt-2 text-sm text-muted">{t('staff.login_text')}</p>
+      <div className="mx-auto w-full max-w-xs px-1 pt-6 text-center">
 
         {/* Seçilen otel */}
         <button
@@ -77,11 +84,11 @@ export default function StaffLogin() {
             setHotel(null)
           }}
           title={t('staff.change_hotel')}
-          className="mx-auto mt-4 flex items-center gap-2 rounded-full border border-line bg-card px-4 py-2 text-sm"
+          className="mx-auto flex items-center gap-2 rounded-[10px] border border-line bg-card px-4 py-2.5"
         >
           <Building2 size={16} />
-          <span className="font-semibold">{hotel.name}</span>
-          <span className="text-muted">· {pick(hotel.city, i18n.resolvedLanguage)}</span>
+          <span className="font-display text-lg font-extrabold">{hotel.name}</span>
+          <span className="text-sm text-muted">{pick(hotel.city, i18n.resolvedLanguage)}</span>
         </button>
 
 
@@ -91,7 +98,7 @@ export default function StaffLogin() {
             <span
               key={i}
               className={`h-4 w-4 rounded-full transition-colors ${
-                error ? 'bg-red-400' : i < pin.length ? 'bg-ink' : 'bg-line'
+                error ? 'bg-red-400' : i < pin.length ? 'bg-primary' : 'bg-line'
               }`}
             />
           ))}
@@ -101,15 +108,15 @@ export default function StaffLogin() {
         {/* Tuş takımı */}
         <div className="grid grid-cols-3 gap-3">
           {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((d) => (
-            <button key={d} type="button" onClick={() => press(d)} className="h-16 rounded-xl border border-line bg-card text-2xl font-semibold active:bg-background">
+            <button key={d} type="button" onClick={() => press(d)} className="h-16 rounded-[10px] border border-line bg-card font-display text-[28px] font-extrabold active:bg-background">
               {d}
             </button>
           ))}
           <span />
-          <button type="button" onClick={() => press('0')} className="h-16 rounded-xl border border-line bg-card text-2xl font-semibold active:bg-background">
+          <button type="button" onClick={() => press('0')} className="h-16 rounded-[10px] border border-line bg-card font-display text-[28px] font-extrabold active:bg-background">
             0
           </button>
-          <button type="button" onClick={() => setPin(pin.slice(0, -1))} aria-label={t('staff.delete')} className="flex h-16 items-center justify-center rounded-xl text-muted">
+          <button type="button" onClick={() => setPin(pin.slice(0, -1))} aria-label={t('staff.delete')} className="flex h-16 items-center justify-center rounded-[10px] text-muted">
             <Delete size={24} />
           </button>
         </div>

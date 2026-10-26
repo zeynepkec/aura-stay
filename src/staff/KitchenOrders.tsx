@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { CheckCircle2, Clock, StickyNote } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import StaffTitle from './StaffTitle'
 import { menuItems, pick, price } from '../data/menu'
 import { useShared } from '../lib/shared'
 import type { Order, OrderStatus } from '../store/StayContext'
@@ -17,8 +18,8 @@ const NEXT: Partial<Record<OrderStatus, OrderStatus>> = {
 
 // Sütun başlığındaki renkli nokta
 const DOT: Record<string, string> = {
-  received: 'bg-accent',
-  preparing: 'bg-activity',
+  received: 'bg-discover',
+  preparing: 'bg-primary',
   on_the_way: 'bg-service',
 }
 
@@ -46,10 +47,7 @@ export default function KitchenOrders() {
 
   return (
     <div>
-      <header className="mb-5">
-        <h1 className="text-2xl font-bold">{t('kitchen.title')}</h1>
-        <p className="mt-1 text-sm text-muted">{t('kitchen.subtitle')}</p>
-      </header>
+      <StaffTitle line="food" title={t('kitchen.title')} subtitle={t('kitchen.subtitle')} />
 
       {/* 3 sütun: Yeni / Hazırlanıyor / Yolda */}
       <div className="grid gap-4 md:grid-cols-3">
@@ -57,12 +55,15 @@ export default function KitchenOrders() {
           // En eski sipariş en üstte
           const list = orders.filter((o) => o.status === status).sort((a, b) => a.createdAt - b.createdAt)
           return (
-            <section key={status} className="rounded-card bg-line/40 p-3">
-              <h2 className="mb-3 flex items-center gap-2 px-1 text-sm font-bold">
-                <span className={`h-2.5 w-2.5 rounded-full ${DOT[status]}`} />
+            <section key={status} className="overflow-hidden rounded-card border border-line bg-card/60">
+              {/* Sütun başlığı: hattın bir durağı */}
+              <h2 className="flex items-center gap-2.5 border-b border-line bg-card px-4 py-3 text-xl">
+                <span className={`h-4 w-4 rounded-full border-[3px] border-card ring-2 ring-line ${DOT[status]}`} />
                 {t(`kitchen.columns.${status}`)}
-                <span className="ml-auto rounded-full bg-card px-2 py-0.5 text-xs">{list.length}</span>
+                <span className="ml-auto rounded-md bg-background px-2 py-0.5 font-display text-base">{list.length}</span>
               </h2>
+              <div className={`h-1.5 ${DOT[status]}`} />
+              <div className="p-3">
 
               {list.length === 0 ? (
                 <p className="rounded-xl border border-dashed border-line p-6 text-center text-sm text-muted">{t('kitchen.empty')}</p>
@@ -71,16 +72,16 @@ export default function KitchenOrders() {
                   {list.map((o) => (
                     <article
                       key={o.id}
-                      className={`rounded-card border bg-card p-4 ${status === 'received' ? 'border-accent ring-2 ring-accent/20' : 'border-line'}`}
+                      className={`rounded-card border bg-card p-4 ${status === 'received' ? 'border-primary ring-2 ring-primary-soft' : 'border-line'}`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <p className="text-2xl font-bold">{t('kitchen.room', { number: o.room ?? '—' })}</p>
+                          <p className="font-display text-[30px] font-extrabold leading-none">{t('kitchen.room', { number: o.room ?? '—' })}</p>
                           <p className="mt-0.5 flex items-center gap-1 text-xs text-muted">
-                            #{o.id} · <Clock size={12} /> {ago(o.createdAt)}
+                            #{o.id}, <Clock size={12} /> {ago(o.createdAt)}
                           </p>
                         </div>
-                        <span className="text-sm font-semibold">{price(o.total, lang)}</span>
+                        <span className="font-display text-lg font-extrabold">{price(o.total, lang)}</span>
                       </div>
 
                       <ul className="mt-3 space-y-1 text-sm">
@@ -106,7 +107,7 @@ export default function KitchenOrders() {
                       <button
                         type="button"
                         onClick={() => advance(o.id)}
-                        className="mt-4 h-11 w-full rounded-[10px] bg-ink text-sm font-semibold text-card active:scale-[0.99]"
+                        className="mt-4 h-12 w-full rounded-[10px] bg-ink font-display text-lg font-extrabold text-card active:scale-[0.99]"
                       >
                         {t(`kitchen.actions.${status}`)}
                       </button>
@@ -114,6 +115,7 @@ export default function KitchenOrders() {
                   ))}
                 </div>
               )}
+              </div>
             </section>
           )
         })}
@@ -122,7 +124,7 @@ export default function KitchenOrders() {
       {/* Son teslim edilenler */}
       {delivered.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-3 text-sm font-bold text-muted">{t('kitchen.delivered')}</h2>
+          <h2 className="mb-3 text-xl">{t('kitchen.delivered')}</h2>
           <ul className="divide-y divide-line rounded-card border border-line bg-card">
             {delivered.map((o) => (
               <li key={o.id} className="flex items-center gap-3 px-4 py-3 text-sm">

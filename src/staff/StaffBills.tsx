@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ChevronDown, Lock, Receipt, Unlock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import StaffTitle from './StaffTitle'
 import { menuItems, pick, price } from '../data/menu'
 import { optionName, transferDestinations } from '../data/hotel'
 import { useShared } from '../lib/shared'
@@ -43,7 +44,7 @@ export default function StaffBills() {
     add(r.room, {
       id: r.id,
       label: `${t('bills.transfer')} #${r.id}`,
-      detail: `${optionName(transferDestinations, r.details.destination, lang)} · ${r.details.date ?? ''} ${r.details.time ?? ''}`,
+      detail: `${optionName(transferDestinations, r.details.destination, lang)}, ${r.details.date ?? ''} ${r.details.time ?? ''}`,
       time: r.createdAt,
       amount: null,
     })
@@ -73,23 +74,20 @@ export default function StaffBills() {
 
   return (
     <div>
-      <header className="mb-5">
-        <h1 className="text-2xl font-bold">{t('bills.title')}</h1>
-        <p className="mt-1 text-sm text-muted">{t('bills.subtitle')}</p>
-      </header>
+      <StaffTitle line="stay" title={t('bills.title')} subtitle={t('bills.subtitle')} />
 
       {/* Özet kutuları */}
       <div className="mb-6 grid grid-cols-3 gap-3">
         <div className="rounded-card border border-line bg-card p-4">
-          <p className="text-3xl font-bold">{openBills.length}</p>
+          <p className="font-display text-[34px] font-extrabold">{openBills.length}</p>
           <p className="mt-1 text-xs text-muted">{t('bills.stats.open')}</p>
         </div>
         <div className="rounded-card border border-line bg-card p-4">
-          <p className="text-3xl font-bold">{price(openAmount, lang)}</p>
+          <p className="font-display text-[34px] font-extrabold">{price(openAmount, lang)}</p>
           <p className="mt-1 text-xs text-muted">{t('bills.stats.amount')}</p>
         </div>
         <div className="rounded-card border border-line bg-card p-4">
-          <p className="text-3xl font-bold">{list.length - openBills.length}</p>
+          <p className="font-display text-[34px] font-extrabold">{list.length - openBills.length}</p>
           <p className="mt-1 text-xs text-muted">{t('bills.stats.closed')}</p>
         </div>
       </div>
@@ -108,15 +106,15 @@ export default function StaffBills() {
                   onClick={() => setOpenRoom(expanded ? null : bill.room)}
                   className="flex w-full items-center gap-4 p-4 text-left"
                 >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-background">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-background">
                     <Receipt size={20} />
                   </span>
                   <div className="flex-1">
-                    <p className="text-lg font-bold">{t('bills.room', { number: bill.room })}</p>
+                    <p className="font-display text-2xl font-extrabold leading-none">{t('bills.room', { number: bill.room })}</p>
                     <p className="text-xs text-muted">{t('bills.items', { count: bill.lines.length })}</p>
                   </div>
                   <span
-                    className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                    className={`rounded-md px-2.5 py-1 text-xs font-semibold ${
                       bill.isClosed ? 'bg-service' : 'bg-accent/15 text-accent'
                     }`}
                   >
@@ -150,7 +148,7 @@ export default function StaffBills() {
                     <button
                       type="button"
                       onClick={() => toggleClosed(bill.room)}
-                      className={`mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-full text-sm font-semibold ${
+                      className={`mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-[10px] text-base font-bold font-display ${
                         bill.isClosed ? 'border border-line' : 'bg-ink text-card'
                       }`}
                     >

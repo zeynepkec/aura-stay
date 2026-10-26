@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { CalendarDays, Check, StickyNote, Users, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import StaffTitle from './StaffTitle'
 import { optionName, tableVenues } from '../data/hotel'
 import { useShared } from '../lib/shared'
 import type { RequestStatus, ServiceRequest } from '../store/ServiceContext'
@@ -36,17 +37,14 @@ export default function StaffTables() {
 
   const stat = (value: number, label: string, highlight = false) => (
     <div className={`rounded-card border p-4 ${highlight && value > 0 ? 'border-accent bg-accent/10' : 'border-line bg-card'}`}>
-      <p className="text-3xl font-bold">{value}</p>
+      <p className="font-display text-[34px] font-extrabold">{value}</p>
       <p className="mt-1 text-xs text-muted">{label}</p>
     </div>
   )
 
   return (
     <div>
-      <header className="mb-5">
-        <h1 className="text-2xl font-bold">{t('tables.title')}</h1>
-        <p className="mt-1 text-sm text-muted">{t('tables.subtitle')}</p>
-      </header>
+      <StaffTitle line="table" title={t('tables.title')} subtitle={t('tables.subtitle')} />
 
       {/* Özet kutuları */}
       <div className="mb-6 grid grid-cols-3 gap-3">
@@ -62,10 +60,10 @@ export default function StaffTables() {
             key={v}
             type="button"
             onClick={() => setView(v)}
-            className={`flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium ${view === v ? 'bg-ink text-card' : 'border border-line bg-card'}`}
+            className={`flex h-9 items-center gap-2 rounded-[10px] px-4 text-base font-bold font-display ${view === v ? 'bg-primary text-card' : 'border border-line bg-card'}`}
           >
             {t(`tables.views.${v}`)}
-            <span className={`rounded-full px-1.5 text-xs ${view === v ? 'bg-card/20' : 'bg-background'}`}>
+            <span className={`rounded-md px-1.5 text-xs ${view === v ? 'bg-card/20' : 'bg-background'}`}>
               {tables.filter((r) => r.status === v).length}
             </span>
           </button>
@@ -80,7 +78,7 @@ export default function StaffTables() {
             <article key={r.id} className="flex flex-col gap-4 rounded-card border border-line bg-card p-4 sm:flex-row sm:items-center">
               {/* Saat ve tarih */}
               <div className="flex w-28 shrink-0 flex-col items-center rounded-xl bg-background px-3 py-2">
-                <p className="text-2xl font-bold">{r.details.time ?? '—'}</p>
+                <p className="font-display text-[28px] font-extrabold">{r.details.time ?? '—'}</p>
                 <p className="flex items-center gap-1 text-xs text-muted">
                   <CalendarDays size={12} />
                   {dateLabel(r.details.date)}
@@ -89,11 +87,11 @@ export default function StaffTables() {
 
               {/* Oda, kişi sayısı, not */}
               <div className="flex-1">
-                <p className="text-lg font-bold">{t('tables.room', { number: r.room ?? '—' })}</p>
+                <p className="font-display text-[26px] font-extrabold leading-none">{t('tables.room', { number: r.room ?? '—' })}</p>
                 <p className="flex items-center gap-1 text-sm text-ink/70">
                   <Users size={14} />
                   {t('tables.people', { count: Number(r.details.people ?? 1) })}
-                  {r.details.venue && <span className="ml-1 rounded-full bg-background px-2 py-0.5 text-xs font-medium">{optionName(tableVenues, r.details.venue, lang)}</span>}
+                  {r.details.venue && <span className="ml-1 rounded-md bg-background px-2 py-0.5 text-xs font-medium">{optionName(tableVenues, r.details.venue, lang)}</span>}
                 </p>
                 {r.details.note && (
                   <p className="mt-2 flex gap-2 rounded-xl bg-activity/40 p-2.5 text-sm">
@@ -109,7 +107,7 @@ export default function StaffTables() {
                   <button
                     type="button"
                     onClick={() => setStatus(r.id, 'declined')}
-                    className="flex h-11 items-center gap-1.5 rounded-[10px] border border-line px-4 text-sm font-semibold"
+                    className="flex h-11 items-center gap-1.5 rounded-[10px] border border-line px-4 text-base font-bold font-display"
                   >
                     <X size={16} />
                     {t('tables.decline')}
@@ -117,14 +115,14 @@ export default function StaffTables() {
                   <button
                     type="button"
                     onClick={() => setStatus(r.id, 'confirmed')}
-                    className="flex h-11 items-center gap-1.5 rounded-[10px] bg-ink px-5 text-sm font-semibold text-card"
+                    className="flex h-11 items-center gap-1.5 rounded-[10px] bg-ink px-5 text-base font-bold text-card font-display"
                   >
                     <Check size={16} />
                     {t('tables.confirm')}
                   </button>
                 </div>
               ) : (
-                <button type="button" onClick={() => setStatus(r.id, 'pending')} className="h-10 px-4 text-sm font-medium text-muted underline">
+                <button type="button" onClick={() => setStatus(r.id, 'pending')} className="h-10 px-4 text-base font-bold text-muted underline font-display">
                   {t('tables.undo')}
                 </button>
               )}

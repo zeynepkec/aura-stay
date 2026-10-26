@@ -3,6 +3,7 @@ import { LogOut, QrCode } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet } from 'react-router-dom'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import LineBadge, { LINES, type Line } from '../components/LineBadge'
 import SyncBadge from '../components/SyncBadge'
 import { hotel } from '../data/hotel'
 import { useShared } from '../lib/shared'
@@ -12,6 +13,11 @@ import type { ServiceRequest } from '../store/ServiceContext'
 import type { Order } from '../store/StayContext'
 import { TYPES_BY_ROLE } from './StaffTasks'
 import '../translations/staff'
+
+// Rolün ve sekmelerin hattı (misafir uygulamasıyla aynı renkler)
+const ROLE_LINE: Record<StaffSession['role'], Line> = { kitchen: 'food', housekeeping: 'clean', reception: 'concierge' }
+const TAB_LINE: Record<string, Line> = { kitchen: 'food', menu: 'food', tasks: 'clean', tables: 'table', bills: 'stay', feedback: 'concierge', demo: 'route' }
+const TAB_LABEL: Record<string, string> = { kitchen: 'Y', menu: 'Y2', tasks: 'T', tables: 'M', bills: 'O', feedback: 'K', demo: 'D' }
 
 // Kısa "ding-dong" sesi (ses dosyası gerekmez, tarayıcı kendisi üretir)
 function playChime() {
@@ -63,74 +69,71 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Üst çubuk */}
-      <header className="border-b border-line bg-card">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
+      {/* Tabela: otel ve rol */}
+      <header className="bg-primary text-card">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4">
           <div className="flex items-center gap-3">
-            <span className="h-9 w-9 rounded-xl bg-ink p-2">
-              <span className="block h-full w-full rounded-full bg-discover" />
+            <span className="flex h-11 min-w-11 items-center justify-center rounded-lg bg-card font-display text-[24px] font-extrabold text-primary">
+              {LINES[ROLE_LINE[staff.role]].letter}
             </span>
             <div>
-              <p className="text-sm font-bold leading-tight">{t('staff.title')}</p>
-              <p className="text-xs text-muted">{hotel.name} · {t(`staff.roles.${staff.role}`)}</p>
+              <p className="font-display text-[26px] font-extrabold leading-none">{t(`staff.roles.${staff.role}`)}</p>
+              <p className="mt-1 text-sm text-card/85">{t('staff.title')}, {hotel.name}</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {staff.role === 'reception' && (
-              <a href={`/qr?hotel=${hotel.id}`} className="hidden h-10 items-center gap-1.5 rounded-[10px] border border-line px-4 text-sm font-medium sm:flex">
+              <a href={`/qr?hotel=${hotel.id}`} className="hidden h-10 items-center gap-1.5 rounded-[10px] bg-card/15 px-4 font-display text-base font-bold sm:flex">
                 <QrCode size={16} />
                 {t('staff.qr_codes')}
               </a>
             )}
             <SyncBadge />
-            <LanguageSwitcher />
+            <LanguageSwitcher dark />
             <button
               type="button"
               onClick={() => {
                 staffLogout()
                 window.location.replace('/staff')
               }}
-              className="flex h-10 items-center gap-1.5 rounded-[10px] border border-line px-4 text-sm font-medium"
+              className="flex h-10 items-center gap-1.5 rounded-[10px] bg-card/15 px-4 font-display text-base font-bold"
             >
               <LogOut size={16} />
               <span className="hidden sm:inline">{t('staff.logout')}</span>
             </button>
           </div>
         </div>
+      </header>
 
-        {/* Sekmeler + bekleyen iş rozetleri */}
-        <nav className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 pb-3">
+      {/* Sekmeler: hat rozeti + bekleyen iş sayısı, seçili sekmenin altında çizgi */}
+      <nav className="border-b border-line bg-card">
+        <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-3">
           {tabs.map((tab) => {
             const count = counts[tab.key] ?? 0
+            const line = TAB_LINE[tab.key] ?? 'stay'
             return (
               <NavLink
                 key={tab.key}
                 to={`/staff/${tab.key}`}
                 className={({ isActive }) =>
-                  `flex h-9 shrink-0 items-center rounded-full px-4 text-sm font-medium ${
-                    isActive ? 'bg-ink text-card' : 'text-muted hover:bg-background'
-                  }`
+                  `relative flex h-14 shrink-0 items-center gap-2 px-3 font-display text-[17px] ${isActive ? 'font-extrabold text-ink' : 'font-bold text-muted'}`
                 }
               >
                 {({ isActive }) => (
                   <>
+                    <LineBadge line={line} label={TAB_LABEL[tab.key]} size="sm" />
                     {t(`staff.tabs.${tab.key}`)}
                     {count > 0 && (
-                      <span
-                        className={`ml-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[11px] font-bold ${
-                          isActive ? 'bg-card text-ink' : 'bg-accent text-card'
-                        }`}
-                      >
-                        {count}
-                      </span>
+                      <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-md bg-primary px-1.5 text-sm font-extrabold text-card">{count}</span>
                     )}
+                    <span className={`absolute inset-x-2 bottom-0 h-1 ${isActive ? 'bg-primary' : ''}`} />
                   </>
                 )}
               </NavLink>
             )
           })}
-        </nav>
-      </header>
+        </div>
+      </nav>
 
       {/* Seçili sekmenin içeriği */}
       <main className="mx-auto max-w-6xl p-5">

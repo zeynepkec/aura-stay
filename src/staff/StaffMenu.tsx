@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import StaffTitle from './StaffTitle'
 import { categories, menuItems, pick, price } from '../data/menu'
 import { useShared } from '../lib/shared'
 import '../translations/soldOut'
@@ -14,20 +15,16 @@ export default function StaffMenu() {
 
   return (
     <div>
-      <header className="mb-5 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold">{t('staffMenu.title')}</h1>
-          <p className="mt-1 text-sm text-muted">{t('staffMenu.subtitle')}</p>
-        </div>
-        <span className={`rounded-full px-3 py-1.5 text-sm font-semibold ${soldOut.length ? 'bg-ink text-card' : 'bg-service'}`}>
+      <StaffTitle line="food" label="Y2" title={t('staffMenu.title')} subtitle={t('staffMenu.subtitle')}>
+        <span className={`rounded-md px-3 py-1.5 font-display text-base font-bold ${soldOut.length ? 'bg-ink text-card' : 'bg-service'}`}>
           {soldOut.length ? t('staffMenu.count', { count: soldOut.length }) : t('staffMenu.all_available')}
         </span>
-      </header>
+      </StaffTitle>
 
       <div className="grid gap-4 md:grid-cols-2">
         {categories.map((c) => (
           <section key={c.id} className="rounded-card border border-line bg-card p-4">
-            <h2 className="mb-2 text-sm font-bold">{pick(c.name, lang)}</h2>
+            <h2 className="mb-2 text-xl">{pick(c.name, lang)}</h2>
             <ul className="divide-y divide-line">
               {menuItems
                 .filter((item) => item.category === c.id)

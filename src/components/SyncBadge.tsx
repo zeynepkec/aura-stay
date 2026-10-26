@@ -22,7 +22,7 @@ export default function SyncBadge() {
   }, [])
 
   return (
-    <span className="flex items-center gap-1.5 rounded-full border border-line bg-card px-3 py-1.5 text-xs font-medium" title={t(`sync.hint.${status}`)}>
+    <span className="flex h-10 items-center gap-1.5 rounded-[10px] bg-card px-3 font-display text-base font-bold text-ink" title={t(`sync.hint.${status}`)}>
       <span className={`h-2 w-2 rounded-full ${DOT[status]}`} />
       {t(`sync.${status}`)}
     </span>

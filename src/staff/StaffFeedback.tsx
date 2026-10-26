@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Star } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import StaffTitle from './StaffTitle'
 import ReviewSummary from '../components/ReviewSummary'
 import { useShared } from '../lib/shared'
 import type { Feedback, FeedbackStatus, Review } from '../store/FeedbackContext'
@@ -44,10 +45,7 @@ export default function StaffFeedback() {
 
   return (
     <div>
-      <header className="mb-5">
-        <h1 className="text-2xl font-bold">{t('feedback.title')}</h1>
-        <p className="mt-1 text-sm text-muted">{t('feedback.subtitle')}</p>
-      </header>
+      <StaffTitle line="concierge" title={t('feedback.title')} subtitle={t('feedback.subtitle')} />
 
       <div className="grid gap-6 lg:grid-cols-[3fr_2fr]">
         {/* Sol: misafir mesajları */}
@@ -58,10 +56,10 @@ export default function StaffFeedback() {
                 key={v}
                 type="button"
                 onClick={() => setView(v)}
-                className={`flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium ${view === v ? 'bg-ink text-card' : 'border border-line bg-card'}`}
+                className={`flex h-9 items-center gap-2 rounded-[10px] px-4 text-base font-bold font-display ${view === v ? 'bg-primary text-card' : 'border border-line bg-card'}`}
               >
                 {t(`feedback.views.${v}`)}
-                <span className={`rounded-full px-1.5 text-xs ${view === v ? 'bg-card/20' : 'bg-background'}`}>
+                <span className={`rounded-md px-1.5 text-xs ${view === v ? 'bg-card/20' : 'bg-background'}`}>
                   {feedback.filter((f) => inView(f, v)).length}
                 </span>
               </button>
@@ -75,17 +73,17 @@ export default function StaffFeedback() {
               {list.map((f) => (
                 <article
                   key={f.id}
-                  className={`rounded-card border bg-card p-4 ${f.status === 'new' ? 'border-accent ring-2 ring-accent/20' : 'border-line'}`}
+                  className={`rounded-card border bg-card p-4 ${f.status === 'new' ? 'border-primary ring-2 ring-primary-soft' : 'border-line'}`}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-bold">
+                    <p className="font-display text-xl font-extrabold">
                       {t('feedback.room', { number: f.room })}
-                      <span className="ml-2 rounded-full bg-background px-2 py-0.5 text-xs font-medium text-muted">
+                      <span className="ml-2 rounded-md bg-background px-2 py-0.5 text-xs font-medium text-muted">
                         {t(`review.feedback.categories.${f.category}`)}
                       </span>
                     </p>
                     <span
-                      className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                      className={`rounded-md px-2.5 py-1 text-xs font-semibold ${
                         f.status === 'resolved' ? 'bg-service' : f.status === 'seen' ? 'bg-accent/15 text-accent' : 'bg-activity'
                       }`}
                     >
@@ -101,7 +99,7 @@ export default function StaffFeedback() {
                         <button
                           type="button"
                           onClick={() => setStatus(f.id, 'seen')}
-                          className="h-10 flex-1 rounded-full border border-line text-sm font-semibold"
+                          className="h-10 flex-1 rounded-[10px] border border-line text-base font-bold font-display"
                         >
                           {t('feedback.mark_seen')}
                         </button>
@@ -109,7 +107,7 @@ export default function StaffFeedback() {
                       <button
                         type="button"
                         onClick={() => setStatus(f.id, 'resolved')}
-                        className="h-10 flex-1 rounded-full bg-ink text-sm font-semibold text-card"
+                        className="h-10 flex-1 rounded-[10px] bg-ink text-base font-bold text-card font-display"
                       >
                         {t('feedback.mark_resolved')}
                       </button>
@@ -123,7 +121,7 @@ export default function StaffFeedback() {
 
         {/* Sağ: oda değerlendirmeleri */}
         <section>
-          <h2 className="mb-4 text-base font-bold">{t('feedback.reviews')}</h2>
+          <h2 className="mb-4 text-xl">{t('feedback.reviews')}</h2>
 
           {/* AI yorum özeti (askHermis) */}
           <div className="mb-4">
@@ -155,7 +153,7 @@ export default function StaffFeedback() {
               {reviews.map((r) => (
                 <article key={r.room} className="rounded-card border border-line bg-card p-4">
                   <div className="flex items-center justify-between">
-                    <p className="font-bold">{t('feedback.room', { number: r.room })}</p>
+                    <p className="font-display text-xl font-extrabold">{t('feedback.room', { number: r.room })}</p>
                     <span className="text-xs text-muted">{time(r.createdAt)}</span>
                   </div>
                   <div className="mt-2 space-y-1 text-xs">
