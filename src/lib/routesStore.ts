@@ -29,3 +29,9 @@ export function walkingKm(stops: Stop[]) {
 
 // Toplam süre: duraklarda geçen süre + yürüyüş (km başına 15 dk)
 export const totalMinutes = (stops: Stop[]) => stops.reduce((s, x) => s + x.minutes, 0) + Math.round(walkingKm(stops) * 15)
+
+// İki nokta arası yürüme süresi (dk): kuş uçuşu × 1,3, km başına 15 dk, en az 5 dk, 5'e yuvarlanır
+export function walkMinutes(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
+  const km = distanceKm(a as Stop, b as Stop) * 1.3
+  return Math.max(5, Math.round((km * 15) / 5) * 5)
+}

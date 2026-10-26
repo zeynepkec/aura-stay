@@ -79,11 +79,11 @@ function QrPanel({ onDone }: { onDone: (s: Session) => void }) {
       </div>
       <p className="mt-3 text-center text-sm text-ink/70">{t('guest.qr_hint')}</p>
       {error && (
-        <p role="alert" className="mt-3 rounded-2xl bg-card/80 p-3 text-sm">
+        <p role="alert" className="mt-3 rounded-xl bg-card/80 p-3 text-sm">
           {t(error === 'camera' ? 'guest.qr_no_camera' : 'guest.qr_invalid')}
         </p>
       )}
-      <label className="mt-4 flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full bg-card text-sm font-semibold">
+      <label className="mt-4 flex h-12 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-card text-sm font-semibold">
         <ImageUp size={18} />
         {t('guest.qr_photo')}
         <input type="file" accept="image/*" className="sr-only" onChange={(e) => onPhoto(e.target.files?.[0])} />
@@ -106,7 +106,7 @@ function CodePanel({ hotelId, onDone }: { hotelId: string; onDone: (s: Session) 
     else setWrong(true)
   }
 
-  const input = 'h-14 w-full rounded-2xl border border-line bg-card px-4 text-lg font-semibold tracking-wide outline-none focus:border-accent'
+  const input = 'h-14 w-full rounded-xl border border-line bg-card px-4 text-lg font-semibold tracking-wide outline-none focus:border-accent'
 
   return (
     <form onSubmit={submit} className="space-y-4">
@@ -138,11 +138,11 @@ function CodePanel({ hotelId, onDone }: { hotelId: string; onDone: (s: Session) 
         />
         <p className="mt-1.5 text-xs text-ink/70">{t('guest.code_help')}</p>
       </div>
-      {wrong && <p role="alert" className="rounded-2xl bg-card/80 p-3 text-sm font-medium">{t('guest.code_wrong')}</p>}
+      {wrong && <p role="alert" className="rounded-xl bg-card/80 p-3 text-sm font-medium">{t('guest.code_wrong')}</p>}
       <button
         type="submit"
         disabled={!room || code.length < 4}
-        className="flex h-14 w-full items-center justify-center rounded-full bg-ink text-sm font-semibold text-card disabled:opacity-40"
+        className="flex h-14 w-full items-center justify-center rounded-[10px] bg-ink text-sm font-semibold text-card disabled:opacity-40"
       >
         {t('guest.code_submit')}
       </button>
@@ -208,12 +208,12 @@ function CardPanel({ onDone }: { onDone: (s: Session) => void }) {
       {state === 'waiting' ? (
         <p className="mt-5 text-lg">{t('guest.card_waiting')}</p>
       ) : (
-        <button type="button" onClick={start} className="mt-6 flex h-14 w-full items-center justify-center rounded-full bg-ink text-sm font-semibold text-card">
+        <button type="button" onClick={start} className="mt-6 flex h-14 w-full items-center justify-center rounded-[10px] bg-ink text-sm font-semibold text-card">
           {t('guest.card_start')}
         </button>
       )}
       {(state === 'error' || state === 'invalid') && (
-        <p role="alert" className="mt-4 w-full rounded-2xl bg-card/80 p-3 text-sm">
+        <p role="alert" className="mt-4 w-full rounded-xl bg-card/80 p-3 text-sm">
           {t(state === 'error' ? 'guest.card_error' : 'guest.card_invalid')}
         </p>
       )}
@@ -240,15 +240,15 @@ export default function GuestLogin() {
   const back = mode ? () => setMode(null) : !picking && hotel ? () => setPicking(true) : null
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-gradient-to-br from-discover to-discover-pink px-6 pb-8 pt-4">
+    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-background px-5 pb-8 pt-4">
       <div className="flex items-center justify-between">
         {back && !session ? (
-          <button type="button" onClick={back} className="-ml-2 flex h-11 items-center gap-1 px-2 text-sm text-ink/70">
+          <button type="button" onClick={back} className="-ml-2 flex h-11 items-center gap-1 px-2 text-sm text-muted">
             <ArrowLeft size={18} />
             {t('guest.back')}
           </button>
         ) : (
-          <Link to="/" className="-ml-2 flex h-11 items-center gap-1 px-2 text-sm text-ink/70">
+          <Link to="/" className="-ml-2 flex h-11 items-center gap-1 px-2 text-sm text-muted">
             <ArrowLeft size={18} />
             {t('guest.back')}
           </Link>
@@ -261,28 +261,28 @@ export default function GuestLogin() {
       ) : picking || !hotel ? (
         <>
           <header className="pb-6 pt-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-ink/60">{t('guest.title')}</p>
-            <h1 className="mt-2 text-3xl font-bold">{t('picker.title')}</h1>
-            <p className="mt-2 text-sm text-ink/70">{t('picker.text')}</p>
+            <p className="font-display text-base font-bold text-muted">{t('guest.title')}</p>
+            <h1 className="text-[36px] leading-tight">{t('picker.title')}</h1>
+            <p className="mt-1 text-muted">{t('picker.text')}</p>
           </header>
           <HotelPicker initial={hotel?.id} onSelect={selectHotel} />
         </>
       ) : (
         <>
           <header className="pb-5 pt-6">
-            <h1 className="text-3xl font-bold">{mode ? t(`guest.${mode}`) : t('guest.title')}</h1>
-            <p className="mt-2 text-sm text-ink/70">{mode ? t(`guest.${mode}_text`) : t('guest.text')}</p>
+            <h1 className="text-[36px] leading-tight">{mode ? t(`guest.${mode}`) : t('guest.title')}</h1>
+            <p className="mt-1 text-muted">{mode ? t(`guest.${mode}_text`) : t('guest.text')}</p>
           </header>
 
           {/* Seçilen otel */}
           {!mode && (
-            <button type="button" onClick={() => setPicking(true)} className="mb-4 flex items-center gap-3 rounded-card bg-card/60 p-3 text-left">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-card">
+            <button type="button" onClick={() => setPicking(true)} className="mb-4 flex items-center gap-3 rounded-card bg-primary p-3 text-left text-card">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-card/15">
                 <Building2 size={18} />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-sm font-bold">{hotel.name}</span>
-                <span className="block text-xs text-ink/70">{pick(hotel.area, lang)}</span>
+                <span className="block font-display text-lg font-extrabold leading-tight">{hotel.name}</span>
+                <span className="block text-xs text-card/80">{pick(hotel.area, lang)}</span>
               </span>
               <span className="text-xs font-semibold underline">{t('picker.change')}</span>
             </button>
@@ -290,15 +290,15 @@ export default function GuestLogin() {
 
           {/* Üç giriş yolu */}
           {!mode && (
-            <ul className="space-y-3">
+            <ul className="divide-y divide-line rounded-card border border-line bg-card">
               {options.map(({ mode: m, icon: Icon }) => (
                 <li key={m}>
-                  <button type="button" onClick={() => setMode(m)} className="flex w-full items-center gap-4 rounded-card bg-card p-4 text-left shadow-sm">
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-discover/40">
-                      <Icon size={24} strokeWidth={1.75} />
+                  <button type="button" onClick={() => setMode(m)} className="flex min-h-[72px] w-full items-center gap-3.5 px-4 py-3 text-left">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-discover">
+                      <Icon size={20} />
                     </span>
                     <span className="flex-1">
-                      <span className="block font-bold">{t(`guest.${m}`)}</span>
+                      <span className="block font-display text-xl font-extrabold">{t(`guest.${m}`)}</span>
                       <span className="block text-sm text-muted">{t(`guest.${m}_text`)}</span>
                     </span>
                     <ChevronRight size={18} className="text-muted" />

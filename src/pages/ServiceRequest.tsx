@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { amenityItems, cleaningSlots, optionName, tableVenues, transferDestinations } from '../data/hotel'
 import { PRICE_ON_REQUEST } from '../data/stay'
 import { useServices, type ServiceType } from '../store/ServiceContext'
-import { serviceIcons } from './Services'
+import { serviceBadge } from './Services'
 import { serviceDesc } from '../lib/serviceDesc'
 import '../translations/services'
 
@@ -19,7 +19,6 @@ export default function ServiceRequest() {
   const [params] = useSearchParams()
   const { sendRequest } = useServices()
   const type = (useParams().type ?? 'cleaning') as ServiceType
-  const Icon = serviceIcons[type] ?? serviceIcons.cleaning
 
   // Form alanları (kampanya linki ?venue=rooftop ile gelebilir)
   const [slot, setSlot] = useState('now')
@@ -54,30 +53,31 @@ export default function ServiceRequest() {
       key={value}
       type="button"
       onClick={onClick}
-      className={`h-10 rounded-full px-4 text-sm font-medium ${active ? 'bg-ink text-card' : 'border border-line bg-card'}`}
+      className={`h-11 rounded-[10px] px-4 font-display text-base font-bold ${active ? 'bg-primary text-card' : 'border border-line bg-card'}`}
     >
       {text}
     </button>
   )
 
-  const label = (text: string) => <p className="mb-2 text-sm font-bold">{text}</p>
-  const inputClass = 'h-12 w-full rounded-2xl border border-line bg-card px-4 text-sm outline-none focus:border-accent'
+  const label = (text: string) => <p className="mb-2 font-display text-lg font-extrabold">{text}</p>
+  const inputClass = 'h-12 w-full rounded-[10px] border border-line bg-card px-4 text-base outline-none focus:border-primary'
 
   return (
     <div>
-      <Link to="/services" className="ml-3 mt-4 flex h-11 w-fit items-center gap-1 px-2 text-sm text-muted">
-        <ArrowLeft size={18} />
-        {t('services.form.back')}
-      </Link>
-
-      {/* Başlık kartı — Sage Green */}
-      <header className="mx-5 mb-6 flex items-center gap-4 rounded-card bg-service p-5">
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-card/70">
-          <Icon size={22} />
+      {/* Başlık: hizmetin hattı */}
+      <header className={`mb-6 px-5 pb-5 pt-3 ${serviceBadge[type].line === 'clean' ? 'bg-discover-pink' : 'bg-activity'}`}>
+        <Link to="/services" className="-ml-1 flex h-10 w-fit items-center gap-1 text-sm">
+          <ArrowLeft size={18} />
+          {t('services.form.back')}
+        </Link>
+        <div className="mt-1 flex items-center gap-3">
+        <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-ink px-1.5 font-display text-[20px] font-extrabold text-card">
+          {serviceBadge[type].label}
         </span>
         <div>
-          <h1 className="text-xl font-bold">{t(`services.types.${type}.title`)}</h1>
-          <p className="text-sm text-ink/70">{serviceDesc(type, t, i18n.resolvedLanguage)}</p>
+          <h1 className="text-[30px] leading-none">{t(`services.types.${type}.title`)}</h1>
+          <p className="mt-1 text-sm">{serviceDesc(type, t, i18n.resolvedLanguage)}</p>
+        </div>
         </div>
       </header>
 

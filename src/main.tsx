@@ -1,3 +1,7 @@
+import '@fontsource-variable/sofia-sans'
+import '@fontsource/sofia-sans-condensed/600.css'
+import '@fontsource/sofia-sans-condensed/700.css'
+import '@fontsource/sofia-sans-condensed/800.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'

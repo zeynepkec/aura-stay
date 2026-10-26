@@ -4,8 +4,23 @@
 
 body {
   @apply bg-background text-ink antialiased;
-  font-family: Inter, system-ui, sans-serif;
+  font-family: 'Sofia Sans Variable', 'Sofia Sans', system-ui, sans-serif;
+  font-size: 15px;
 }
+
+/* Başlıklar tabela yazısı gibi: dar ve kalın */
+h1,
+h2 {
+  font-family: 'Sofia Sans Condensed', 'Sofia Sans Variable', system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid #3c4c7f;
+  outline-offset: 2px;
+}
+
 @keyframes toast-in {
   from {
     opacity: 0;
@@ -14,5 +29,14 @@ body {
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

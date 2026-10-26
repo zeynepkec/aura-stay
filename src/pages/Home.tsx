@@ -1,37 +1,33 @@
-import { ArrowUpRight, BellRing, ChevronRight, Clock, Coffee, MapPin, Phone, Sparkles, UtensilsCrossed, Wifi, Wine } from 'lucide-react'
+import { ArrowRight, ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import LineBadge, { type Line } from '../components/LineBadge'
+import OrderLine from '../components/OrderLine'
 import { campaign, hotel } from '../data/hotel'
 import { pick } from '../data/menu'
-import type { TravelRoute } from '../data/routes'
-import { useAllRoutes } from '../lib/routesStore'
 import { stay } from '../data/stay'
+import { useAllRoutes } from '../lib/routesStore'
 import { useServices } from '../store/ServiceContext'
 import { ORDER_STEPS, useStay } from '../store/StayContext'
-import { serviceIcons } from './Services'
 import '../translations/home'
+import '../translations/metro'
 import '../translations/orders'
 import '../translations/services'
 import '../translations/tables'
 
-const quickActions = [
-  { to: '/dining', key: 'action_food', icon: UtensilsCrossed },
-  { to: '/services/cleaning', key: 'action_cleaning', icon: BellRing },
-  { to: '/services/table', key: 'action_table', icon: Wine },
-  { to: '/assistant', key: 'action_assistant', icon: Sparkles },
+// Hizmet "hatları": harfli rozet + başlık + açıklama
+const lines: { to: string; line: Line; key: string }[] = [
+  { to: '/dining', line: 'food', key: 'food' },
+  { to: '/services/cleaning', line: 'clean', key: 'clean' },
+  { to: '/services/table', line: 'table', key: 'table' },
+  { to: '/explore', line: 'route', key: 'route' },
+  { to: '/assistant', line: 'concierge', key: 'concierge' },
+  { to: '/stay', line: 'stay', key: 'stay' },
 ]
 
-// Günün saatine göre önerilen rotalar: akşamüstü gün batımı rotaları öne çıkar
-function suggestedRoutes(routes: TravelRoute[], hour: number) {
-  const sunsetFirst = hour >= 15 && hour < 20
-  return [...routes]
-    .sort((a, b) => {
-      const score = (r: TravelRoute) => (sunsetFirst && r.tags.includes('sunset') ? 2 : 0) + (r.featured ? 1 : 0)
-      return score(b) - score(a)
-    })
-    .slice(0, 4)
-}
+// Talep türünün hattı
+export const serviceLine: Record<string, Line> = { cleaning: 'clean', towels: 'clean', table: 'table', transfer: 'table' }
 
 export default function Home() {
   const { t, i18n } = useTranslation()
@@ -47,151 +43,109 @@ export default function Home() {
   // Bekleyen ya da işlemdeki talepler (en fazla 3)
   const activeRequests = requests.filter((r) => r.status === 'pending' || r.status === 'in_progress').slice(0, 3)
 
+  const date = (time: number) => new Date(time).toLocaleDateString(lang, { day: 'numeric', month: 'short' })
+
   return (
-    <div className="space-y-7 pt-6">
-      {/* Karşılama + dil seçimi */}
-      <header className="flex items-start justify-between gap-3 px-5">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-muted">{stay.hotelName}</p>
-          <h1 className="mt-1 text-3xl font-bold leading-tight">
-            {t('home.welcome')}
-            <br />
-            {t('home.room', { number: stay.roomNumber })}
-          </h1>
+    <div className="pb-8">
+      {/* Yön tabelası: büyük oda numarası */}
+      <header className="bg-primary px-5 pb-6 pt-5 text-card">
+        <div className="flex items-center justify-between">
+          <span className="font-display text-[17px] font-bold">AURA Stay</span>
+          <LanguageSwitcher dark />
         </div>
-        <LanguageSwitcher />
+        <div className="mt-5 flex items-end gap-4">
+          <span className="font-display text-[92px] font-extrabold leading-[0.85] tracking-tight">{stay.roomNumber}</span>
+          <div className="pb-1">
+            <p className="text-[15px] font-bold">{stay.hotelName}</p>
+            <p className="text-sm text-card/85">
+              {t('metro.floor', { floor: stay.roomNumber.charAt(0) })}, {date(stay.checkIn)} – {date(stay.checkOut)}
+            </p>
+          </div>
+        </div>
       </header>
 
-      {/* Aktif sipariş — mutfak durumu değiştirdikçe ilerler */}
+      {/* Aktif sipariş: metro hattı */}
       {activeOrder && (
-        <section className="px-5">
-          <Link to={`/orders/${activeOrder.id}`} className="block rounded-card border border-accent bg-card p-4 ring-2 ring-accent/15">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-muted">
-                {t('home.active_order')} · {t('home.order_no', { id: activeOrder.id })}
-              </span>
-              <ChevronRight size={18} className="text-muted" />
-            </div>
-            <p className="mt-1 text-lg font-bold">{t(`orders.status.${activeOrder.status}`)}</p>
-            <p className="text-xs text-muted">{t(`orders.status_desc.${activeOrder.status}`)}</p>
-            <div className="mt-3 grid grid-cols-4 gap-1.5">
-              {ORDER_STEPS.map((s, i) => (
-                <span key={s} className={`h-1.5 rounded-full ${i <= step ? 'bg-accent' : 'bg-line'}`} />
-              ))}
-            </div>
-          </Link>
-        </section>
+        <Link to={`/orders/${activeOrder.id}`} className="block border-b border-line bg-card px-5 pb-5 pt-4">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="flex items-center gap-2 font-display text-[19px] font-extrabold">
+              <LineBadge line="food" size="sm" />
+              {t('metro.order_title', { id: activeOrder.id })}
+            </span>
+            <ChevronRight size={20} className="text-muted" />
+          </div>
+          <OrderLine step={step} />
+        </Link>
       )}
 
-      {/* Devam eden hizmet talepleri */}
+      {/* Devam eden talepler */}
       {activeRequests.length > 0 && (
-        <section className="px-5">
-          <h2 className="mb-3 text-base font-bold">{t('home.active_requests')}</h2>
-          <div className="space-y-2">
-            {activeRequests.map((r) => {
-              const Icon = serviceIcons[r.type]
-              return (
-                <Link key={r.id} to="/services" className="flex items-center gap-3 rounded-card border border-line bg-card p-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-service">
-                    <Icon size={16} />
-                  </span>
-                  <span className="flex-1 text-sm font-semibold">{t(`services.types.${r.type}.title`)}</span>
-                  <span
-                    className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-                      r.status === 'in_progress' ? 'bg-accent/15 text-accent' : 'bg-background text-muted'
-                    }`}
-                  >
+        <section className="border-b border-line bg-card px-5 py-3">
+          <h2 className="mb-1 text-lg">{t('metro.requests')}</h2>
+          <ul>
+            {activeRequests.map((r) => (
+              <li key={r.id}>
+                <Link to="/services" className="flex min-h-[48px] items-center gap-3">
+                  <LineBadge line={serviceLine[r.type] ?? 'clean'} size="sm" />
+                  <span className="flex-1 font-semibold">{t(`services.types.${r.type}.title`)}</span>
+                  <span className={`rounded-md px-2.5 py-1 text-xs font-bold ${r.status === 'in_progress' ? 'bg-primary-soft text-primary' : 'bg-background text-muted'}`}>
                     {t(`services.status.${r.status}`)}
                   </span>
                 </Link>
-              )
-            })}
-          </div>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 
-      {/* Kampanya kartı — Deep Blue */}
-      <section className="relative mx-5 overflow-hidden rounded-card bg-campaign p-5 text-card">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-card/70">{t('home.campaign_tag')}</span>
-        <h2 className="mt-2 max-w-[80%] text-xl font-bold leading-snug">{pick(campaign.title, lang)}</h2>
-        <p className="mt-1 text-sm text-card/80">{pick(campaign.description, lang)}</p>
-        <Link to="/services/table?venue=rooftop" className="mt-3 inline-flex h-9 items-center rounded-full bg-card px-4 text-xs font-bold text-campaign">
-          {pick(campaign.cta, lang)}
-        </Link>
-        <span className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-card/15">
-          <ArrowUpRight size={18} />
-        </span>
-        <span className="pointer-events-none absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-accent/40" />
-      </section>
-
-      {/* Hızlı işlemler — beyaz kartlar */}
-      <section className="px-5">
-        <h2 className="mb-3 text-base font-bold">{t('home.quick_actions')}</h2>
-        <div className="grid grid-cols-2 gap-3">
-          {quickActions.map(({ to, key, icon: Icon }) => (
-            <Link key={key} to={to} className="flex min-h-[96px] flex-col justify-between rounded-card border border-line bg-card p-4">
-              <Icon size={22} />
-              <span className="text-sm font-semibold">{t(`home.${key}`)}</span>
-            </Link>
+      {/* Hatlar */}
+      <section className="px-5 pt-5">
+        <h2 className="mb-1 text-[22px]">{t('metro.lines_title')}</h2>
+        <ul>
+          {lines.map(({ to, line, key }, i) => (
+            <li key={key}>
+              <Link to={to} className={`flex min-h-[62px] items-center gap-3.5 ${i < lines.length - 1 ? 'border-b border-line' : ''}`}>
+                <LineBadge line={line} />
+                <span className="flex-1">
+                  <span className="block text-[17px] font-bold">{t(`metro.line_${key}`)}</span>
+                  <span className="block text-[13px] text-muted">{t(`metro.line_${key}_desc`, { hours: hotel.roomService, count: all.length })}</span>
+                </span>
+                <ArrowRight size={22} />
+              </Link>
+            </li>
           ))}
+        </ul>
+      </section>
+
+      {/* Bu akşam: kampanya */}
+      <section className="px-5 pt-5">
+        <div className="rounded-card bg-campaign p-5 text-card">
+          <p className="text-sm text-card/80">{t('metro.tonight')}, {hotel.rooftop}</p>
+          <h2 className="mt-1 text-2xl leading-tight">{pick(campaign.title, lang)}</h2>
+          <p className="mt-1 text-sm text-card/85">{pick(campaign.description, lang)}</p>
+          <Link to="/services/table?venue=rooftop" className="mt-4 inline-flex h-11 items-center rounded-[10px] bg-card px-4 font-display text-base font-extrabold text-campaign">
+            {pick(campaign.cta, lang)}
+          </Link>
         </div>
       </section>
 
-      {/* Aktiviteler — Peach Salmon */}
-      <section>
-        <div className="mb-3 flex items-center justify-between px-5">
-          <h2 className="text-base font-bold">{t('home.today_near')}</h2>
-          <Link to="/explore" className="text-sm font-medium text-accent">{t('home.see_all')}</Link>
-        </div>
-        <div className="flex gap-3 overflow-x-auto px-5 pb-1">
-          {suggestedRoutes(all, new Date().getHours()).map((route) => (
-            <Link key={route.id} to={`/explore/${route.id}`} className="flex w-[220px] shrink-0 flex-col rounded-card bg-activity p-4">
-              <span className="mb-8 flex h-8 w-8 items-center justify-center rounded-full bg-card/60 text-base">
-                {route.tags.includes('sunset') ? '🌅' : route.tags.includes('food') ? '🍽️' : '🏛️'}
-              </span>
-              <h3 className="font-bold leading-snug">{pick(route.title, lang)}</h3>
-              <div className="mt-2 flex gap-3 text-xs text-ink/70">
-                <span className="flex items-center gap-1"><Clock size={13} />{t('home.min', { count: route.minutes })}</span>
-                <span className="flex items-center gap-1"><MapPin size={13} />{t('home.km', { count: route.km })}</span>
-              </div>
-            </Link>
+      {/* Bilgi panosu */}
+      <section className="px-5 pt-5">
+        <h2 className="mb-2 text-[22px]">{t('metro.board')}</h2>
+        <dl className="divide-y divide-line rounded-card border border-line bg-card">
+          {[
+            [t('metro.wifi'), `${hotel.wifi.name}, ${hotel.wifi.password}`],
+            [t('metro.breakfast'), hotel.breakfast],
+            [t('metro.room_service'), hotel.roomService],
+            [t('metro.checkout'), hotel.checkOut],
+            [t('metro.reception'), pick(hotel.reception, lang)],
+          ].map(([label, value]) => (
+            <div key={label} className="flex items-baseline justify-between gap-4 px-4 py-3">
+              <dt className="text-muted">{label}</dt>
+              <dd className="text-right font-bold">{value}</dd>
+            </div>
           ))}
-        </div>
-      </section>
-
-      {/* Otel bilgileri (askHermis içeriği) */}
-      <section className="px-5">
-        <div className="rounded-card border border-line bg-card p-4">
-          <h2 className="mb-3 text-sm font-bold">{t('home.info')}</h2>
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            {[
-              { icon: Wifi, label: t('home.wifi'), value: `${hotel.wifi.name} · ${hotel.wifi.password}` },
-              { icon: Coffee, label: t('home.breakfast'), value: hotel.breakfast },
-              { icon: Clock, label: t('home.checkout'), value: hotel.checkOut },
-              { icon: Phone, label: t('home.reception'), value: pick(hotel.reception, lang) },
-            ].map(({ icon: Icon, label, value }) => (
-              <div key={label} className="flex gap-2">
-                <Icon size={16} className="mt-0.5 shrink-0 text-accent" />
-                <div className="min-w-0">
-                  <p className="text-muted">{label}</p>
-                  <p className="break-words font-semibold">{value}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Konaklamam — lila-pembe geçiş */}
-      <section className="px-5">
-        <Link to="/stay" className="flex items-center gap-4 rounded-card border border-line bg-card p-4">
-          <span className="h-11 w-11 shrink-0 rounded-full bg-gradient-to-br from-discover to-discover-pink" />
-          <span className="flex-1">
-            <span className="block text-sm font-bold">{t('home.my_stay')}</span>
-            <span className="block text-xs text-muted">{t('home.my_stay_text')}</span>
-          </span>
-          <ChevronRight size={18} className="text-muted" />
-        </Link>
+        </dl>
       </section>
     </div>
   )

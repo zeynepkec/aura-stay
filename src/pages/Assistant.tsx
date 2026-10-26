@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import { ArrowUp, Check, Info, Plus, Sparkles, Star, X } from 'lucide-react'
+import { ArrowUp, Check, Info, Plus, Star, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { amenityItems, hotel, optionName, tableVenues, transferDestinations } from '../data/hotel'
@@ -139,7 +139,7 @@ export default function Assistant() {
     return (
       <>
         <p>{t(record.kind === 'order' ? 'assistant.ai.confirm_order' : 'assistant.ai.confirm_request')}</p>
-        <div className="mt-2 rounded-2xl bg-background p-3">
+        <div className="mt-2 rounded-xl bg-background p-3">
           {record.kind === 'order' ? (
             <ul className="space-y-1">
               {record.items.map((i) => {
@@ -174,11 +174,11 @@ export default function Assistant() {
 
         {msg.status === 'pending' && (
           <div className="mt-3 flex gap-2">
-            <button type="button" onClick={() => cancel(id)} className="flex h-10 flex-1 items-center justify-center gap-1 rounded-full border border-line text-sm font-semibold">
+            <button type="button" onClick={() => cancel(id)} className="flex h-10 flex-1 items-center justify-center gap-1 rounded-[10px] border border-line text-sm font-semibold">
               <X size={15} />
               {t('assistant.buttons.no')}
             </button>
-            <button type="button" onClick={() => execute(id, record)} className="flex h-10 flex-[1.4] items-center justify-center gap-1 rounded-full bg-ink text-sm font-semibold text-card">
+            <button type="button" onClick={() => execute(id, record)} className="flex h-10 flex-[1.4] items-center justify-center gap-1 rounded-[10px] bg-ink text-sm font-semibold text-card">
               <Check size={15} />
               {t('assistant.buttons.yes')}
             </button>
@@ -187,7 +187,7 @@ export default function Assistant() {
         {msg.status === 'done' && (
           <Link
             to={record.kind === 'order' ? `/orders/${msg.resultId}` : '/services'}
-            className="mt-3 flex items-center justify-between gap-2 rounded-2xl bg-service px-3 py-2 text-sm font-semibold"
+            className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-service px-3 py-2 text-sm font-semibold"
           >
             <span className="flex items-center gap-1.5"><Check size={15} /> #{msg.resultId}</span>
             <span className="underline">{t(record.kind === 'order' ? 'assistant.buttons.track_order' : 'assistant.buttons.see_requests')}</span>
@@ -218,7 +218,7 @@ export default function Assistant() {
               const item = menuItems.find((m) => m.id === itemId)
               if (!item) return null
               return (
-                <li key={itemId} className="flex items-center gap-2 rounded-2xl bg-background p-2">
+                <li key={itemId} className="flex items-center gap-2 rounded-xl bg-background p-2">
                   <span className="text-xl">{item.image}</span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-semibold">{pick(item.name, lang)}</span>
@@ -247,7 +247,7 @@ export default function Assistant() {
     return (
       <>
         {t('assistant.ai.route_intro')}
-        <Link to={`/explore/${route.id}`} className="mt-2 flex items-center gap-3 rounded-2xl bg-background p-2">
+        <Link to={`/explore/${route.id}`} className="mt-2 flex items-center gap-3 rounded-xl bg-background p-2">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-activity">
             <Icon size={18} />
           </span>
@@ -270,8 +270,8 @@ export default function Assistant() {
   // Asistan baloncuğu
   const botBubble = (key: number, children: ReactNode) => (
     <div key={key} className="flex gap-2">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-discover to-discover-pink">
-        <Sparkles size={16} />
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-discover">
+        <span className="font-display text-base font-extrabold">{hotel.name.charAt(0)}</span>
       </span>
       <div className="max-w-[85%] rounded-card rounded-tl-md border border-line bg-card px-4 py-3 text-sm leading-relaxed">{children}</div>
     </div>
@@ -279,9 +279,12 @@ export default function Assistant() {
 
   return (
     <div className="pb-20">
-      <header className="px-5 pb-4 pt-6">
-        <h1 className="text-3xl font-bold">{t('assistant.title')}</h1>
-        <p className="mt-1 text-sm text-muted">{t('assistant.subtitle', { hotel: hotel.name.split(' ')[0] })}</p>
+      <header className="mb-4 flex items-center gap-3 bg-primary px-5 pb-5 pt-6 text-card">
+        <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-card font-display text-[22px] font-extrabold text-primary">K</span>
+        <div>
+          <h1 className="text-[36px] leading-none">{t('assistant.title')}</h1>
+          <p className="mt-1 text-sm text-card/85">{t('assistant.subtitle', { hotel: hotel.name.split(' ')[0] })}</p>
+        </div>
       </header>
 
       <div className="space-y-3 px-5">
@@ -324,9 +327,9 @@ export default function Assistant() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={t('assistant.placeholder')}
-          className="h-12 flex-1 rounded-full border border-line bg-card px-5 text-sm outline-none focus:border-accent"
+          className="h-12 flex-1 rounded-[10px] border border-line bg-card px-4 text-base outline-none focus:border-primary"
         />
-        <button type="submit" disabled={!input.trim() || typing} className="flex h-12 w-12 items-center justify-center rounded-full bg-ink text-card disabled:opacity-30">
+        <button type="submit" disabled={!input.trim() || typing} aria-label={t('assistant.buttons.send', { defaultValue: 'Gönder' })} className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-primary text-card disabled:opacity-30">
           <ArrowUp size={20} />
         </button>
       </form>

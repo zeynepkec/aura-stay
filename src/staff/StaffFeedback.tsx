@@ -131,7 +131,7 @@ export default function StaffFeedback() {
           </div>
 
           {/* Ortalama puan kartı — lila-pembe geçiş */}
-          <div className="mb-4 rounded-card bg-gradient-to-br from-discover to-discover-pink p-5">
+          <div className="mb-4 rounded-card p-5 bg-discover">
             <p className="text-sm text-ink/70">{t('feedback.average')}</p>
             <p className="mt-1 text-4xl font-bold">{reviews.length ? overall.toFixed(1) : '—'}</p>
             <p className="text-xs text-ink/60">{t('feedback.count', { count: reviews.length })}</p>
@@ -166,7 +166,7 @@ export default function StaffFeedback() {
                       </div>
                     ))}
                   </div>
-                  {r.comment && <p className="mt-3 rounded-2xl bg-background p-3 text-sm italic">“{r.comment}”</p>}
+                  {r.comment && <p className="mt-3 rounded-xl bg-background p-3 text-sm italic">“{r.comment}”</p>}
                 </article>
               ))}
             </div>

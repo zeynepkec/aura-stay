@@ -87,7 +87,7 @@ export default function StatusToasts() {
             }}
             className="flex flex-1 items-center gap-3 p-1 text-left"
           >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-discover to-discover-pink text-ink">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink bg-discover">
               <Bell size={18} />
             </span>
             <span className="min-w-0">

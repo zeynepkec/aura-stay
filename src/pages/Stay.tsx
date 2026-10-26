@@ -26,19 +26,19 @@ export default function Stay() {
       </Link>
 
       {/* Konaklama kartı — lila-pembe geçiş */}
-      <header className="mx-5 rounded-card bg-gradient-to-br from-discover to-discover-pink p-5">
-        <p className="text-xs font-medium uppercase tracking-wider text-ink/60">{stay.hotelName}</p>
-        <h1 className="mt-1 text-3xl font-bold">{t('stay.room', { number: stay.roomNumber })}</h1>
+      <header className="bg-primary px-5 pb-5 pt-4 text-card">
+        <p className="font-display text-base font-bold text-card/85">{stay.hotelName}</p>
+        <h1 className="mt-1 font-display text-[64px] leading-[0.9]">{stay.roomNumber}</h1>
         <div className="mt-5 grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-card/60 p-2">
-            <p className="text-[11px] text-ink/60">{t('stay.check_in')}</p>
+          <div className="rounded-lg bg-card/15 p-2">
+            <p className="text-xs text-card/80">{t('stay.check_in')}</p>
             <p className="text-sm font-bold">{date(stay.checkIn)}</p>
           </div>
-          <div className="rounded-2xl bg-card/60 p-2">
-            <p className="text-[11px] text-ink/60">{t('stay.check_out')}</p>
+          <div className="rounded-lg bg-card/15 p-2">
+            <p className="text-xs text-card/80">{t('stay.check_out')}</p>
             <p className="text-sm font-bold">{date(stay.checkOut)}</p>
           </div>
-          <div className="flex items-center justify-center rounded-2xl bg-card/60 p-2 text-sm font-bold">
+          <div className="flex items-center justify-center rounded-lg bg-card/15 p-2 text-sm font-bold">
             {t('stay.nights', { count: nights })}
           </div>
         </div>
@@ -59,7 +59,7 @@ export default function Stay() {
               {ready ? (
                 <ChevronRight size={18} className="text-muted" />
               ) : (
-                <span className="rounded-full bg-background px-2.5 py-1 text-[11px] font-semibold text-muted">{t('stay.soon')}</span>
+                <span className="rounded-full bg-background px-2.5 py-1 text-xs font-semibold text-muted">{t('stay.soon')}</span>
               )}
             </>
           )
@@ -82,7 +82,7 @@ export default function Stay() {
               window.location.replace('/')
             }
           }}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-line bg-card text-sm font-semibold text-muted"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-[10px] border border-line bg-card text-sm font-semibold text-muted"
         >
           <LogOut size={18} />
           {t('qr.logout')}

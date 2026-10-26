@@ -46,6 +46,15 @@ Uygulama giriş ekranıyla açılır: **Misafir girişi** ya da **Personel giri�
 - **Yeni rota:** `routes.ts` → `routes` listesine ekle. Her durak için `place` (Google Haritalar'da aranacak İngilizce isim) ve `lat/lng` (harita konumu) yaz.
 - **Asistanın cevapladığı sorular:** `hotel.ts` → `faq` listesi (`keywords` + 3 dilde `answer`).
 
+## Tasarım: Metro Hattı
+
+Otel tabelası ve metro haritası fikri. Her hizmet renkli, harfli bir "hat" rozetiyle gösterilir:
+**Y** Yemek (lila), **T** Temizlik (pembe), **M** Masa / transfer (şeftali), **R** Rotalar (yeşil), **K** Konsiyerj (koyu mavi).
+Sipariş durumu ve rota durakları metro hattı üzerinde ilerler.
+
+- Yazı tipleri: Sofia Sans (metin) ve Sofia Sans Condensed (başlıklar, numaralar); Türkçe ve Yunanca destekli, uygulamanın içinde gelir
+- Renkler: `tailwind.config.js` · Rozet: `src/components/LineBadge.tsx` · Sipariş hattı: `src/components/OrderLine.tsx`
+
 ## Asistan kuralları (`src/lib/concierge.ts`)
 
 1. Sipariş ve talepleri personele göndermeden **önce onay ister**.

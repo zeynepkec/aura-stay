@@ -29,7 +29,7 @@ export default function ReviewSummary({ showSamples = false }: { showSamples?: b
   return (
     <div className="space-y-3">
       {/* Özet kartı — lila-pembe geçiş */}
-      <section className="rounded-card bg-gradient-to-br from-discover to-discover-pink p-5">
+      <section className="rounded-card p-5 bg-discover">
         <div className="flex items-center justify-between">
           <p className="flex items-center gap-1.5 text-sm font-bold">
             <Sparkles size={16} />
@@ -43,7 +43,7 @@ export default function ReviewSummary({ showSamples = false }: { showSamples?: b
         </div>
         {summary.praise.length > 0 && <p className="mt-3 text-sm">{t('reviewSummary.praise', { list: joinList(summary.praise, and) })}</p>}
         {summary.complain.length > 0 && <p className="mt-1 text-sm">{t('reviewSummary.complain', { list: joinList(summary.complain, and) })}</p>}
-        <p className="mt-3 text-[11px] text-ink/60">{t('reviewSummary.note')}</p>
+        <p className="mt-3 text-xs text-ink/60">{t('reviewSummary.note')}</p>
       </section>
 
       {/* Örnek yorumlar */}
@@ -64,7 +64,7 @@ export default function ReviewSummary({ showSamples = false }: { showSamples?: b
                   </span>
                 </div>
                 <p className="mt-1.5 text-sm text-ink/80">{r.text}</p>
-                <p className="mt-1.5 text-[11px] text-muted">{t('reviewSummary.sample')} · {r.date}</p>
+                <p className="mt-1.5 text-xs text-muted">{t('reviewSummary.sample')} · {r.date}</p>
               </li>
             ))}
           </ul>

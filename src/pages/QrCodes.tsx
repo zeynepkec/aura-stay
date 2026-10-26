@@ -27,7 +27,7 @@ function WriteCardButton({ link }: { link: string }) {
   }
 
   return (
-    <button type="button" onClick={write} className="mt-3 flex h-9 items-center gap-1.5 rounded-full border border-line px-3 text-xs font-semibold print:hidden">
+    <button type="button" onClick={write} className="mt-3 flex h-9 items-center gap-1.5 rounded-[10px] border border-line px-3 text-xs font-semibold print:hidden">
       <Nfc size={16} />
       {t(state === 'idle' ? 'qr.write_card' : `qr.write_${state}`)}
     </button>
@@ -49,7 +49,7 @@ export default function QrCodes() {
         <button
           type="button"
           onClick={() => window.print()}
-          className="flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-card"
+          className="flex h-11 items-center gap-2 rounded-[10px] bg-ink px-5 text-sm font-semibold text-card"
         >
           <Printer size={18} />
           {t('qr.print')}

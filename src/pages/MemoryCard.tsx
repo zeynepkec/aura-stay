@@ -71,9 +71,9 @@ export default function MemoryCard() {
   }
 
   const stat = (value: string, label: string) => (
-    <div className="rounded-2xl bg-card/60 p-3">
+    <div className="rounded-xl bg-card/60 p-3">
       <p className="truncate text-lg font-bold">{value}</p>
-      <p className="text-[11px] text-ink/60">{label}</p>
+      <p className="text-xs text-ink/60">{label}</p>
     </div>
   )
 
@@ -85,18 +85,18 @@ export default function MemoryCard() {
       </Link>
 
       <header className="px-5 pb-4 pt-2">
-        <h1 className="text-3xl font-bold">{t('memory.title')}</h1>
+        <h1 className="text-[36px] leading-tight">{t('memory.title')}</h1>
         <p className="mt-1 text-sm text-muted">{t('memory.subtitle')}</p>
       </header>
 
       <div className="px-5">
         {/* Anı kartı — resme çevrilen kısım */}
-        <div ref={cardRef} className="relative overflow-hidden rounded-card bg-gradient-to-br from-discover to-discover-pink p-6">
+        <div ref={cardRef} className="relative overflow-hidden rounded-card p-6 bg-discover">
           <span className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-card/25" />
           <span className="pointer-events-none absolute -bottom-20 -left-10 h-40 w-40 rounded-full bg-accent/25" />
 
           <div className="relative">
-            <p className="text-xs font-bold uppercase tracking-[0.2em]">AURA Stay</p>
+            <p className="text-xs font-bold font-display">AURA Stay</p>
             <h2 className="mt-8 text-3xl font-bold leading-tight">{pick(hotel.memory.title, lang)}</h2>
             <p className="mt-1 text-sm text-ink/70">
               {stay.hotelName} · {date(stay.checkIn)} – {date(stay.checkOut)}
@@ -120,7 +120,7 @@ export default function MemoryCard() {
             type="button"
             onClick={onShare}
             disabled={busy}
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-ink text-sm font-semibold text-card disabled:opacity-50"
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-[10px] bg-ink text-sm font-semibold text-card disabled:opacity-50"
           >
             <Share2 size={18} />
             {busy ? t('memory.preparing') : t('memory.share')}
@@ -129,7 +129,7 @@ export default function MemoryCard() {
             type="button"
             onClick={onDownload}
             disabled={busy}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-line bg-card text-sm font-semibold disabled:opacity-50"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-[10px] border border-line bg-card text-sm font-semibold disabled:opacity-50"
           >
             <Download size={18} />
             {t('memory.download')}

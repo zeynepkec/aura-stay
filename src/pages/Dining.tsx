@@ -35,9 +35,12 @@ export default function Dining() {
 
   return (
     <div className={cartCount > 0 ? 'pb-20' : ''}>
-      <header className="px-5 pb-2 pt-6">
-        <h1 className="text-3xl font-bold">{t('dining.title')}</h1>
-        <p className="mt-1 text-sm text-muted">{t('dining.subtitle', { hours: hotel.roomService })}</p>
+      <header className="flex items-center gap-3 bg-discover px-5 pb-5 pt-6">
+        <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-ink font-display text-[22px] font-extrabold text-card">Y</span>
+        <div>
+        <h1 className="text-[36px] leading-none">{t('dining.title')}</h1>
+        <p className="mt-1 text-sm">{t('dining.subtitle', { hours: hotel.roomService })}</p>
+        </div>
       </header>
 
       <nav className="sticky top-0 z-10 flex gap-2 overflow-x-auto bg-background px-5 py-3">
@@ -46,8 +49,8 @@ export default function Dining() {
             key={c.id}
             type="button"
             onClick={() => goTo(c.id)}
-            className={`h-9 shrink-0 rounded-full px-4 text-sm font-medium ${
-              active === c.id ? 'bg-ink text-card' : 'border border-line bg-card'
+            className={`h-10 shrink-0 rounded-[10px] px-4 font-display text-[15px] font-bold ${
+              active === c.id ? 'bg-primary text-card' : 'border border-line bg-card'
             }`}
           >
             {pick(c.name, lang)}
@@ -62,7 +65,7 @@ export default function Dining() {
             key={f}
             type="button"
             onClick={() => setDiet(f)}
-            className={`h-8 shrink-0 rounded-full px-3 text-xs font-semibold ${
+            className={`h-8 shrink-0 rounded-md px-3 text-xs font-bold ${
               diet === f ? 'bg-accent text-card' : 'bg-accent/10 text-accent'
             }`}
           >
@@ -77,7 +80,7 @@ export default function Dining() {
           if (items.length === 0) return null
           return (
             <section key={c.id} id={c.id} className="scroll-mt-16">
-              <h2 className="mb-3 text-base font-bold">{pick(c.name, lang)}</h2>
+              <h2 className="mb-3 text-xl">{pick(c.name, lang)}</h2>
               <div className="space-y-2.5">
                 {items.map((item) => {
                     const qty = quantityOf(item.id)
@@ -87,24 +90,24 @@ export default function Dining() {
                         key={item.id}
                         className={`flex gap-3 rounded-card border border-line bg-card p-3 ${isSoldOut ? 'opacity-60' : ''}`}
                       >
-                        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-background text-3xl">{item.image}</span>
+                        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-background text-3xl">{item.image}</span>
                         <div className="min-w-0 flex-1">
                           <h3 className="text-sm font-semibold">{pick(item.name, lang)}</h3>
                           <p className="mt-0.5 text-xs text-muted">{pick(item.description, lang)}</p>
                           {item.allergens.length > 0 && (
-                            <p className="mt-0.5 text-[11px] text-muted">
+                            <p className="mt-0.5 text-xs text-muted">
                               {t('dining.allergens')}: {item.allergens.map((a) => pick(allergenLabels[a], lang)).join(', ')}
                             </p>
                           )}
                           <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                             <span className="mr-1 text-sm font-semibold">{price(item.price, lang)}</span>
                             {isSoldOut && (
-                              <span className="rounded-full bg-ink px-2 py-0.5 text-[11px] font-semibold text-card">
+                              <span className="rounded-full bg-ink px-2 py-0.5 text-xs font-semibold text-card">
                                 {t('dining.sold_out')}
                               </span>
                             )}
                             {item.tags.map((tag) => (
-                              <span key={tag} className="rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
+                              <span key={tag} className="rounded-full bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
                                 {t(`dining.tags.${tag}`)}
                               </span>
                             ))}
@@ -133,7 +136,7 @@ export default function Dining() {
 
       {cartCount > 0 && (
         <div className="fixed bottom-[76px] left-1/2 z-10 w-full max-w-[430px] -translate-x-1/2 px-5">
-          <Link to="/cart" className="flex h-14 items-center justify-between rounded-full bg-ink px-5 text-card shadow-lg">
+          <Link to="/cart" className="flex h-14 items-center justify-between rounded-[10px] bg-ink px-5 text-card shadow-lg">
             <span className="flex items-center gap-3 text-sm">
               <span className="flex h-7 min-w-[28px] items-center justify-center rounded-full bg-card/15 px-2 font-semibold">
                 {cartCount}

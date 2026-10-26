@@ -84,7 +84,7 @@ export default function AddRoute() {
     navigate(`/explore/${id}`, { replace: true })
   }
 
-  const field = 'w-full rounded-2xl border border-line bg-card px-4 text-sm outline-none focus:border-accent'
+  const field = 'w-full rounded-xl border border-line bg-card px-4 text-sm outline-none focus:border-accent'
   const linePoints = stops.map((s) => [s.lat, s.lng] as [number, number])
 
   return (
@@ -95,7 +95,7 @@ export default function AddRoute() {
       </Link>
 
       <header className="px-5 pb-5 pt-2">
-        <h1 className="text-3xl font-bold">{t('addRoute.title')}</h1>
+        <h1 className="text-[36px] leading-tight">{t('addRoute.title')}</h1>
         <p className="mt-1 text-muted">{t('addRoute.text')}</p>
       </header>
 
@@ -189,7 +189,7 @@ export default function AddRoute() {
               type="button"
               onClick={addStop}
               disabled={!point || !stopName.trim()}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-ink text-sm font-semibold disabled:border-line disabled:text-muted"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-[10px] border-2 border-ink text-sm font-semibold disabled:border-line disabled:text-muted"
             >
               <Plus size={18} />
               {point ? t('addRoute.stop_add') : t('addRoute.stop_pick')}
@@ -237,9 +237,9 @@ export default function AddRoute() {
           <input id="route-author" value={author} onChange={(e) => setAuthor(e.target.value)} maxLength={30} placeholder={t('addRoute.your_name_ph', { room })} className={`${field} h-12`} />
         </div>
 
-        {showMissing && !ready && <p role="alert" className="rounded-2xl bg-activity/60 p-3 text-sm font-medium">{t('addRoute.missing')}</p>}
+        {showMissing && !ready && <p role="alert" className="rounded-xl bg-activity/60 p-3 text-sm font-medium">{t('addRoute.missing')}</p>}
 
-        <button type="submit" className="flex h-14 w-full items-center justify-center rounded-full bg-ink text-sm font-semibold text-card">
+        <button type="submit" className="flex h-14 w-full items-center justify-center rounded-[10px] bg-ink text-sm font-semibold text-card">
           {t('addRoute.submit')}
         </button>
       </div>

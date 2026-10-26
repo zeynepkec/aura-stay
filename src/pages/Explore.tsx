@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Clock, Compass, Plus, Footprints, Landmark, MapPin, Palette, Star, Sunset, Trees, Users, Utensils } from 'lucide-react'
+import { ArrowRight, Compass, Plus, Footprints, Landmark, Palette, Star, Sunset, Trees, Users, Utensils } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { pick } from '../data/menu'
 import { routeTags, type RouteTag, type TravelRoute } from '../data/routes'
@@ -35,72 +35,82 @@ export default function Explore() {
 
   return (
     <div>
-      {/* Başlık alanı — lila-pembe geçiş */}
-      <section className="mx-5 mt-6 rounded-card bg-gradient-to-br from-discover to-discover-pink p-6">
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-card/60">
-          <Compass size={20} />
-        </span>
-        <h1 className="mt-8 text-3xl font-bold leading-tight">{t('explore.hero_title')}</h1>
-        <p className="mt-1 text-sm text-ink/70">{t('explore.hero_text')}</p>
-        {/* Misafir kendi rotasını ekleyebilir */}
-        <Link to="/explore/new" className="mt-5 inline-flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-card">
-          <Plus size={18} />
-          {t('addRoute.button')}
-        </Link>
-      </section>
+      {/* Tabela: rotalar */}
+      <header className="bg-service px-5 pb-5 pt-6">
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <h1 className="text-[36px] leading-none">{t('explore.hero_title')}</h1>
+            <p className="mt-1.5 text-sm">{t('explore.hero_text')}</p>
+          </div>
+          {/* Misafir kendi rotasını ekleyebilir */}
+          <Link to="/explore/new" className="flex h-11 shrink-0 items-center gap-1.5 rounded-[10px] bg-ink px-4 font-display text-base font-extrabold text-card">
+            <Plus size={18} />
+            {t('addRoute.button')}
+          </Link>
+        </div>
+      </header>
 
       {/* Kategori filtreleri */}
-      <nav className="flex gap-2 overflow-x-auto px-5 py-5">
+      <nav className="flex gap-2 overflow-x-auto px-5 pb-3 pt-4">
         {filters.map((f) => (
           <button
             key={f}
             type="button"
             onClick={() => setFilter(f)}
-            className={`h-9 shrink-0 rounded-full px-4 text-sm font-medium ${
-              filter === f ? 'bg-ink text-card' : 'border border-line bg-card'
+            className={`flex h-10 shrink-0 items-center gap-1.5 rounded-[10px] px-3.5 font-display text-[15px] font-bold ${
+              filter === f ? 'bg-primary text-card' : 'border border-line bg-card'
             }`}
           >
-            {f === 'all' ? t('explore.categories.all') : `${routeTags[f].emoji} ${pick(routeTags[f].name, lang)}`}
+            {f === 'all' ? (
+              t('explore.categories.all')
+            ) : (
+              <>
+                {(() => {
+                  const TagIcon = routeIcons[f]
+                  return <TagIcon size={16} />
+                })()}
+                {pick(routeTags[f].name, lang)}
+              </>
+            )}
           </button>
         ))}
       </nav>
 
-      <p className="px-5 pb-3 text-xs text-muted">{t('explore.count', { count: visible.length })}</p>
+      <p className="px-5 pb-1 text-sm text-muted">{t('explore.count', { count: visible.length })}</p>
 
-      {/* Rota kartları */}
-      <ul className="space-y-3 px-5 pb-6">
+      {/* Rotalar: hat listesi */}
+      <ul className="px-5 pb-6">
         {visible.map((route) => {
-          const Icon = routeIcon(route)
+          const score = ratingOf(route)
           return (
             <li key={route.id}>
-              <Link to={`/explore/${route.id}`} className="flex gap-4 rounded-card border border-line bg-card p-3">              {/* Sol taraf — Peach Salmon */}
-              <span className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-activity">
-                <Icon size={30} strokeWidth={1.6} />
-              </span>
-              <div className="min-w-0 flex-1 py-0.5">
-                <div className="flex items-start justify-between gap-2">
-                  <h2 className="text-sm font-bold leading-snug">{pick(route.title, lang)}</h2>
-                  <span className="flex shrink-0 items-center gap-0.5 text-xs font-semibold">
-                    {ratingOf(route).value > 0 ? (
-                      <>
-                        <Star size={13} className="fill-accent text-accent" />
-                        {ratingOf(route).value}
-                        {ratingOf(route).count > 0 && <span className="font-medium text-muted">({ratingOf(route).count})</span>}
-                      </>
-                    ) : (
-                      <span className="rounded-full bg-accent/15 px-2 py-0.5 text-[11px] text-accent">{t('addRoute.new')}</span>
-                    )}
-                  </span>
+              <Link to={`/explore/${route.id}`} className="flex items-center gap-3.5 border-b border-line py-3.5">
+                <span className="flex h-10 min-w-10 shrink-0 items-center justify-center rounded-lg bg-service px-1.5 font-display text-[19px] font-extrabold">
+                  R{all.indexOf(route) + 1}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-2">
+                    <h2 className="text-[19px] leading-tight">{pick(route.title, lang)}</h2>
+                    <span className="flex shrink-0 items-center gap-0.5 pt-0.5 text-sm font-bold">
+                      {score.value > 0 ? (
+                        <>
+                          <Star size={14} className="fill-accent text-accent" />
+                          {score.value}
+                          {score.count > 0 && <span className="font-medium text-muted">({score.count})</span>}
+                        </>
+                      ) : (
+                        <span className="rounded-md bg-primary-soft px-2 py-0.5 text-xs text-primary">{t('addRoute.new')}</span>
+                      )}
+                    </span>
+                  </div>
+                  <p className="mt-0.5 text-[13px] text-muted">
+                    {t('explore.min', { count: route.minutes })}, {t('explore.km', { count: route.km })}, {t('explore.stops', { count: route.stops.length })}. {t('explore.shared_by', { name: route.sharedBy })}
+                  </p>
                 </div>
-                <p className="mt-0.5 text-xs text-muted">{t('explore.shared_by', { name: route.sharedBy })}</p>
-                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-ink/70">
-                  <span className="flex items-center gap-1"><Clock size={13} />{t('explore.min', { count: route.minutes })}</span>
-                  <span className="flex items-center gap-1"><MapPin size={13} />{t('explore.km', { count: route.km })}</span>
-                  <span>{t('explore.stops', { count: route.stops.length })}</span>
-                </div>
-              </div>
+                <ArrowRight size={20} className="shrink-0" />
               </Link>
-            </li>          )
+            </li>
+          )
         })}
       </ul>
     </div>

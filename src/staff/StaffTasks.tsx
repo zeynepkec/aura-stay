@@ -96,7 +96,7 @@ export default function StaffTasks() {
               </h2>
 
               {list.length === 0 ? (
-                <p className="rounded-2xl border border-dashed border-line p-6 text-center text-sm text-muted">{t('tasks.empty')}</p>
+                <p className="rounded-xl border border-dashed border-line p-6 text-center text-sm text-muted">{t('tasks.empty')}</p>
               ) : (
                 <div className="space-y-3">
                   {list.map((r) => {
@@ -122,7 +122,7 @@ export default function StaffTasks() {
 
                         {/* Misafirin notu */}
                         {r.details.note && (
-                          <p className="mt-3 flex gap-2 rounded-2xl bg-activity/40 p-3 text-sm">
+                          <p className="mt-3 flex gap-2 rounded-xl bg-activity/40 p-3 text-sm">
                             <StickyNote size={16} className="mt-0.5 shrink-0" />
                             {r.details.note}
                           </p>
@@ -132,7 +132,7 @@ export default function StaffTasks() {
                           <button
                             type="button"
                             onClick={() => advance(r.id)}
-                            className="mt-4 h-11 w-full rounded-full bg-ink text-sm font-semibold text-card active:scale-[0.99]"
+                            className="mt-4 h-11 w-full rounded-[10px] bg-ink text-sm font-semibold text-card active:scale-[0.99]"
                           >
                             {t(`tasks.actions.${status}`)}
                           </button>

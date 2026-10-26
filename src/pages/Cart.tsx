@@ -32,7 +32,7 @@ export default function Cart() {
       </Link>
 
       <header className="px-5 pb-4 pt-2">
-        <h1 className="text-3xl font-bold">{t('dining.cart_title')}</h1>
+        <h1 className="text-[36px] leading-tight">{t('dining.cart_title')}</h1>
         {cartCount > 0 && <p className="mt-1 text-sm text-muted">{t('dining.items', { count: cartCount })}</p>}
       </header>
 
@@ -40,7 +40,7 @@ export default function Cart() {
         <div className="mx-5 flex flex-col items-center rounded-card border border-line bg-card px-6 py-14 text-center">
           <ShoppingBag size={28} className="text-muted" />
           <p className="mt-3 text-sm text-muted">{t('dining.empty_cart')}</p>
-          <Link to="/dining" className="mt-5 flex h-11 items-center rounded-full bg-ink px-5 text-sm font-semibold text-card">
+          <Link to="/dining" className="mt-5 flex h-11 items-center rounded-[10px] bg-ink px-5 text-sm font-semibold text-card">
             {t('dining.browse_menu')}
           </Link>
         </div>
@@ -57,13 +57,13 @@ export default function Cart() {
                   key={line.id}
                   className={`flex items-center gap-3 rounded-card border bg-card p-3 ${isSoldOut ? 'border-ink' : 'border-line'}`}
                 >
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-background text-2xl">{item.image}</span>
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-background text-2xl">{item.image}</span>
                   <div className="min-w-0 flex-1">
                     <p className={`truncate text-sm font-semibold ${isSoldOut ? 'line-through opacity-60' : ''}`}>
                       {pick(item.name, lang)}
                     </p>
                     {isSoldOut ? (
-                      <span className="mt-0.5 inline-block rounded-full bg-ink px-2 py-0.5 text-[11px] font-semibold text-card">
+                      <span className="mt-0.5 inline-block rounded-full bg-ink px-2 py-0.5 text-xs font-semibold text-card">
                         {t('dining.sold_out')}
                       </span>
                     ) : (
@@ -74,7 +74,7 @@ export default function Cart() {
                     <button
                       type="button"
                       onClick={() => setQuantity(line.id, 0)}
-                      className="h-9 rounded-full border border-line px-4 text-sm font-semibold"
+                      className="h-9 rounded-[10px] border border-line px-4 text-sm font-semibold"
                     >
                       {t('dining.remove')}
                     </button>
@@ -134,7 +134,7 @@ export default function Cart() {
               type="button"
               onClick={confirmOrder}
               disabled={hasSoldOut}
-              className="flex h-14 w-full items-center justify-between rounded-full bg-ink px-6 text-card shadow-lg disabled:opacity-30"
+              className="flex h-14 w-full items-center justify-between rounded-[10px] bg-ink px-6 text-card shadow-lg disabled:opacity-30"
             >
               <span className="text-sm font-semibold">{t('orders.place_order')}</span>
               <span className="font-semibold">{price(cartTotal, lang)}</span>

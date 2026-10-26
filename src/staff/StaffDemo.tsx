@@ -37,7 +37,7 @@ export default function StaffDemo() {
 
       <div className="grid gap-4 md:grid-cols-2">
         {/* Örnek veriler — lila-pembe geçiş */}
-        <section className="flex flex-col rounded-card bg-gradient-to-br from-discover to-discover-pink p-5">
+        <section className="flex flex-col rounded-card p-5 bg-discover">
           <span className="flex h-11 w-11 items-center justify-center rounded-full bg-card/60">
             <Database size={20} />
           </span>

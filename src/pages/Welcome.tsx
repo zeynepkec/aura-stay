@@ -13,84 +13,79 @@ export default function Welcome() {
   const saved = getSession()
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-gradient-to-br from-discover to-discover-pink px-6 pb-8 pt-6">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-bold uppercase tracking-[0.2em]">AURA Stay</p>
-        <LanguageSwitcher />
-      </div>
+    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-background">
+      {/* Tabela */}
+      <header className="bg-primary px-5 pb-8 pt-5 text-card">
+        <div className="flex items-center justify-between">
+          <span className="font-display text-[17px] font-bold">AURA Stay</span>
+          <LanguageSwitcher dark />
+        </div>
+        <h1 className="mt-10 text-[44px] leading-none">{t('start.title')}</h1>
+        <p className="mt-3 text-card/85">{t('start.subtitle')}</p>
+      </header>
 
-      <div className="mt-12">
-        <h1 className="text-4xl font-bold leading-tight">{t('start.title')}</h1>
-        <p className="mt-3 text-base text-ink/70">{t('start.subtitle')}</p>
-        <p className="mt-6 text-sm font-semibold">{t('start.question')}</p>
-      </div>
+      <div className="flex flex-1 flex-col px-5 pb-8 pt-6">
+        <h2 className="mb-3 text-[22px]">{t('start.question')}</h2>
 
-      {saved && (
-        <section className="mt-4 flex items-center gap-3 rounded-card bg-ink p-4 text-card">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-card/15">
-            <RotateCcw size={20} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-bold">{t('start.continue_title')}</p>
-            <p className="truncate text-xs text-card/75">{t('join.success_text', { room: saved.room, hotel: saved.hotelName })}</p>
+        {saved && (
+          <section className="mb-3 flex items-center gap-3 rounded-card bg-ink p-4 text-card">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-card/15">
+              <RotateCcw size={20} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-lg font-extrabold leading-tight">{t('start.continue_title')}</p>
+              <p className="truncate text-sm text-card/80">{t('join.success_text', { room: saved.room, hotel: saved.hotelName })}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  endSession()
+                  window.location.replace('/')
+                }}
+                className="mt-0.5 text-xs text-card/75 underline"
+              >
+                {t('start.not_me')}
+              </button>
+            </div>
             <button
               type="button"
               onClick={() => {
-                endSession()
+                markEntered()
                 window.location.replace('/')
               }}
-              className="mt-1 text-xs text-card/75 underline"
+              className="flex h-11 shrink-0 items-center rounded-[10px] bg-card px-4 font-display text-base font-extrabold text-ink"
             >
-              {t('start.not_me')}
+              {t('start.continue')}
             </button>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              markEntered()
-              window.location.replace('/')
-            }}
-            className="flex h-11 shrink-0 items-center rounded-full bg-card px-4 text-sm font-semibold text-ink"
-          >
-            {t('start.continue')}
-          </button>
-        </section>
-      )}
+          </section>
+        )}
 
-      <div className="mt-4 flex flex-col gap-4">
-        {/* 1. seçenek: Misafir */}
-        <section className="rounded-card bg-card p-5 shadow-sm">
-          <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-discover/40">
-              <KeyRound size={24} strokeWidth={1.75} />
-            </span>
-            <div>
-              <h2 className="text-lg font-bold">{t('start.guest')}</h2>
-              <p className="text-sm text-muted">{t('start.guest_text')}</p>
-            </div>
-          </div>
-          <Link to="/guest" className="mt-5 flex h-12 items-center justify-center gap-2 rounded-full bg-ink text-sm font-semibold text-card">
-            {t('start.guest')}
-            <ArrowRight size={16} />
-          </Link>
-        </section>
-
-        {/* 2. seçenek: Personel — /staff ayrı bir uygulama olduğu için sayfa baştan yüklenir (a etiketi) */}
-        <section className="rounded-card bg-card p-5 shadow-sm">
-          <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-service">
-              <UserCog size={24} strokeWidth={1.75} />
-            </span>
-            <div>
-              <h2 className="text-lg font-bold">{t('start.staff')}</h2>
-              <p className="text-sm text-muted">{t('start.staff_text')}</p>
-            </div>
-          </div>
-          <a href="/staff" className="mt-5 flex h-12 items-center justify-center gap-2 rounded-full border border-ink text-sm font-semibold">
-            {t('start.staff')}
-            <ArrowRight size={16} />
-          </a>
-        </section>
+        <ul className="divide-y divide-line rounded-card border border-line bg-card">
+          <li>
+            <Link to="/guest" className="flex min-h-[76px] items-center gap-3.5 px-4 py-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-card">
+                <KeyRound size={20} />
+              </span>
+              <span className="flex-1">
+                <span className="block font-display text-xl font-extrabold">{t('start.guest')}</span>
+                <span className="block text-sm text-muted">{t('start.guest_text')}</span>
+              </span>
+              <ArrowRight size={22} />
+            </Link>
+          </li>
+          <li>
+            {/* /staff ayrı bir uygulama olduğu için sayfa baştan yüklenir (a etiketi) */}
+            <a href="/staff" className="flex min-h-[76px] items-center gap-3.5 px-4 py-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-service">
+                <UserCog size={20} />
+              </span>
+              <span className="flex-1">
+                <span className="block font-display text-xl font-extrabold">{t('start.staff')}</span>
+                <span className="block text-sm text-muted">{t('start.staff_text')}</span>
+              </span>
+              <ArrowRight size={22} />
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   )

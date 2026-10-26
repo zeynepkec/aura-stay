@@ -42,7 +42,7 @@ export default function StaffLogin() {
           </a>
           <LanguageSwitcher />
         </div>
-        <p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-muted">AURA Stay</p>
+        <p className="mt-8 text-xs font-bold text-muted font-display">AURA Stay</p>
         <h1 className="mt-1 text-3xl font-bold">{t('staff.login_title')}</h1>
         <p className="mb-6 mt-2 text-sm text-muted">{t('picker.text')}</p>
         <HotelPicker
@@ -65,7 +65,7 @@ export default function StaffLogin() {
         <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-ink text-card">
           <Lock size={26} />
         </span>
-        <p className="mt-6 text-xs font-bold uppercase tracking-[0.2em] text-muted">AURA Stay</p>
+        <p className="mt-6 text-xs font-bold text-muted font-display">AURA Stay</p>
         <h1 className="mt-1 text-3xl font-bold">{t('staff.login_title')}</h1>
         <p className="mt-2 text-sm text-muted">{t('staff.login_text')}</p>
 
@@ -101,15 +101,15 @@ export default function StaffLogin() {
         {/* Tuş takımı */}
         <div className="grid grid-cols-3 gap-3">
           {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((d) => (
-            <button key={d} type="button" onClick={() => press(d)} className="h-16 rounded-2xl border border-line bg-card text-2xl font-semibold active:bg-background">
+            <button key={d} type="button" onClick={() => press(d)} className="h-16 rounded-xl border border-line bg-card text-2xl font-semibold active:bg-background">
               {d}
             </button>
           ))}
           <span />
-          <button type="button" onClick={() => press('0')} className="h-16 rounded-2xl border border-line bg-card text-2xl font-semibold active:bg-background">
+          <button type="button" onClick={() => press('0')} className="h-16 rounded-xl border border-line bg-card text-2xl font-semibold active:bg-background">
             0
           </button>
-          <button type="button" onClick={() => setPin(pin.slice(0, -1))} aria-label={t('staff.delete')} className="flex h-16 items-center justify-center rounded-2xl text-muted">
+          <button type="button" onClick={() => setPin(pin.slice(0, -1))} aria-label={t('staff.delete')} className="flex h-16 items-center justify-center rounded-xl text-muted">
             <Delete size={24} />
           </button>
         </div>

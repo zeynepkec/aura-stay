@@ -68,7 +68,7 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
           <div className="flex items-center gap-3">
             <span className="h-9 w-9 rounded-xl bg-ink p-2">
-              <span className="block h-full w-full rounded-full bg-gradient-to-br from-discover to-discover-pink" />
+              <span className="block h-full w-full rounded-full bg-discover" />
             </span>
             <div>
               <p className="text-sm font-bold leading-tight">{t('staff.title')}</p>
@@ -77,7 +77,7 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
           </div>
           <div className="flex items-center gap-3">
             {staff.role === 'reception' && (
-              <a href={`/qr?hotel=${hotel.id}`} className="hidden h-10 items-center gap-1.5 rounded-full border border-line px-4 text-sm font-medium sm:flex">
+              <a href={`/qr?hotel=${hotel.id}`} className="hidden h-10 items-center gap-1.5 rounded-[10px] border border-line px-4 text-sm font-medium sm:flex">
                 <QrCode size={16} />
                 {t('staff.qr_codes')}
               </a>
@@ -90,7 +90,7 @@ export default function StaffLayout({ staff }: { staff: StaffSession }) {
                 staffLogout()
                 window.location.replace('/staff')
               }}
-              className="flex h-10 items-center gap-1.5 rounded-full border border-line px-4 text-sm font-medium"
+              className="flex h-10 items-center gap-1.5 rounded-[10px] border border-line px-4 text-sm font-medium"
             >
               <LogOut size={16} />
               <span className="hidden sm:inline">{t('staff.logout')}</span>

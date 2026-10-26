@@ -6,23 +6,27 @@ const languages = [
   { code: 'el', label: 'ΕΛ' },
 ]
 
-export default function LanguageSwitcher() {
+// dark: koyu mavi tabelanın üstünde kullanılır
+export default function LanguageSwitcher({ dark = false }: { dark?: boolean }) {
   const { i18n } = useTranslation()
 
   return (
-    <div className="flex rounded-full border border-line bg-card p-1">
-      {languages.map(({ code, label }) => (
-        <button
-          key={code}
-          type="button"
-          onClick={() => i18n.changeLanguage(code)}
-          className={`h-8 min-w-[36px] rounded-full px-2 text-xs font-semibold ${
-            i18n.resolvedLanguage === code ? 'bg-ink text-card' : 'text-muted'
-          }`}
-        >
-          {label}
-        </button>
-      ))}
+    <div className={`flex gap-0.5 rounded-lg p-[3px] ${dark ? 'bg-card/15' : 'border border-line bg-card'}`}>
+      {languages.map(({ code, label }) => {
+        const active = i18n.resolvedLanguage === code
+        return (
+          <button
+            key={code}
+            type="button"
+            onClick={() => i18n.changeLanguage(code)}
+            className={`h-8 min-w-[38px] rounded-md px-2 font-display text-[13px] font-bold ${
+              active ? (dark ? 'bg-card text-primary' : 'bg-primary text-card') : dark ? 'text-card' : 'text-muted'
+            }`}
+          >
+            {label}
+          </button>
+        )
+      })}
     </div>
   )
 }

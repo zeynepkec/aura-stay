@@ -23,7 +23,7 @@ export default function Join() {
   }, [session])
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col items-center justify-center bg-gradient-to-br from-discover to-discover-pink px-6 text-center">
+    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col items-center justify-center bg-background px-6 text-center">
       {session ? (
         <>
           <CheckCircle2 size={64} strokeWidth={1.5} />
@@ -36,7 +36,7 @@ export default function Join() {
           <XCircle size={64} strokeWidth={1.5} />
           <h1 className="mt-6 text-3xl font-bold">{t('join.invalid_title')}</h1>
           <p className="mt-2 text-sm text-ink/70">{t('join.invalid_text')}</p>
-          <Link to="/" className="mt-8 flex h-12 items-center rounded-full bg-ink px-6 text-sm font-semibold text-card">
+          <Link to="/" className="mt-8 flex h-12 items-center rounded-[10px] bg-ink px-6 text-sm font-semibold text-card">
             {t('join.back')}
           </Link>
         </>

@@ -3,10 +3,10 @@ import i18n from '../i18n'
 // Asistan metinleri — askHermis asistanının cümleleriyle birleştirildi
 i18n.addResourceBundle('tr', 'translation', {
   assistant: {
-    title: 'Asistan',
+    title: 'Konsiyerj',
     subtitle: '{{hotel}} dijital konsiyerjin, 7/24',
     welcome: 'Merhaba! Ben {{hotel}} dijital konsiyerjin. Yemek siparişi, oda temizliği, transfer, masa rezervasyonu ya da {{city}} rotaları için yardımcı olabilirim.',
-    placeholder: 'Asistana bir şey sor…',
+    placeholder: 'Ne istediğini yaz…',
     via: 'Asistan üzerinden',
     suggestions: ['2 musakka sipariş et', 'Oda temizliği istiyorum', 'Havalimanı transferi', 'Gün batımı rotası öner', 'Wi-Fi şifresi'],
     ai: {
@@ -49,10 +49,10 @@ i18n.addResourceBundle('tr', 'translation', {
 
 i18n.addResourceBundle('en', 'translation', {
   assistant: {
-    title: 'Assistant',
+    title: 'Concierge',
     subtitle: 'Your {{hotel}} digital concierge, 24/7',
     welcome: "Hello! I'm your {{hotel}} digital concierge. I can help with food orders, room cleaning, transfers, table bookings or {{city}} routes.",
-    placeholder: 'Ask the concierge anything…',
+    placeholder: 'Write what you need…',
     via: 'Via assistant',
     suggestions: ['Order 2 moussaka', 'I need room cleaning', 'Airport transfer', 'Suggest a sunset route', 'Wi-Fi password'],
     ai: {
@@ -95,10 +95,10 @@ i18n.addResourceBundle('en', 'translation', {
 
 i18n.addResourceBundle('el', 'translation', {
   assistant: {
-    title: 'Βοηθός',
+    title: 'Κονσιέρζ',
     subtitle: 'Ο ψηφιακός σου concierge στο {{hotel}}, 24/7',
     welcome: 'Γεια σας! Είμαι ο ψηφιακός concierge του {{hotel}}. Μπορώ να βοηθήσω με παραγγελίες, καθαρισμό, μεταφορές, κρατήσεις ή διαδρομές: {{city}}.',
-    placeholder: 'Ρωτήστε τον βοηθό…',
+    placeholder: 'Γράψε τι χρειάζεσαι…',
     via: 'Μέσω βοηθού',
     suggestions: ['2 μουσακάδες', 'Καθαρισμός δωματίου', 'Μεταφορά στο αεροδρόμιο', 'Διαδρομή για ηλιοβασίλεμα', 'Κωδικός Wi-Fi'],
     ai: {

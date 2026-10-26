@@ -31,7 +31,7 @@ export default function Bill() {
       </Link>
 
       <header className="px-5 pb-4 pt-2">
-        <h1 className="text-3xl font-bold">{t('stay.bill.title')}</h1>
+        <h1 className="text-[36px] leading-tight">{t('stay.bill.title')}</h1>
         <p className="mt-1 text-sm text-muted">
           {t('stay.room', { number: stay.roomNumber })} · {stay.hotelName}
         </p>

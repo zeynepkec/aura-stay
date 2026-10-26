@@ -79,7 +79,7 @@ export default function StaffTables() {
           {list.map((r) => (
             <article key={r.id} className="flex flex-col gap-4 rounded-card border border-line bg-card p-4 sm:flex-row sm:items-center">
               {/* Saat ve tarih */}
-              <div className="flex w-28 shrink-0 flex-col items-center rounded-2xl bg-background px-3 py-2">
+              <div className="flex w-28 shrink-0 flex-col items-center rounded-xl bg-background px-3 py-2">
                 <p className="text-2xl font-bold">{r.details.time ?? '—'}</p>
                 <p className="flex items-center gap-1 text-xs text-muted">
                   <CalendarDays size={12} />
@@ -96,7 +96,7 @@ export default function StaffTables() {
                   {r.details.venue && <span className="ml-1 rounded-full bg-background px-2 py-0.5 text-xs font-medium">{optionName(tableVenues, r.details.venue, lang)}</span>}
                 </p>
                 {r.details.note && (
-                  <p className="mt-2 flex gap-2 rounded-2xl bg-activity/40 p-2.5 text-sm">
+                  <p className="mt-2 flex gap-2 rounded-xl bg-activity/40 p-2.5 text-sm">
                     <StickyNote size={16} className="mt-0.5 shrink-0" />
                     {r.details.note}
                   </p>
@@ -109,7 +109,7 @@ export default function StaffTables() {
                   <button
                     type="button"
                     onClick={() => setStatus(r.id, 'declined')}
-                    className="flex h-11 items-center gap-1.5 rounded-full border border-line px-4 text-sm font-semibold"
+                    className="flex h-11 items-center gap-1.5 rounded-[10px] border border-line px-4 text-sm font-semibold"
                   >
                     <X size={16} />
                     {t('tables.decline')}
@@ -117,7 +117,7 @@ export default function StaffTables() {
                   <button
                     type="button"
                     onClick={() => setStatus(r.id, 'confirmed')}
-                    className="flex h-11 items-center gap-1.5 rounded-full bg-ink px-5 text-sm font-semibold text-card"
+                    className="flex h-11 items-center gap-1.5 rounded-[10px] bg-ink px-5 text-sm font-semibold text-card"
                   >
                     <Check size={16} />
                     {t('tables.confirm')}

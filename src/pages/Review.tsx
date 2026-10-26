@@ -50,7 +50,7 @@ export default function Review() {
       </Link>
 
       <header className="px-5 pb-4 pt-2">
-        <h1 className="text-3xl font-bold">{t('review.title')}</h1>
+        <h1 className="text-[36px] leading-tight">{t('review.title')}</h1>
         <p className="mt-1 text-sm text-muted">{t('review.subtitle')}</p>
       </header>
 
@@ -105,7 +105,7 @@ export default function Review() {
             type="button"
             onClick={submitReview}
             disabled={!canSave}
-            className="h-14 w-full rounded-full bg-ink text-sm font-semibold text-card disabled:opacity-30"
+            className="h-14 w-full rounded-[10px] bg-ink text-sm font-semibold text-card disabled:opacity-30"
           >
             {review ? t('review.update') : t('review.send')}
           </button>
@@ -146,7 +146,7 @@ export default function Review() {
           type="button"
           onClick={submitFeedback}
           disabled={!message.trim()}
-          className="mt-3 h-12 w-full rounded-full border border-ink text-sm font-semibold disabled:opacity-30"
+          className="mt-3 h-12 w-full rounded-[10px] border border-ink text-sm font-semibold disabled:opacity-30"
         >
           {t('review.feedback.send')}
         </button>
