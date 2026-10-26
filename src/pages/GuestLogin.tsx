@@ -225,7 +225,8 @@ export default function GuestLogin() {
   const { t, i18n } = useTranslation()
   const lang = i18n.resolvedLanguage
   const [hotel, setHotel] = useState<HotelProfile | null>(() => hotelById(localStorage.getItem('aura-hotel-choice') ?? undefined) ?? null)
-  const [picking, setPicking] = useState(!hotel)
+  // "Misafir girişi"ne basınca her zaman önce otel seçimi gelir (son seçilen otel işaretli durur)
+  const [picking, setPicking] = useState(true)
   const [mode, setMode] = useState<Mode | null>(null)
   const [session, setSession] = useState<Session | null>(null)
 
